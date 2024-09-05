@@ -10,18 +10,12 @@ import { handleResetPassword,handleCRP } from '../../lib/aws-amplify';
 const forgotPass = () => {
   const [email, setEmail] = useState("")
   const [codesent, setCodeSent] = useState(false);
-  const [code, setCode] = useState("");
-  const [password,setPassword] = useState("");
-
-  const handleCodeChange = (text) => {
-    console.log('Code entered:', text);
-    setCode(text);
-  };
+  const [passform,setPassForm]=useState({
+    password:"",
+    code:"",
+})
   
-  const handlePasswordChange = (text) => {
-    console.log('Password entered:', text);
-    setPassword(text);
-  };
+  
 
   const handleResetNextSteps = async ()=>{
     const response =await handleResetPassword({username:email})
@@ -41,8 +35,8 @@ const forgotPass = () => {
   const handleConfirmReset=async()=>{
     await handleCRP({
       username:email,
-      confirmationCode:code,
-      newPassword:password
+      confirmationCode:passform.code,
+      newPassword:passform.password,
     })
 
   }
@@ -73,8 +67,8 @@ const forgotPass = () => {
           The code has been sent to {email}
         </Text>
         <View className='flex-col items-center'>
-          <TextField label="Code" value={code} onChangeText={handleCodeChange} placeholder="secret code" keyboardtype="numeric" error=""/>
-          <TextField label="Password" value={password} onChangeText={(text)=>handlePasswordChange(text)} placeholder="" keyboardtype="normal" error=""/>
+          <TextField label="Code" value={passform.code} onhandleChange={(e) => setPassForm({ ...passform, code: e })} placeholder="secret code" keyboardtype="numeric" error=""/>
+          <TextField label="Password" value={passform.password} onhandleChange={(e) => setPassForm({ ...passform, password: e })} placeholder="" keyboardtype="normal" error=""/>
 
           <Button title='Reset password' containerStyle='px-10 py-2 mt-2' onPress={handleConfirmReset}/>
         </View>

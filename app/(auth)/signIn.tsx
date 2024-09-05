@@ -65,9 +65,9 @@ const signin = () => {
             <Text className="text-secondary text-xl">SIGN IN</Text>
           </View>
           <View className='items-center justify-start px-4'>
-                <TextField label="Email" value={signForm.email} handlechange={(e)=>setSignForm({...signForm,email:e})}placeholder="john.doe@something.com" keyboardtype="email-address" error=""/>
+                <TextField label="Email" value={signForm.email} onhandleChange={(e)=>setSignForm({...signForm,email:e})}placeholder="john.doe@something.com" keyboardtype="email-address" error=""/>
 
-                <TextField label="Password" value={signForm.password} handlechange={(e)=>setSignForm({...signForm,password:e})} keyboardtype="default" placeholder="Password" error=""/>
+                <TextField label="Password" value={signForm.password} onhandleChange={(e)=>setSignForm({...signForm,password:e})} keyboardtype="default" placeholder="Password" error=""/>
 
                 <Button title='Sign In' containerStyle='mt-5 mb-3 px-10 py-3' isLoading={false} onPress={onsubmit}/>
                 <Link href={'/forgotPass'} className='text-gray-400 text-xs'>Forgot your password?</Link>

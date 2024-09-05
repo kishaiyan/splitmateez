@@ -6,7 +6,9 @@ module.exports = {
       colors:{
         primary:"#212121",
         secondary:"#BD6A33",
-        fieldfill:"#1C1C1C"
+        fieldfill:"#1C1C1C", 
+        homeTile:"#000000",
+        signOut:"#e4313157",
       }
     },
   },

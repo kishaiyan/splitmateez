@@ -53,6 +53,7 @@ export async function handleResetPassword({ username}){
 export async function handleCRP({username,confirmationCode,newPassword}){
   try {
     await confirmResetPassword({username,confirmationCode,newPassword})
+    console.log("Changed Successfully")
   } catch (error) {
     
   }

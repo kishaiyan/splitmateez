@@ -15,30 +15,43 @@ const Home = () => {
     {name:"toad",key:'5'},
     {name:"peach",key:'6'},
   ])
-  
+  const [visible, setVisible] = useState(true)
+  useEffect(()=>{
+    const timer = setTimeout(()=>{
+      setVisible(false);
+    },5000);
+  },[])
   return (
     <SafeAreaView className='flex-1 bg-primary  px-4'>
       <AppBar />
       
       <View className='h-[10%]'>
         <Text className='text-white text-xl'>Welcome back</Text>
-        <Text className='text-secondary text-2xl font-extrabold'>Welcome</Text>
+        <Text className='text-secondary text-2xl font-extrabold'>UserName</Text>
       </View>
-      <View className='flex-row items-center justify-center gap-2'>
+      {visible? 
+       <View className='flex-row items-center justify-center gap-2'>
         <MaterialIcons name='swipe' color='#ffffff' size={20}/>
         <Text className='text-gray-200'>Swipe for more properties</Text>
-      </View>
+      </View>:
+      <View>
+      </View>}
+      <View className='h-[60%]'>
+
       <FlatList  
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item)=>item.key}
         data={people}
         renderItem={({item})=>(
           
-            <HomeTile name={item.name}/>
-         
+          <HomeTile name={item.name}/>
+        
         )}
         horizontal
-       
         
-      />
+        
+        />
+        </View>
     </SafeAreaView>
   )
 }

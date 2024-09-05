@@ -144,7 +144,7 @@ const Signup = () => {
                     <TextField
                       label="Email"
                       value={form.email}
-                      handlechange={(e) => setForm({ ...form, email: e })}
+                      onhandleChange={(e) => setForm({ ...form, email: e })}
                       placeholder="john.doe@something.com"
                       keyboardtype="email-address"
                       error={errors.email}
@@ -152,7 +152,7 @@ const Signup = () => {
                     <TextField
                       label="First Name"
                       value={form.firstname}
-                      handlechange={(e) => setForm({ ...form, firstname: e })}
+                      onhandleChange={(e) => setForm({ ...form, firstname: e })}
                       placeholder="John"
                       keyboardtype="default"
                       error={errors.firstname}
@@ -160,7 +160,7 @@ const Signup = () => {
                     <TextField
                       label="Last Name"
                       value={form.lastname}
-                      handlechange={(e) => setForm({ ...form, lastname: e })}
+                      onhandleChange={(e) => setForm({ ...form, lastname: e })}
                       placeholder="Doe"
                       keyboardtype="default"
                       error={errors.lastname}
@@ -168,7 +168,7 @@ const Signup = () => {
                     <TextField
                       label="Phone Number"
                       value={form.phno}
-                      handlechange={(e) => setForm({ ...form, phno: e })}
+                      onhandleChange={(e) => setForm({ ...form, phno: e })}
                       keyboardtype="number-pad"
                       placeholder="04.."
                       error={errors.phno}
@@ -176,7 +176,7 @@ const Signup = () => {
                     <TextField
                       label="Password"
                       value={form.password}
-                      handlechange={(e) => setForm({ ...form, password: e })}
+                      onhandleChange={(e) => setForm({ ...form, password: e })}
                       keyboardtype="default"
                       placeholder="Password"
                       error={errors.password}
