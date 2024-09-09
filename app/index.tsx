@@ -17,7 +17,7 @@ export default function app(){
   const {isLoading,isLoggedIn}=useGlobalContext();
  
   if(!isLoading && isLoggedIn) {return <Redirect href="/home" />}
-  else{return <Redirect href="/home" />}
+  // else{return <Redirect href="/home" />}
   
   return(
   
@@ -29,7 +29,7 @@ export default function app(){
         source={icon} 
         className="w-screen h-screen"
       />
-      <View className="absolute bg-black/80  items-center justify-evenly w-full h-[50%] bottom-[5%] " style={{borderTopLeftRadius:15,borderTopRightRadius:15,}} >
+      <View className="absolute bg-black/80  items-center justify-evenly w-full h-[30%] bottom-[5%] " style={{borderTopLeftRadius:15,borderTopRightRadius:15,}} >
         
         
         <Button 

@@ -5,8 +5,16 @@ import AppBar from '../../components/appBar'
 
 const AddProperty = () => {
   return (
-    <SafeAreaView className='flex-1 bg-primary'>
+    <SafeAreaView className='flex-1 bg-primary px-4'>
       <AppBar/>
+      <View>
+        <Text className='text-secondary text-xl'>
+            ADD PROPERTY
+        </Text>
+      </View>
+      <View>
+        
+      </View>
     </SafeAreaView>
   )
 }

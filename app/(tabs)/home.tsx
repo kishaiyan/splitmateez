@@ -39,6 +39,7 @@ const Home = () => {
       <View className='h-[60%]'>
 
       <FlatList  
+        
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item)=>item.key}
         data={people}

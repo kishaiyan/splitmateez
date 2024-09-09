@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons'
 const HomeTile = ({name}) => {
   return (
     <TouchableOpacity onPress={()=>console.log("Clicked tile")}>
-    <View className='flex-col bg-fieldfill m-1 p-4 h-[100%] w-[300px] rounded-3xl'>
+    <View className='flex-col bg-tile m-1 p-4 h-[100%] w-[300px] rounded-3xl'>
     <View className='flex-row mb-1 h-[80%] items-center'>
       {/**? left side of the card */}
           <View className='w-[80%]'>

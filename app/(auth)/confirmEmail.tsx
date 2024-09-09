@@ -4,13 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/customButton';
 import { useLocalSearchParams, router } from 'expo-router';
 import { confirmSignUp , type ConfirmSignUpInput} from 'aws-amplify/auth';
+import AppBar from '../../components/appBar';
 
 
 
 const ConfirmEmail = () => {
   
   const { email,user } = useLocalSearchParams();
-  const logo=require("../../assets/images/logo.png")
   const [code, setCode] = useState(null);
 
   async function handleSignUpConfirmation({
@@ -39,11 +39,9 @@ const ConfirmEmail = () => {
 
   return (
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
+      <AppBar />
     {/* // appBar */}
-    <View className='flex-row items-center gap-3 mb-6'>
-      <Image source={logo} className='w-10 h-10' resizeMode='contain'/>
-      <Text className='text-gray-200 text-2xl font-bold'>SplitSavvy</Text>
-    </View>
+    
       <View className='h-full bg-primary w-full items-center px-3'>
         <View className=' w-full h-[5%] my-5'>
           <Text className='text-white text-center text-2xl font-sans'>Confirm your Email</Text>
@@ -52,12 +50,12 @@ const ConfirmEmail = () => {
           <Text className='text-white text-xl font-sans'>Please enter the verification code to confirm your email address</Text>
           <Text className='text-white text-sm'>Email has been sent to {email}</Text>
         </View>
-        <View className='h-[250px] items-center justify-center'>
+        <View className='h-[250px] justify-center'>
           <TextInput
             keyboardType='number-pad'
             value={code}
             onChangeText={(text) => setCode(text)}
-            className='border text-gray-200 border-gray-400 h-[40%] text-3xl'
+            className='border text-gray-200 border-gray-400 h-[40%] text-3xl rounded-md'
             textAlign='center'
             placeholder='******'
             placeholderTextColor="#dddddd35"

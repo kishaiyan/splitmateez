@@ -70,7 +70,7 @@ const signin = () => {
                 <TextField label="Password" value={signForm.password} onhandleChange={(e)=>setSignForm({...signForm,password:e})} keyboardtype="default" placeholder="Password" error=""/>
 
                 <Button title='Sign In' containerStyle='mt-5 mb-3 px-10 py-3' isLoading={false} onPress={onsubmit}/>
-                <Link href={'/forgotPass'} className='text-gray-400 text-xs'>Forgot your password?</Link>
+                <Link href={'/forgotPass'} className='text-gray-300 text-xs font-thin'>Forgot your password?</Link>
             </View>
 
             <View className='flex items-center mt-10'>

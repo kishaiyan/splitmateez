@@ -7,7 +7,7 @@ module.exports = {
         primary:"#212121",
         secondary:"#BD6A33",
         fieldfill:"#1C1C1C", 
-        homeTile:"#000000",
+        tile:"#353535cc",
         signOut:"#e4313157",
       }
     },

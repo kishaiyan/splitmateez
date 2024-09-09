@@ -6,6 +6,7 @@ import Button from '../../components/customButton'
 import { AntDesign } from '@expo/vector-icons'
 import TextField from '../../components/textField'
 import { handleResetPassword,handleCRP } from '../../lib/aws-amplify';
+import { router } from 'expo-router'
 
 const forgotPass = () => {
   const [email, setEmail] = useState("")
@@ -33,11 +34,16 @@ const forgotPass = () => {
   }
 
   const handleConfirmReset=async()=>{
-    await handleCRP({
-      username:email,
-      confirmationCode:passform.code,
-      newPassword:passform.password,
-    })
+    try {
+      await handleCRP({
+        username:email,
+        confirmationCode:passform.code,
+        newPassword:passform.password,
+      })
+      router.replace("/signIn")
+    } catch (error) {
+      
+    }
 
   }
   return (

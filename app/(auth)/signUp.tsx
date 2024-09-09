@@ -5,7 +5,8 @@ import { signUp } from 'aws-amplify/auth';
 import Button from '../../components/customButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, useRouter } from 'expo-router';
-import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import AppBar from '../../components/appBar';
 
 
 type signupParameters = {
@@ -129,10 +130,7 @@ const Signup = () => {
 
   return (
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
-      <View className='flex-row items-center gap-3 mb-4'>
-        <Image source={logo} className='w-10 h-10' resizeMode='contain'/>
-        <Text className='text-gray-200 text-2xl font-bold'>SPLITSAVVY</Text>
-      </View>
+      <AppBar />
       
         <ScrollView className=""  showsVerticalScrollIndicator={false}>
           {/* <View className="flex-1"> */}
@@ -183,7 +181,7 @@ const Signup = () => {
                     />
                     <Button title='Sign Up' containerStyle='mt-6 px-10 py-2' onPress={onSubmit} />
                     <View className='w-[80%] mt-5 pt-3 flex-row gap-2'>
-  <MaterialIcons name='check' color="green" size={16}/>
+  <AntDesign name='checksquareo' color="green" size={16}/>
   <Text className='text-gray-200 text-xs'>By signing up you agree to our terms and conditions</Text>
 </View>
                   </View>
