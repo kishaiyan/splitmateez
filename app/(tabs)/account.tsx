@@ -1,14 +1,27 @@
 import { View, Text,  } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from '../../components/customButton'
 import { handleSignOut } from '../../lib/aws-amplify'
 import { router } from 'expo-router'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import AppBar from '../../components/appBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { generateClient } from 'aws-amplify/api'
+import { getOwner } from '../../src/graphql/queries'
 
 const Account = () => {
+  const client=generateClient();
   const {user}=useGlobalContext()
+
+  const getUserDetails=async(user: any)=>{
+    const result=await client.graphql({query:getOwner, variables:{
+      id:user
+    }})
+    console.log(result.data.getOwner.Properties)
+  }
+  useEffect(()=>{
+   getUserDetails(user)
+  },[user])
   const signOut=()=>{
     try{
       handleSignOut()

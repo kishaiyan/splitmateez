@@ -1,4 +1,4 @@
-import { View, Text, ScrollView,Image  } from 'react-native';
+import { View, Text, ScrollView  } from 'react-native';
 import React, { useState } from 'react';
 import TextField from '../../components/textField';
 import { signUp } from 'aws-amplify/auth';
@@ -7,6 +7,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, useRouter } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import AppBar from '../../components/appBar';
+import { generateClient } from 'aws-amplify/api';
+import { createOwner } from '../../src/graphql/mutations';
+const client = generateClient();
+
+
+
 
 
 type signupParameters = {
@@ -20,6 +26,7 @@ type signupParameters = {
 
 
 const Signup = () => {
+  
   function getNumber(phone: string) {
     return phone.replace('0', '+61');
   }
@@ -44,7 +51,17 @@ const Signup = () => {
             autoSignIn: { enabled: true },
         }
       });
-      console.log(isSignUpComplete,userId,nextStep);
+      await client.graphql({query:createOwner,variables:{
+        input:{
+          id:userId,
+          firstName:firstname,
+          lastName:lastname,
+          phNo:phone,
+          email:email,
+        }
+      }})
+      
+
       if( !isSignUpComplete && nextStep.signUpStep === "CONFIRM_SIGN_UP" ){
         router.replace(`/confirmEmail?email=${encodeURIComponent(email)}&user=${encodeURIComponent(userId)}`)
       }
@@ -132,9 +149,9 @@ const Signup = () => {
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
       <AppBar />
       
-        <ScrollView className=""  showsVerticalScrollIndicator={false}>
+        <ScrollView className="flex-1"  showsVerticalScrollIndicator={false}>
           {/* <View className="flex-1"> */}
-              <View className='flex items-start'>
+              <View className='items-start'>
                 <Text className="text-secondary text-xl">REGISTER</Text>
               </View>
                 <View className="px-4 my-2 items-center justify-between">

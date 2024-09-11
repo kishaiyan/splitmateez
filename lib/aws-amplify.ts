@@ -24,7 +24,6 @@ export  async function handleSignOut() {
 export  async function getcurrentUser(){
   try{
     const response = await getCurrentUser();
-    console.log(response)
     return response.userId;
   }
   catch(error){

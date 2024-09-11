@@ -3,15 +3,20 @@ import React from 'react';
 import { View,Image} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, Redirect } from "expo-router";
-import { Amplify } from "aws-amplify";
-import awsconfig from "../aws-exports";
-
+import { Amplify } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
+import config from "../src/amplifyconfiguration.json";
 import { useGlobalContext } from "../context/GlobalProvider";
 import AppBar from "../components/appBar";
-Amplify.configure(awsconfig);
+import * as burnt from "burnt";
 
+
+Amplify.configure(config);
+
+const client = generateClient();
 
 export default function app(){
+  
   const icon=require('../assets/images/splash_screen.jpg')
   
   const {isLoading,isLoggedIn}=useGlobalContext();
@@ -24,6 +29,7 @@ export default function app(){
   <SafeAreaView className="flex-1 items-center bg-primary">
    
    <AppBar/>
+   
     <View className="realtive mt-8 h-full w-full">
       <Image
         source={icon} 
@@ -34,7 +40,8 @@ export default function app(){
         
         <Button 
         title="Get Started !"
-        handlePress={()=>router.push('/signIn')}
+        handlePress={()=>
+          router.push('/signIn')}
         containerStyle="w-[70%] min-h-[62px]"
         textStyle="text-white"
         />
@@ -43,6 +50,7 @@ export default function app(){
       
       </View>
     </View>
+    
   </SafeAreaView>
     
   )

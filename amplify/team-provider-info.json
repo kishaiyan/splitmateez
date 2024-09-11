@@ -16,5 +16,29 @@
         "splitmate": {}
       }
     }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-splitmate-dev-42ddd-authRole",
+      "UnauthRoleArn": "arn:aws:iam::010526281591:role/amplify-splitmate-dev-42ddd-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::010526281591:role/amplify-splitmate-dev-42ddd-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-splitmate-dev-42ddd-deployment",
+      "UnauthRoleName": "amplify-splitmate-dev-42ddd-unauthRole",
+      "StackName": "amplify-splitmate-dev-42ddd",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:010526281591:stack/amplify-splitmate-dev-42ddd/24156310-6e5d-11ef-97c0-06d415b5c483",
+      "AmplifyAppId": "d1ybibwevqi969"
+    },
+    "categories": {
+      "auth": {
+        "splitmate": {}
+      },
+      "storage": {
+        "splitsavvy": {}
+      },
+      "api": {
+        "splitmate": {}
+      }
+    }
   }
 }

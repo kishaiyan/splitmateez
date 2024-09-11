@@ -1,5 +1,4 @@
-import { View, Text } from 'react-native';
-import { Tabs } from 'expo-router';
+import {  Tabs } from 'expo-router';
 import React from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import TabBar from '../../components/tabBar';
@@ -50,6 +49,7 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+      
     </>
   );
 }

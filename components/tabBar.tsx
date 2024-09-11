@@ -24,7 +24,7 @@ const TabBar = ({state,descriptors,navigation}) => {
           : route.name;
       
       const isFocused = state.index === index;
-
+    
       const onPress = () => {
         const event = navigation.emit({
           type: 'tabPress',
@@ -83,10 +83,7 @@ const styles=StyleSheet.create({
     paddingVertical:10,
     borderRadius:25,
     borderCurve:"continuous",
-    shadowColor:"orange",
-    shadowOffset:{width:0, height:10},
-    shadowOpacity:0.1,
-    shadowRadius:10,
+    
   },
   tabbarItem:{
     flex:1,

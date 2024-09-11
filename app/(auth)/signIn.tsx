@@ -1,24 +1,23 @@
-import { View, Text, Alert,Image } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextField from '../../components/textField';
 import Button from '../../components/customButton';
 import { Link, useRouter } from 'expo-router';
-import { handleSignIn,currentSess, handleSignOut } from '../../lib/aws-amplify';
+import { handleSignIn } from '../../lib/aws-amplify';
 import AppBar from '../../components/appBar';
 import { useGlobalContext } from '../../context/GlobalProvider';
-
+import Toast from "react-native-toast-message";
 
 
 const signin = () => {
-  const logo=require("../../assets/images/logo.png")
   const {isLoading,setIsLoading}=useGlobalContext()
   const router=useRouter();
   const [signForm,setSignForm]=useState({
     email:'',
     password:''
   })
-  
+ 
   const onsubmit=async()=>{
   try{ 
     setIsLoading(true)
@@ -28,11 +27,9 @@ const signin = () => {
         password:signForm.password,
       }
       )
-      console.log(response)
    setIsLoading(false)
     if(response && response.isSignedIn)
       {
-        console.log("Logged in Successfully: ",response.isSignedIn);
         router.replace('/home');      
       }
       else
@@ -53,18 +50,27 @@ const signin = () => {
     console.log(error) 
    }
   }
-  
+   const handleToast=()=>{
+    console.log("Toast");
+    
+    Toast.show({
+      type:"error",
+      text1:"signed in",
+      position:"top",
+    })
+   }
 
   return (
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
+      
       {/* // appBar */}
       <AppBar/>
       {/* // Rest of the page */}
         <View className='flex-1'>
-          <View className='flex items-start mb-4'>
+          <View className='flex items-start'>
             <Text className="text-secondary text-xl">SIGN IN</Text>
           </View>
-          <View className='items-center justify-start px-4'>
+          <View className='items-center justify-start px-4 my-2'>
                 <TextField label="Email" value={signForm.email} onhandleChange={(e)=>setSignForm({...signForm,email:e})}placeholder="john.doe@something.com" keyboardtype="email-address" error=""/>
 
                 <TextField label="Password" value={signForm.password} onhandleChange={(e)=>setSignForm({...signForm,password:e})} keyboardtype="default" placeholder="Password" error=""/>
@@ -79,7 +85,7 @@ const signin = () => {
         </View>
             
         </View>
-        
+        <Toast />
     </SafeAreaView>
     
   )

@@ -3,23 +3,23 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AppBar from '../../components/appBar'
 import HomeTile from '../../components/homeTile'
-import { AntDesign, MaterialIcons } from '@expo/vector-icons'
+import {  MaterialIcons } from '@expo/vector-icons'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 
 const Home = () => {
-  const [people,setPeople]=useState([
-    {name:"shaun",key:'1'},
-    {name:"yoshi",key:'2'},
-    {name:"mario",key:'3'},
-    {name:"luigi",key:'4'},
-    {name:"toad",key:'5'},
-    {name:"peach",key:'6'},
-  ])
+  const ItemSeparator = () => (
+    <View style={{ width: 10 }} /> // Adjust the width as needed
+  );
+
+  const {property}=useGlobalContext();
+  
+  
   const [visible, setVisible] = useState(true)
   useEffect(()=>{
     const timer = setTimeout(()=>{
       setVisible(false);
-    },5000);
+    },2000);
   },[])
   return (
     <SafeAreaView className='flex-1 bg-primary  px-4'>
@@ -36,16 +36,21 @@ const Home = () => {
       </View>:
       <View>
       </View>}
-      <View className='h-[60%]'>
+      <View className='h-[65%] items-center'>
 
       <FlatList  
-        
+        ItemSeparatorComponent={ItemSeparator}
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item)=>item.key}
-        data={people}
+        keyExtractor={(item)=>item.id}
+        data={property}
         renderItem={({item})=>(
           
-          <HomeTile name={item.name}/>
+          <HomeTile 
+          name={item.address} 
+          maximum={item.maximum_tenant} 
+          current={item.tenants.length}
+          property={item}
+          />
         
         )}
         horizontal
