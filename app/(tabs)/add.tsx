@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from 'react-native'
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AppBar from '../../components/appBar'
@@ -8,6 +8,11 @@ import * as ImagePicker from "expo-image-picker";
 
 const AddProperty = () => {
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+
     <SafeAreaView className='flex-1 bg-primary px-4'>
       <AppBar/>
       <View>
@@ -16,7 +21,7 @@ const AddProperty = () => {
         </Text>
       </View>
       <View>
-        <ScrollView className='h-[74%]' showsVerticalScrollIndicator={false}>
+        <ScrollView className='h-[74%]' showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:40}}>
           <View className='items-center'>
         <TextField label="Address" placeholder="123,qwerty st state postcode" value={""} onhandleChange={(e)=>{}} keyboardtype="" error=""/>
           <TextField label="Rooms" placeholder="2" value={""} onhandleChange={(e)=>{}} keyboardtype="numeric" error=""/>
@@ -30,6 +35,7 @@ const AddProperty = () => {
 
       </View>
     </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 

@@ -1,10 +1,15 @@
+
 import { getcurrentUser } from "../lib/aws-amplify";
 import { createContext,useContext,useState,useEffect } from "react";
+import { generateClient } from 'aws-amplify/api'
+import { getOwner } from '../src/graphql/queries'
+
 
 const GlobalContext= createContext();
 export const useGlobalContext=()=>useContext(GlobalContext);
 
-const GlobalProvider =({children})=>{
+const GlobalProvider = ({children})=>{
+ 
   const [property,setProperty]=useState([
     {
       id: "1",
@@ -81,7 +86,29 @@ const GlobalProvider =({children})=>{
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user,setUser]=useState(null)
   const [isLoading,setIsLoading]=useState(true)
+  const client=generateClient();
+  const [userDetails, setuserDetails] = useState(null)
 
+  const getUserDetails=async()=>{
+    try{
+    const result=await client.graphql({query:getOwner, variables:{
+      id:user
+    }})
+    return result.data.getOwner;
+  }
+    catch(error){
+      console.log("User Details Error",error);
+    }
+  }
+  useEffect(()=>{
+    const fetchUserDetails=async()=>{
+      if(user){
+        const details=await getUserDetails(user);
+        setuserDetails(details);
+        console.log(details);}
+  }
+   fetchUserDetails();
+  },[user])
   useEffect(()=>{
     getcurrentUser()
     .then((res)=>{
@@ -110,7 +137,8 @@ const GlobalProvider =({children})=>{
       isLoading,
       setIsLoading,
       property,
-      setProperty
+      setProperty,
+      userDetails
     }}
     >
       {children}

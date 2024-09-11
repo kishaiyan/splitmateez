@@ -6,22 +6,14 @@ import { router } from 'expo-router'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import AppBar from '../../components/appBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { generateClient } from 'aws-amplify/api'
-import { getOwner } from '../../src/graphql/queries'
+import AccountField from '../../components/accountField'
+
 
 const Account = () => {
-  const client=generateClient();
-  const {user}=useGlobalContext()
+ 
+  const {userDetails}=useGlobalContext();
+  
 
-  const getUserDetails=async(user: any)=>{
-    const result=await client.graphql({query:getOwner, variables:{
-      id:user
-    }})
-    console.log(result.data.getOwner.Properties)
-  }
-  useEffect(()=>{
-   getUserDetails(user)
-  },[user])
   const signOut=()=>{
     try{
       handleSignOut()
@@ -30,8 +22,8 @@ const Account = () => {
     catch(error){
       console.log(error)
     }
-  
   }
+  
   return (
     <SafeAreaView className='flex-1 bg-primary px-4'>
       <AppBar/>
@@ -40,9 +32,11 @@ const Account = () => {
       <View className="mb-5">
        <Text className='text-secondary text-xl'>ACCOUNT DETAILS</Text>
       </View> 
-
       <View className='mb-6'>
-      <Text className='text-white'>{user ? user : "No User is Signed in"}</Text>
+          <AccountField name="Email" text={userDetails.email}/>
+          <AccountField name="Phone" text={userDetails.phNo}/>
+          <AccountField name="Given" text={userDetails.firstName}/>
+          <AccountField name="last" text={userDetails.lastName}/>
       </View>
       <View className='items-center'>
         <Button title='Sign Out' containerStyle='px-10 py-3 bg-signOut border border-red-500' onPress={signOut}/>
