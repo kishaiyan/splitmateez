@@ -2,9 +2,9 @@ import { View, Text,Image, Pressable } from 'react-native'
 import React from 'react'
 import { FontAwesome5, Ionicons } from '@expo/vector-icons'
 
-const TenantCard = ({tenant,onPressElectricity,onPressGas,onPressWater,onPressWifi}) => {
+const TenantCard = ({tenant,onPressElectricity,onPressGas,onPressWater,onPressWifi,onPress}) => {
   return (
-    <View>
+    <Pressable onPress={onPress}>
       <View className="p-2 bg-tile mb-2 rounded-lg">
         <Text className='text-white text-lg'>{tenant.fullName}</Text>
         <View className='flex-row justify-between'>
@@ -43,7 +43,7 @@ const TenantCard = ({tenant,onPressElectricity,onPressGas,onPressWater,onPressWi
         </View>
         
       </View>
-    </View>
+    </Pressable>
   )
 }
 

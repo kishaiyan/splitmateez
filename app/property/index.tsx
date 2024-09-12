@@ -1,4 +1,4 @@
-import { Text, View, Image, ScrollView } from 'react-native';
+import { Text, View, Image, ScrollView, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -54,6 +54,13 @@ const PropertyDetails = () => {
       return updatedProperties;
     });
   };
+  const openModel=(tenant)=>{
+    <Modal  
+    animationType="slide"
+        transparent={true}
+        visible={true}
+       />
+  }
 
   // Toggling individual services
   const toggleElectricity = (tenantId: string) => toggleService(tenantId, 'electricity');
@@ -78,7 +85,7 @@ const PropertyDetails = () => {
         {disProperty ? (
         <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom:10}} showsVerticalScrollIndicator={false}>
         <View className='flex-row items-center justify-between'>
-          <View>
+          <View className='mb-3'>
             <Text className='text-white text-md'>Address:</Text>
             <Text className='text-secondary text-lg'>{disProperty.address}</Text>
           </View>
@@ -120,6 +127,7 @@ const PropertyDetails = () => {
           <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
           {disProperty.tenants.length > 0 ? disProperty.tenants.map((tenant: any) => (
             <TenantCard
+              onPress={openModel(tenant)}
               key={tenant.id}
               tenant={tenant}
               onPressElectricity={() => toggleElectricity(tenant.id)} // Pass the tenant ID to toggle

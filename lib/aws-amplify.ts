@@ -33,8 +33,16 @@ export  async function getcurrentUser(){
 export async function handleSignIn({ username, password }) {
   try {
     const response=await signIn({ username, password });
-    
-    return response;
+    let res;
+    if(response.isSignedIn){
+      try{
+        res = await getCurrentUser()
+      }
+      catch(error){
+        console.log("error after signing in ",error);
+      }
+    }
+    return {response,res};
   } catch (error) {
     console.log(error,error.underlyingError)
   }

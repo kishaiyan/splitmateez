@@ -11,12 +11,14 @@ import AccountField from '../../components/accountField'
 
 const Account = () => {
  
-  const {userDetails}=useGlobalContext();
+  const {userDetails,setUser,user}=useGlobalContext();
   
 
   const signOut=()=>{
     try{
       handleSignOut()
+      setUser(null);
+      console.log(user);
       router.replace('/signIn')
     }
     catch(error){

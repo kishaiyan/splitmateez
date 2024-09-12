@@ -4,14 +4,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import TextField from '../../components/textField';
 import Button from '../../components/customButton';
 import { Link, useRouter } from 'expo-router';
-import { handleSignIn } from '../../lib/aws-amplify';
+import { handleSignIn,getcurrentUser} from '../../lib/aws-amplify';
 import AppBar from '../../components/appBar';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import Toast from "react-native-toast-message";
+import { getCurrentUser } from 'aws-amplify/auth';
 
 
 const signin = () => {
-  const {isLoading,setIsLoading}=useGlobalContext()
+  const {isLoading,setIsLoading,setUser}=useGlobalContext()
   const router=useRouter();
   const [signForm,setSignForm]=useState({
     email:'',
@@ -21,7 +22,7 @@ const signin = () => {
   const onsubmit=async()=>{
   try{ 
     setIsLoading(true)
-     const response=await handleSignIn(
+     const {response,res}=await handleSignIn(
       {
         username:signForm.email,
         password:signForm.password,
@@ -30,6 +31,7 @@ const signin = () => {
    setIsLoading(false)
     if(response && response.isSignedIn)
       {
+        setUser(res.userId)
         router.replace('/home');      
       }
       else

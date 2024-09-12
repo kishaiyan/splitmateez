@@ -105,7 +105,7 @@ const GlobalProvider = ({children})=>{
       if(user){
         const details=await getUserDetails(user);
         setuserDetails(details);
-        console.log(details);}
+        ;}
   }
    fetchUserDetails();
   },[user])
