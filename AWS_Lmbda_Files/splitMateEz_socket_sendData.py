@@ -20,16 +20,26 @@ def lambda_handler(event, context):
         # Parse the CSV content and calculate total cost per tenant
         tenant_costs = {}
         csv_reader = csv.DictReader(StringIO(csv_content))
+        
         for row in csv_reader:
             tenant_id = row['TenantID']
-            cost = float(row['Cost'])
-            if tenant_id in tenant_costs:
-                tenant_costs[tenant_id] += cost
+            cost_str = row.get('Cost', '').strip()
+
+            # Validate and add the cost to the tenant's total cost
+            if cost_str:  # Skip empty cost fields
+                try:
+                    cost = float(cost_str)
+                    if tenant_id in tenant_costs:
+                        tenant_costs[tenant_id] += cost
+                    else:
+                        tenant_costs[tenant_id] = cost
+                except ValueError:
+                    print(f"Invalid cost for TenantID {tenant_id}: {cost_str}, skipping...")
             else:
-                tenant_costs[tenant_id] = cost
+                print(f"Cost not available for TenantID {tenant_id}, skipping...")
 
         # Prepare the message to be sent to the clients
-        message = {"tenant_costs": tenant_costs}  # This will be in the format { '1': 6000, '2': 120, ... }
+        message = {"tenant_costs": tenant_costs}  # Total cost for each tenant
         message = json.dumps(message)
     
     except Exception as e:
@@ -42,7 +52,7 @@ def lambda_handler(event, context):
     # Initialize the API Gateway Management API client
     apigatewaymanagementapi = boto3.client(
         'apigatewaymanagementapi', 
-        endpoint_url = "https://x93f2f8a41.execute-api.ap-southeast-2.amazonaws.com/production/@connections"
+        endpoint_url="https://x93f2f8a41.execute-api.ap-southeast-2.amazonaws.com/production"
     )
     
     # Retrieve all connection IDs from DynamoDB
@@ -59,7 +69,7 @@ def lambda_handler(event, context):
                 ConnectionId=connectionId['connectionId']['S']
             )
         except Exception as e:
-            print(f"Failed to send message to {connectionId}: {str(e)}")
+            print(f"Failed to send message to {connectionId['connectionId']['S']}: {str(e)}")
     
     return {
         'statusCode': 200,
