@@ -1,6 +1,6 @@
 import Button from "../components/customButton";
 import React from 'react';
-import { View,Image} from "react-native";
+import { View,Image,Text} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, Redirect } from "expo-router";
 import { Amplify } from 'aws-amplify';
@@ -8,8 +8,7 @@ import { generateClient } from 'aws-amplify/api';
 import config from "../src/amplifyconfiguration.json";
 import { useGlobalContext } from "../context/GlobalProvider";
 import AppBar from "../components/appBar";
-import * as burnt from "burnt";
-
+import LoadingScreen from "./loadingScreen";
 
 Amplify.configure(config);
 
@@ -21,8 +20,9 @@ export default function app(){
   
   const {isLoading,isLoggedIn}=useGlobalContext();
  
-  if(!isLoading && isLoggedIn) {return <Redirect href="/home" />}
-  // else{return <Redirect href="/home" />}
+  if(!isLoading && isLoggedIn) {
+    return <Redirect href="/home" />}
+  
   
   return(
   

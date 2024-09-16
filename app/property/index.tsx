@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
-import { AntDesign, FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
 import TenantCard from '../../components/tenantCard';
 
 const PropertyDetails = () => {
@@ -76,9 +76,11 @@ const PropertyDetails = () => {
           headerBackTitle:"Home",
           headerTitle: "Property",
           headerTintColor: "#ffffff",
+          headerTitleAlign:"center",
           headerStyle: {
-            backgroundColor: "#424242"
+            backgroundColor:"#212121",
           },
+          
         }}
       />
          

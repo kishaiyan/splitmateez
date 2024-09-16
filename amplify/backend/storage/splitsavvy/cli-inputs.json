@@ -1,9 +1,13 @@
 {
   "resourceName": "splitsavvy",
-  "policyUUID": "bb39b9df",
-  "bucketName": "splitmate50a426a1624e4f89acc11f828ce59995",
-  "storageAccess": "auth",
-  "guestAccess": [],
+  "policyUUID": "06473ed2",
+  "bucketName": "splitmate62a9bfe38a7f46bebb291853db829501",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
   "authAccess": [
     "CREATE_AND_UPDATE",
     "READ",

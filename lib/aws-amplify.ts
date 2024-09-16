@@ -44,7 +44,9 @@ export async function handleSignIn({ username, password }) {
     }
     return {response,res};
   } catch (error) {
-    console.log(error,error.underlyingError)
+    console.log(error)
+    return error;
+    
   }
 }
 

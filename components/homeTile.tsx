@@ -1,6 +1,5 @@
 import { View, Text,Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { AntDesign } from '@expo/vector-icons'
 import { router } from 'expo-router'
 
 const HomeTile = ({name,maximum,current,property}) => {

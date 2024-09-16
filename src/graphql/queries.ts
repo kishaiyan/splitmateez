@@ -16,12 +16,13 @@ export const getProperty = /* GraphQL */ `query GetProperty($id: ID!) {
     maximum
     bathroom
     parking
-    ownerID
+    photo
     Tenants {
       nextToken
       startedAt
       __typename
     }
+    ownerID
     createdAt
     updatedAt
     _version
@@ -47,6 +48,7 @@ export const listProperties = /* GraphQL */ `query ListProperties(
       maximum
       bathroom
       parking
+      photo
       ownerID
       createdAt
       updatedAt
@@ -83,6 +85,7 @@ export const syncProperties = /* GraphQL */ `query SyncProperties(
       maximum
       bathroom
       parking
+      photo
       ownerID
       createdAt
       updatedAt
@@ -100,6 +103,45 @@ export const syncProperties = /* GraphQL */ `query SyncProperties(
   APITypes.SyncPropertiesQueryVariables,
   APITypes.SyncPropertiesQuery
 >;
+export const propertiesByOwnerID = /* GraphQL */ `query PropertiesByOwnerID(
+  $ownerID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelPropertyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  propertiesByOwnerID(
+    ownerID: $ownerID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      address
+      rooms
+      maximum
+      bathroom
+      parking
+      photo
+      ownerID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.PropertiesByOwnerIDQueryVariables,
+  APITypes.PropertiesByOwnerIDQuery
+>;
 export const getTenant = /* GraphQL */ `query GetTenant($id: ID!) {
   getTenant(id: $id) {
     id
@@ -112,6 +154,7 @@ export const getTenant = /* GraphQL */ `query GetTenant($id: ID!) {
     useWater
     useGas
     propertyID
+    photo
     createdAt
     updatedAt
     _version
@@ -138,6 +181,7 @@ export const listTenants = /* GraphQL */ `query ListTenants(
       useWater
       useGas
       propertyID
+      photo
       createdAt
       updatedAt
       _version
@@ -177,6 +221,7 @@ export const syncTenants = /* GraphQL */ `query SyncTenants(
       useWater
       useGas
       propertyID
+      photo
       createdAt
       updatedAt
       _version
@@ -192,44 +237,6 @@ export const syncTenants = /* GraphQL */ `query SyncTenants(
 ` as GeneratedQuery<
   APITypes.SyncTenantsQueryVariables,
   APITypes.SyncTenantsQuery
->;
-export const propertiesByOwnerID = /* GraphQL */ `query PropertiesByOwnerID(
-  $ownerID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelPropertyFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  propertiesByOwnerID(
-    ownerID: $ownerID
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      address
-      rooms
-      maximum
-      bathroom
-      parking
-      ownerID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PropertiesByOwnerIDQueryVariables,
-  APITypes.PropertiesByOwnerIDQuery
 >;
 export const tenantsByPropertyID = /* GraphQL */ `query TenantsByPropertyID(
   $propertyID: ID!
@@ -256,6 +263,7 @@ export const tenantsByPropertyID = /* GraphQL */ `query TenantsByPropertyID(
       useWater
       useGas
       propertyID
+      photo
       createdAt
       updatedAt
       _version
@@ -284,6 +292,7 @@ export const getOwner = /* GraphQL */ `query GetOwner($id: ID!) {
       startedAt
       __typename
     }
+    photo
     createdAt
     updatedAt
     _version
@@ -305,6 +314,7 @@ export const listOwners = /* GraphQL */ `query ListOwners(
       lastName
       phNo
       email
+      photo
       createdAt
       updatedAt
       _version
@@ -339,6 +349,7 @@ export const syncOwners = /* GraphQL */ `query SyncOwners(
       lastName
       phNo
       email
+      photo
       createdAt
       updatedAt
       _version

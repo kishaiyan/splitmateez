@@ -1,4 +1,4 @@
-import { View, Text, ScrollView  } from 'react-native';
+import { View, Text, ScrollView,Image, Pressable  } from 'react-native';
 import React, { useState } from 'react';
 import TextField from '../../components/textField';
 import { signUp } from 'aws-amplify/auth';
@@ -8,7 +8,11 @@ import { Link, useRouter } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import AppBar from '../../components/appBar';
 import { generateClient } from 'aws-amplify/api';
+import * as ImagePicker from "expo-image-picker";
+import { uploadData } from 'aws-amplify/storage';
 import { createOwner } from '../../src/graphql/mutations';
+
+
 const client = generateClient();
 
 
@@ -22,6 +26,7 @@ type signupParameters = {
   phone: string,
   address:string,
   password: string,
+  photo: object,
 };
 
 
@@ -36,6 +41,7 @@ const Signup = () => {
     router: any // Use appropriate type for navigation
   ) {
     try {
+     let photo='';
       const {isSignUpComplete,userId,nextStep} = await signUp({
         username: email,
         password,
@@ -51,6 +57,11 @@ const Signup = () => {
             autoSignIn: { enabled: true },
         }
       });
+      if(userId){
+        const photoURL=await uploadImage();
+        const URI='https://splitmate62a9bfe38a7f46bebb291853db82950142ddd-dev.s3.ap-southeast-2.amazonaws.com/'
+        photo=URI+photoURL;
+      }
       await client.graphql({query:createOwner,variables:{
         input:{
           id:userId,
@@ -58,6 +69,7 @@ const Signup = () => {
           lastName:lastname,
           phNo:phone,
           email:email,
+          photo:photo,
         }
       }})
       
@@ -69,9 +81,43 @@ const Signup = () => {
     } catch (error) {
       console.log('error signing up:', error);
     }
+    
+  }
+  const uploadImage=async()=>{
+    try {
+      if (!form.photo) {
+        throw new Error("No photo selected");
+      }
+      const response = await fetch(form.photo.uri);
+      const blob = await response.blob();
+      const result=await uploadData({
+        path:`public/${form.photo.fileName}`,
+        data:blob,
+      }).result;
+      console.log(result.path);
+
+      return result.path;
+   
+    } catch (error) {
+      
+      console.log("Error :",error);
+    }
   }
   
-  const logo=require("../../assets/images/logo.png")
+  const handleImage=async()=>{
+
+    const result=await ImagePicker.launchImageLibraryAsync({
+      mediaTypes:ImagePicker.MediaTypeOptions.Images,
+      allowsEditing:true,
+      aspect:[1,1],
+      quality:1,
+    })
+    if(!result.canceled){
+      console.log(result);
+      setForm({...form, photo:result.assets[0]});
+     
+    }
+  }
   const router = useRouter();
   const [form, setForm] = useState({
     email: '',
@@ -79,6 +125,7 @@ const Signup = () => {
     lastname: '',
     password: '',
     phno: '',
+    photo:null
   });
 
   const [errors, setErrors] = useState({
@@ -97,6 +144,7 @@ const Signup = () => {
       lastname: '',
       password: '',
       phno: '',
+      photo:''
     };
 
     if (!form.email) {
@@ -126,7 +174,10 @@ const Signup = () => {
       newErrors.phno = 'Phone number is required';
       valid = false;
     }
-
+    if (!form.photo) {
+      newErrors.email = 'photo is required';
+      valid = false;
+    }
     setErrors(newErrors);
     return valid;
   };
@@ -140,21 +191,25 @@ const Signup = () => {
         phone: form.phno,
         address:"something",
         password: form.password,
+        photo:form.photo,
       }, router);
       
     }
   };
 
   return (
-    <SafeAreaView className='flex-1 items-center bg-primary px-5'>
+    <SafeAreaView className='flex-1 bg-primary px-5'>
       <AppBar />
-      
+      <View className='items-start'>
+                <Text className="text-secondary text-xl">REGISTER</Text>
+      </View>
         <ScrollView className="flex-1"  showsVerticalScrollIndicator={false}>
           {/* <View className="flex-1"> */}
-              <View className='items-start'>
-                <Text className="text-secondary text-xl">REGISTER</Text>
-              </View>
+              
                 <View className="px-4 my-2 items-center justify-between">
+                <Pressable onPress={handleImage}>
+            <Image source={form.photo ? {uri:form.photo.uri} :require("../../assets/images/Avatar.jpg")} style={{width:100,height:100,borderRadius:50}} resizeMode='contain'/>
+            </Pressable>
                   <View className="items-center">
                     <TextField
                       label="Email"
@@ -198,9 +253,9 @@ const Signup = () => {
                     />
                     <Button title='Sign Up' containerStyle='mt-6 px-10 py-2' onPress={onSubmit} />
                     <View className='w-[80%] mt-5 pt-3 flex-row gap-2'>
-  <AntDesign name='checksquareo' color="green" size={16}/>
-  <Text className='text-gray-200 text-xs'>By signing up you agree to our terms and conditions</Text>
-</View>
+                      <AntDesign name='checksquareo' color="green" size={16}/>
+                      <Text className='text-gray-200 text-xs'>By signing up you agree to our terms and conditions</Text>
+                    </View>
                   </View>
 
                   <View className="w-full mt-6">
@@ -212,6 +267,9 @@ const Signup = () => {
                     <View className='flex mt-5 items-center justify-center'>
                       <Text className='text-white mr-2'>Have an account already?</Text>
                       <Link href="/signIn" className='text-secondary text-xl'>Sign In</Link>
+                    </View>
+                    <View className='w-2 h-2 bg-transparent'>
+                    
                     </View>
                   </View>
             </View>

@@ -8,7 +8,8 @@ import { handleSignIn,getcurrentUser} from '../../lib/aws-amplify';
 import AppBar from '../../components/appBar';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import Toast from "react-native-toast-message";
-import { getCurrentUser } from 'aws-amplify/auth';
+import LoadingScreen from '../../app/loadingScreen';
+
 
 
 const signin = () => {
@@ -34,7 +35,7 @@ const signin = () => {
         setUser(res.userId)
         router.replace('/home');      
       }
-      else
+    else
       {
         Alert.alert("Wrong Credentials","Please check your credentials it doesnt match with our records",[
           {text:"Try again",
@@ -68,7 +69,7 @@ const signin = () => {
       {/* // appBar */}
       <AppBar/>
       {/* // Rest of the page */}
-        <View className='flex-1'>
+      {isLoading ?  <LoadingScreen /> : <View className='flex-1'>
           <View className='flex items-start'>
             <Text className="text-secondary text-xl">SIGN IN</Text>
           </View>
@@ -77,16 +78,16 @@ const signin = () => {
 
                 <TextField label="Password" value={signForm.password} onhandleChange={(e)=>setSignForm({...signForm,password:e})} keyboardtype="default" placeholder="Password" error=""/>
 
-                <Button title='Sign In' containerStyle='mt-5 mb-3 px-10 py-3' isLoading={false} onPress={onsubmit}/>
+                <Button title='Sign In' containerStyle={`mt-5 mb-3 px-10 py-3 ${isLoading?'opacity-30':'opacity-100 '}` }isLoading={isLoading} onPress={onsubmit}/>
                 <Link href={'/forgotPass'} className='text-gray-300 text-xs font-thin'>Forgot your password?</Link>
             </View>
 
             <View className='flex items-center mt-10'>
               <Text className='text-white text-md'>Don't have an account?</Text>
-              <Link href={'/signUp'} className='text-secondary text-xl'> Sign Up</Link>
+              <Link href={'/signUp'} className={`text-xl text-secondary`} disabled={isLoading}> Sign Up</Link>
         </View>
             
-        </View>
+        </View>}  
         <Toast />
     </SafeAreaView>
     

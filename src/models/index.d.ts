@@ -12,13 +12,14 @@ type EagerProperty = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly address?: string | null;
-  readonly rooms?: string | null;
-  readonly maximum?: string | null;
-  readonly bathroom?: string | null;
-  readonly parking?: string | null;
-  readonly ownerID: string;
+  readonly address: string;
+  readonly rooms: string;
+  readonly maximum: string;
+  readonly bathroom: string;
+  readonly parking: string;
+  readonly photo: string;
   readonly Tenants?: (Tenant | null)[] | null;
+  readonly ownerID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -29,13 +30,14 @@ type LazyProperty = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly address?: string | null;
-  readonly rooms?: string | null;
-  readonly maximum?: string | null;
-  readonly bathroom?: string | null;
-  readonly parking?: string | null;
-  readonly ownerID: string;
+  readonly address: string;
+  readonly rooms: string;
+  readonly maximum: string;
+  readonly bathroom: string;
+  readonly parking: string;
+  readonly photo: string;
   readonly Tenants: AsyncCollection<Tenant>;
+  readonly ownerID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -52,15 +54,16 @@ type EagerTenant = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly firstName?: string | null;
-  readonly lastName?: string | null;
-  readonly email?: string | null;
-  readonly phNo?: string | null;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly email: string;
+  readonly phNo: string;
   readonly useElectricity?: boolean | null;
   readonly useInternet?: boolean | null;
   readonly useWater?: boolean | null;
   readonly useGas?: boolean | null;
   readonly propertyID: string;
+  readonly photo: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -71,15 +74,16 @@ type LazyTenant = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly firstName?: string | null;
-  readonly lastName?: string | null;
-  readonly email?: string | null;
-  readonly phNo?: string | null;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly email: string;
+  readonly phNo: string;
   readonly useElectricity?: boolean | null;
   readonly useInternet?: boolean | null;
   readonly useWater?: boolean | null;
   readonly useGas?: boolean | null;
   readonly propertyID: string;
+  readonly photo: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -96,11 +100,12 @@ type EagerOwner = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly firstName?: string | null;
-  readonly lastName?: string | null;
-  readonly phNo?: string | null;
-  readonly email?: string | null;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly phNo: string;
+  readonly email: string;
   readonly Properties?: (Property | null)[] | null;
+  readonly photo: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -111,11 +116,12 @@ type LazyOwner = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly firstName?: string | null;
-  readonly lastName?: string | null;
-  readonly phNo?: string | null;
-  readonly email?: string | null;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly phNo: string;
+  readonly email: string;
   readonly Properties: AsyncCollection<Property>;
+  readonly photo: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

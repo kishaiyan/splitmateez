@@ -1,37 +1,36 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY {
-  globalAuthRule: AuthRule = { allow: public }
-} # FOR TESTING ONLY!
-type Property @model @auth(rules: [{ allow: public }]) {
+type Property @model @auth(rules: [{allow: public}]) {
   id: ID!
-  address: String
-  rooms: String
-  maximum: String
-  bathroom: String
-  parking: String
-  ownerID: ID! @index(name: "byOwner")
+  address: String!
+  rooms: String!
+  maximum: String!
+  bathroom: String!
+  parking: String!
+  photo: AWSURL!
   Tenants: [Tenant] @hasMany(indexName: "byProperty", fields: ["id"])
+  ownerID: ID! @index(name: "byOwner")
 }
 
-type Tenant @model @auth(rules: [{ allow: public }]) {
+type Tenant @model @auth(rules: [{allow: public}]) {
   id: ID!
-  firstName: String
-  lastName: String
-  email: String
-  phNo: String
+  firstName: String!
+  lastName: String!
+  email: String!
+  phNo: String!
   useElectricity: Boolean
   useInternet: Boolean
   useWater: Boolean
   useGas: Boolean
   propertyID: ID! @index(name: "byProperty")
+  photo: AWSURL!
 }
 
-type Owner @model @auth(rules: [{ allow: public }, { allow: private }]) {
+type Owner @model @auth(rules: [{allow: public}, {allow: private}]) {
   id: ID!
-  firstName: String
-  lastName: String
-  phNo: String
-  email: String
+  firstName: String!
+  lastName: String!
+  phNo: String!
+  email: String!
   Properties: [Property] @hasMany(indexName: "byOwner", fields: ["id"])
+  photo: AWSURL!
 }
+ 

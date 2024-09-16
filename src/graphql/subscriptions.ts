@@ -16,12 +16,13 @@ export const onCreateProperty = /* GraphQL */ `subscription OnCreateProperty($fi
     maximum
     bathroom
     parking
-    ownerID
+    photo
     Tenants {
       nextToken
       startedAt
       __typename
     }
+    ownerID
     createdAt
     updatedAt
     _version
@@ -42,12 +43,13 @@ export const onUpdateProperty = /* GraphQL */ `subscription OnUpdateProperty($fi
     maximum
     bathroom
     parking
-    ownerID
+    photo
     Tenants {
       nextToken
       startedAt
       __typename
     }
+    ownerID
     createdAt
     updatedAt
     _version
@@ -68,12 +70,13 @@ export const onDeleteProperty = /* GraphQL */ `subscription OnDeleteProperty($fi
     maximum
     bathroom
     parking
-    ownerID
+    photo
     Tenants {
       nextToken
       startedAt
       __typename
     }
+    ownerID
     createdAt
     updatedAt
     _version
@@ -98,6 +101,7 @@ export const onCreateTenant = /* GraphQL */ `subscription OnCreateTenant($filter
     useWater
     useGas
     propertyID
+    photo
     createdAt
     updatedAt
     _version
@@ -122,6 +126,7 @@ export const onUpdateTenant = /* GraphQL */ `subscription OnUpdateTenant($filter
     useWater
     useGas
     propertyID
+    photo
     createdAt
     updatedAt
     _version
@@ -146,6 +151,7 @@ export const onDeleteTenant = /* GraphQL */ `subscription OnDeleteTenant($filter
     useWater
     useGas
     propertyID
+    photo
     createdAt
     updatedAt
     _version
@@ -170,6 +176,7 @@ export const onCreateOwner = /* GraphQL */ `subscription OnCreateOwner($filter: 
       startedAt
       __typename
     }
+    photo
     createdAt
     updatedAt
     _version
@@ -194,6 +201,7 @@ export const onUpdateOwner = /* GraphQL */ `subscription OnUpdateOwner($filter: 
       startedAt
       __typename
     }
+    photo
     createdAt
     updatedAt
     _version
@@ -218,6 +226,7 @@ export const onDeleteOwner = /* GraphQL */ `subscription OnDeleteOwner($filter: 
       startedAt
       __typename
     }
+    photo
     createdAt
     updatedAt
     _version

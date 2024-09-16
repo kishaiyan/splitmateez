@@ -33,11 +33,11 @@
       "auth": {
         "splitmate": {}
       },
-      "storage": {
-        "splitsavvy": {}
-      },
       "api": {
         "splitmate": {}
+      },
+      "storage": {
+        "splitsavvy": {}
       }
     }
   }

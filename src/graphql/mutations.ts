@@ -19,12 +19,13 @@ export const createProperty = /* GraphQL */ `mutation CreateProperty(
     maximum
     bathroom
     parking
-    ownerID
+    photo
     Tenants {
       nextToken
       startedAt
       __typename
     }
+    ownerID
     createdAt
     updatedAt
     _version
@@ -48,12 +49,13 @@ export const updateProperty = /* GraphQL */ `mutation UpdateProperty(
     maximum
     bathroom
     parking
-    ownerID
+    photo
     Tenants {
       nextToken
       startedAt
       __typename
     }
+    ownerID
     createdAt
     updatedAt
     _version
@@ -77,12 +79,13 @@ export const deleteProperty = /* GraphQL */ `mutation DeleteProperty(
     maximum
     bathroom
     parking
-    ownerID
+    photo
     Tenants {
       nextToken
       startedAt
       __typename
     }
+    ownerID
     createdAt
     updatedAt
     _version
@@ -110,6 +113,7 @@ export const createTenant = /* GraphQL */ `mutation CreateTenant(
     useWater
     useGas
     propertyID
+    photo
     createdAt
     updatedAt
     _version
@@ -137,6 +141,7 @@ export const updateTenant = /* GraphQL */ `mutation UpdateTenant(
     useWater
     useGas
     propertyID
+    photo
     createdAt
     updatedAt
     _version
@@ -164,6 +169,7 @@ export const deleteTenant = /* GraphQL */ `mutation DeleteTenant(
     useWater
     useGas
     propertyID
+    photo
     createdAt
     updatedAt
     _version
@@ -191,6 +197,7 @@ export const createOwner = /* GraphQL */ `mutation CreateOwner(
       startedAt
       __typename
     }
+    photo
     createdAt
     updatedAt
     _version
@@ -218,6 +225,7 @@ export const updateOwner = /* GraphQL */ `mutation UpdateOwner(
       startedAt
       __typename
     }
+    photo
     createdAt
     updatedAt
     _version
@@ -245,6 +253,7 @@ export const deleteOwner = /* GraphQL */ `mutation DeleteOwner(
       startedAt
       __typename
     }
+    photo
     createdAt
     updatedAt
     _version
