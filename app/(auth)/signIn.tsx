@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import TextField from '../../components/textField';
 import Button from '../../components/customButton';
 import { Link, useRouter } from 'expo-router';
-import { handleSignIn,getcurrentUser} from '../../lib/aws-amplify';
+import { handleSignIn} from '../../lib/aws-amplify';
 import AppBar from '../../components/appBar';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import Toast from "react-native-toast-message";
@@ -13,7 +13,7 @@ import LoadingScreen from '../../app/loadingScreen';
 
 
 const signin = () => {
-  const {isLoading,setIsLoading,setUser}=useGlobalContext()
+  const {isLoading,setIsLoading,setUser,userType}=useGlobalContext()
   const router=useRouter();
   const [signForm,setSignForm]=useState({
     email:'',
@@ -23,7 +23,7 @@ const signin = () => {
   const onsubmit=async()=>{
   try{ 
     setIsLoading(true)
-     const {response,res}=await handleSignIn(
+     const {response,res,error}=await handleSignIn(
       {
         username:signForm.email,
         password:signForm.password,
@@ -33,10 +33,15 @@ const signin = () => {
     if(response && response.isSignedIn)
       {
         setUser(res.userId)
-        router.replace('/home');      
+        if(userType=="Owner"){
+        router.replace('/home');   }
+        else{
+          router.replace("/tenant_home")
+        }   
       }
     else
       {
+        console.log(error);
         Alert.alert("Wrong Credentials","Please check your credentials it doesnt match with our records",[
           {text:"Try again",
             onPress:()=>{} 

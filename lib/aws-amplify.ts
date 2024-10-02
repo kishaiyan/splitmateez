@@ -39,6 +39,7 @@ export async function handleSignIn({ username, password }) {
         res = await getCurrentUser()
       }
       catch(error){
+        return error
         console.log("error after signing in ",error);
       }
     }

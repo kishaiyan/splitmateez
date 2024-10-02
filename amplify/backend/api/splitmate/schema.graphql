@@ -1,16 +1,16 @@
-type Property @model @auth(rules: [{allow: public}]) {
+type Property @model @auth(rules: [{ allow: public }]) {
   id: ID!
   address: String!
   rooms: String!
   maximum: String!
   bathroom: String!
   parking: String!
-  photo: AWSURL!
+  photo: String!
   Tenants: [Tenant] @hasMany(indexName: "byProperty", fields: ["id"])
   ownerID: ID! @index(name: "byOwner")
 }
 
-type Tenant @model @auth(rules: [{allow: public}]) {
+type Tenant @model @auth(rules: [{ allow: public }]) {
   id: ID!
   firstName: String!
   lastName: String!
@@ -21,16 +21,15 @@ type Tenant @model @auth(rules: [{allow: public}]) {
   useWater: Boolean
   useGas: Boolean
   propertyID: ID! @index(name: "byProperty")
-  photo: AWSURL!
+  photo: String!
 }
 
-type Owner @model @auth(rules: [{allow: public}, {allow: private}]) {
+type Owner @model @auth(rules: [{ allow: public }, { allow: private }]) {
   id: ID!
   firstName: String!
   lastName: String!
   phNo: String!
   email: String!
   Properties: [Property] @hasMany(indexName: "byOwner", fields: ["id"])
-  photo: AWSURL!
+  photo: String!
 }
- 

@@ -88,6 +88,7 @@ const GlobalProvider = ({children})=>{
   const [isLoading,setIsLoading]=useState(true)
   const client=generateClient();
   const [userDetails, setuserDetails] = useState(null)
+  const userType="Owner"
 
   const getUserDetails=async()=>{
     try{
@@ -138,7 +139,8 @@ const GlobalProvider = ({children})=>{
       setIsLoading,
       property,
       setProperty,
-      userDetails
+      userDetails,
+      userType,
     }}
     >
       {children}

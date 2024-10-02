@@ -1,4 +1,4 @@
-import { FlatList,View,Text, Pressable} from 'react-native'
+import { FlatList,View,Text, Pressable, KeyboardAvoidingView, Platform} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AppBar from '../../components/appBar'
@@ -28,6 +28,7 @@ const Home = () => {
   
   return (
     <SafeAreaView className='flex-1 bg-primary  px-4'>
+       
       <AppBar />
       {property && userDetails ? (
         <>

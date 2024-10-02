@@ -1,5 +1,5 @@
-import { View, Text,Image  } from 'react-native'
-import React, { useEffect } from 'react'
+import { View, Text,Image,KeyboardAvoidingView  } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Button from '../../components/customButton'
 import { handleSignOut } from '../../lib/aws-amplify'
 import { router } from 'expo-router'
@@ -7,13 +7,29 @@ import { useGlobalContext } from '../../context/GlobalProvider'
 import AppBar from '../../components/appBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AccountField from '../../components/accountField'
+import { getUrl } from 'aws-amplify/storage';
+
+// Function to get pre-signed URL for the image
 
 
 const Account = () => {
  
   const {userDetails,setUser,user}=useGlobalContext();
-  
-  console.log(userDetails.photo);
+  const[photoUrl,setPhotoUrl]=useState("");
+
+  const fetchImageUrl = async (url) => {
+    try {
+      const result=await getUrl({
+        path: "public/ca511d25-371d-4826-a02a-ef69a59a19c5.jpeg",
+      })
+  setPhotoUrl(result.url.toString());
+      
+    }catch(error){
+      console.log("Error: ", error)
+    }
+  };
+  useEffect(()=>{fetchImageUrl(userDetails.photo)},[]);
+
   const signOut=()=>{
     try{
       handleSignOut()
@@ -28,16 +44,20 @@ const Account = () => {
   
   return (
     <SafeAreaView className='flex-1 bg-primary px-4'>
-      <AppBar/>
+      <KeyboardAvoidingView
+      behavior='padding'>
+        <AppBar/>
     <View>
-      
-      
       <View className="mb-5">
        <Text className='text-secondary text-xl'>ACCOUNT DETAILS</Text>
       </View> 
       <View className='mb-6'>
       <View className='items-center'>
-      <Image source={{uri:"https://splitmate62a9bfe38a7f46bebb291853db82950142ddd-dev.s3.ap-southeast-2.amazonaws.com/public/c4eef3f0-5804-46d9-864c-39f2fd658ecb.jpeg"}} style={{width:100,height:100,marginBottom:16,borderRadius:50}} resizeMode='contain'/>
+      <Image 
+      source={photoUrl ? { uri: photoUrl } : require('../../assets/images/icon.png')}
+      style={{width:100,height:100,marginBottom:16,borderRadius:50}} 
+      resizeMode='contain'
+      onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)}/>
       </View>
           <AccountField name="Email" text={userDetails.email}/>
           <AccountField name="Phone" text={userDetails.phNo}/>
@@ -48,7 +68,8 @@ const Account = () => {
         <Button title='Sign Out' containerStyle='px-10 py-3 bg-signOut border border-red-500' onPress={signOut}/>
       </View>
     </View>
-   
+    </KeyboardAvoidingView>
+      
     </SafeAreaView>
   )
 }

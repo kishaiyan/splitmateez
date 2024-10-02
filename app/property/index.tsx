@@ -1,4 +1,4 @@
-import { Text, View, Image, ScrollView, Modal } from 'react-native';
+import { Text, View, Image, ScrollView, Modal, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,6 +11,7 @@ const PropertyDetails = () => {
   const { id } = params;
   const [disProperty, setdisProperty] = useState(null); // Get the property ID from the route
   const { property, setProperty } = useGlobalContext();
+  const [modelVisible,setModelVisible]=useState(false);
 
   // Fetch the property details from some data source or state, based on the id
   useEffect(() => {
@@ -54,12 +55,8 @@ const PropertyDetails = () => {
       return updatedProperties;
     });
   };
-  const openModel=(tenant)=>{
-    <Modal  
-    animationType="slide"
-        transparent={true}
-        visible={true}
-       />
+  const openModel=()=>{
+    
   }
 
   // Toggling individual services
@@ -83,16 +80,19 @@ const PropertyDetails = () => {
           
         }}
       />
-         
-        {disProperty ? (
+        {modelVisible? <Modal />:
+        (disProperty ? (
         <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom:10}} showsVerticalScrollIndicator={false}>
         <View className='flex-row items-center justify-between'>
           <View className='mb-3'>
             <Text className='text-white text-md'>Address:</Text>
             <Text className='text-secondary text-lg'>{disProperty.address}</Text>
           </View>
-          <View>
-            <AntDesign name='adduser' color={"#ffffff"} size={32}/>
+          <View className='bg-green-500'>
+            <Pressable onPress={openModel}>
+
+              <AntDesign name='adduser' color={"#ffffff"} size={32}/>
+            </Pressable>
           </View>
         </View>
 
@@ -129,7 +129,7 @@ const PropertyDetails = () => {
           <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
           {disProperty.tenants.length > 0 ? disProperty.tenants.map((tenant: any) => (
             <TenantCard
-              onPress={openModel(tenant)}
+              onPress={openModel()}
               key={tenant.id}
               tenant={tenant}
               onPressElectricity={() => toggleElectricity(tenant.id)} // Pass the tenant ID to toggle
@@ -146,7 +146,7 @@ const PropertyDetails = () => {
       </ScrollView>
       ) : (
         <Text className='text-white'>Loading or Property not found...</Text>
-      )}
+      ))}
       
 
     </SafeAreaView>

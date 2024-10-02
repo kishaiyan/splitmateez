@@ -58,10 +58,18 @@ const Signup = () => {
         }
       });
       if(userId){
-        const photoURL=await uploadImage();
-        const URI='https://splitmate62a9bfe38a7f46bebb291853db82950142ddd-dev.s3.ap-southeast-2.amazonaws.com/'
-        photo=URI+photoURL;
+         console.log("Here");
+         photo=await uploadImage(userId);
+         console.log("Photo is assigned",photo);
       }
+      console.log('Variables being sent:', {
+        id: userId,
+        firstName: firstname,
+        lastName: lastname,
+        phNo: phone,
+        email: email,
+        photo: photo,
+      });
       await client.graphql({query:createOwner,variables:{
         input:{
           id:userId,
@@ -83,7 +91,7 @@ const Signup = () => {
     }
     
   }
-  const uploadImage=async()=>{
+  const uploadImage=async(userId)=>{
     try {
       if (!form.photo) {
         throw new Error("No photo selected");
@@ -91,15 +99,15 @@ const Signup = () => {
       const response = await fetch(form.photo.uri);
       const blob = await response.blob();
       const result=await uploadData({
-        path:`public/${form.photo.fileName}`,
+        path:`public/${userId}.jpeg`,
         data:blob,
+        options:{
+          contentType:'image/jpeg',
+        }
       }).result;
-      console.log(result.path);
-
       return result.path;
    
-    } catch (error) {
-      
+    } catch (error) {   
       console.log("Error :",error);
     }
   }
@@ -113,7 +121,7 @@ const Signup = () => {
       quality:1,
     })
     if(!result.canceled){
-      console.log(result);
+      
       setForm({...form, photo:result.assets[0]});
      
     }

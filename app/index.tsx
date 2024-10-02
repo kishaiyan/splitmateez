@@ -8,7 +8,9 @@ import { generateClient } from 'aws-amplify/api';
 import config from "../src/amplifyconfiguration.json";
 import { useGlobalContext } from "../context/GlobalProvider";
 import AppBar from "../components/appBar";
-import LoadingScreen from "./loadingScreen";
+import { Buffer } from "buffer";
+
+global.Buffer=Buffer;
 
 Amplify.configure(config);
 
@@ -18,10 +20,13 @@ export default function app(){
   
   const icon=require('../assets/images/splash_screen.jpg')
   
-  const {isLoading,isLoggedIn}=useGlobalContext();
+  const {isLoading,isLoggedIn,userType}=useGlobalContext();
  
-  if(!isLoading && isLoggedIn) {
+  if(!isLoading && isLoggedIn && userType=="Owner") {
     return <Redirect href="/home" />}
+   
+  else if(!isLoading && isLoggedIn && userType!="Owner") {
+      return <Redirect href="/tenant_home" />}
   
   
   return(
