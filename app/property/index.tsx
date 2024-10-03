@@ -1,6 +1,6 @@
 import { Text, View, Image, ScrollView, Modal, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Href, router, Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
@@ -119,7 +119,11 @@ const PropertyDetails = () => {
         <View>
           <View className='flex-row justify-between m-2 items-center'>
             <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
-            <Pressable onPress={()=>router.push(`/property/add_tenant?id=${disProperty.id}&address=${disProperty.address}`)}>
+            <Pressable
+      onPress={() => {
+        router.push(`/property/add_tenant?id=${disProperty.id}&address=${disProperty.address}`);
+      }}
+    >
 
               <AntDesign name='adduser' color={"#ffffff"} size={26}/>
             </Pressable>

@@ -1,6 +1,6 @@
 import { Text, View, Image, ScrollView, Modal, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Href, router, Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../../context/GlobalProvider';
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
@@ -14,8 +14,8 @@ const PropertyDetails = () => {
 
   // Fetch the property details from some data source or state, based on the id
   useEffect(() => {
-    function getProperty(id: string) {
-      const selectedProperty = property.find((prop: { id: string }) => String(prop.id) === String(id));
+    function getProperty(id: any) {
+      const selectedProperty = property.find((prop: { id: any }) => String(prop.id) === String(id));
       setdisProperty(selectedProperty);
     }
     if (id) {
@@ -63,37 +63,28 @@ const PropertyDetails = () => {
   const toggleWater = (tenantId: string) => toggleService(tenantId, 'waterAccess');
   const toggleGas = (tenantId: string) => toggleService(tenantId, 'gas');
   const toggleWifi = (tenantId: string) => toggleService(tenantId, 'internet');
-
   return (
-    <SafeAreaView className=' flex-1 bg-primary px-3'>
+    <SafeAreaView className=' flex-1 bg-primary px-3 pb-6'>
       <Stack.Screen
         options={{
-          headerShown: true,
-          headerBackTitle:"Home",
-          headerTitle: "Property",
-          headerTintColor: "#ffffff",
-          headerTitleAlign:"center",
-          headerStyle: {
-            backgroundColor:"#212121",
-          },
+          headerShown: false,
+          
           
         }}
       />
         {modelVisible? <Modal />:
         (disProperty ? (
-        <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom:10}} showsVerticalScrollIndicator={false}>
-        <View className='flex-row items-center justify-between'>
-          <View className='mb-3'>
-            <Text className='text-white text-md'>Address:</Text>
-            <Text className='text-secondary text-lg'>{disProperty.address}</Text>
-          </View>
-          <View className='bg-green-500'>
-            <Pressable onPress={openModel}>
-
-              <AntDesign name='adduser' color={"#ffffff"} size={32}/>
+          <>
+          <View className='mb-3 items-center flex-row justify-between'>
+            <Pressable onPress={()=>router.back()}>
+              <AntDesign name='arrowleft' size={26} color={"#fff"}/>
             </Pressable>
+            <Text className='text-secondary text-xl'>{disProperty.address}</Text>
+            <View className='w-10 h-3'>
+
+            </View>
           </View>
-        </View>
+        <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom:10}} showsVerticalScrollIndicator={false}>
 
         <Image
           source={{ uri: disProperty.photo }}
@@ -125,7 +116,13 @@ const PropertyDetails = () => {
         </View>
 
         <View>
-          <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
+          <View className='flex-row justify-between m-2 items-center'>
+            <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
+            <Pressable onPress={()=>router.push(`/property/add_tenant?id=${disProperty.id}&address=${disProperty.address}` as Href)}>
+
+              <AntDesign name='adduser' color={"#ffffff"} size={26}/>
+            </Pressable>
+          </View>
           {disProperty.tenants.length > 0 ? disProperty.tenants.map((tenant: any) => (
             <TenantCard
               onPress={openModel()}
@@ -140,14 +137,16 @@ const PropertyDetails = () => {
         :<View className='items-center'>
           <Text className='text-white font-semibold'>Add Tenants to Monitor the property</Text>
           </View>}
+          <View className='h-10'>
+
+          </View>
         </View>
         
       </ScrollView>
+      </>
       ) : (
         <Text className='text-white'>Loading or Property not found...</Text>
       ))}
-      
-
     </SafeAreaView>
   );
 };

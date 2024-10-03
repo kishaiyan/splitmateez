@@ -1,11 +1,11 @@
 import { View, Text,Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { router } from 'expo-router'
+import { Href, router } from 'expo-router'
 
 const HomeTile = ({name,maximum,current,property}) => {
   const handlePress = () => {
-    router.push(`/property?id=${property.id}`);
-    // router.push(`/(home)/${property.id}`);
+    // router.push(`/property?id=${property.id}`);
+    router.push(`/(home)/${property.id}` as Href);
   };
   return (
     

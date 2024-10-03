@@ -2,7 +2,7 @@
 import { getcurrentUser } from "../lib/aws-amplify";
 import { createContext,useContext,useState,useEffect } from "react";
 import { generateClient } from 'aws-amplify/api'
-import { getOwner } from '../src/graphql/queries'
+import { getOwner,propertiesByOwnerID, } from '../src/graphql/queries'
 
 
 const GlobalContext= createContext();
@@ -89,24 +89,51 @@ const GlobalProvider = ({children})=>{
   const client=generateClient();
   const [userDetails, setuserDetails] = useState(null)
   const userType="Owner"
-
+  
   const getUserDetails=async()=>{
     try{
     const result=await client.graphql({query:getOwner, variables:{
       id:user
     }})
     return result.data.getOwner;
+  
   }
     catch(error){
       console.log("User Details Error",error);
     }
   }
+
+  const getProperty=async()=>{
+    if (!user) {
+      console.log("User ID is not set, skipping properties fetch.");
+      return;
+    }
+    try {
+      const result = await client.graphql({
+        query: propertiesByOwnerID,
+        variables: {
+          ownerID: user, // Use ownerID instead of input.ownerId
+        }
+      });
+      return result.data.propertiesByOwnerID.items; // Return the items directly
+    } catch (error) {
+      console.error("Error getting Properties:", error);
+    }
+  }
+
+  const getTenants=async()=>{
+
+  }
+
   useEffect(()=>{
     const fetchUserDetails=async()=>{
       if(user){
         const details=await getUserDetails(user);
         setuserDetails(details);
-        ;}
+        console.log(details.Properties.items);
+        const properties=await getProperty();  
+        console.log(properties);
+      }
   }
    fetchUserDetails();
   },[user])
@@ -123,7 +150,9 @@ const GlobalProvider = ({children})=>{
           setIsLoggedIn(false)
         }
     })
-    .catch((error)=>{console.log(error)})
+    .catch((error)=>{
+      setUser(null)
+     })
     .finally(()=>setIsLoading(false))
     
   },[])

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TextField from '../../components/textField';
 import Button from '../../components/customButton';
-import { Link, useRouter } from 'expo-router';
+import { Href, Link, useRouter } from 'expo-router';
 import { handleSignIn} from '../../lib/aws-amplify';
 import AppBar from '../../components/appBar';
 import { useGlobalContext } from '../../context/GlobalProvider';
@@ -30,28 +30,34 @@ const signin = () => {
       }
       )
    setIsLoading(false)
-    if(response && response.isSignedIn)
-      {
-        setUser(res.userId)
-        if(userType=="Owner"){
-        router.replace('/home');   }
-        else{
-          router.replace("/tenant_home")
-        }   
-      }
-    else
-      {
-        console.log(error);
-        Alert.alert("Wrong Credentials","Please check your credentials it doesnt match with our records",[
-          {text:"Try again",
-            onPress:()=>{} 
-          },
-          {
-            text:"Sign Up",
-            onPress:()=>{router.push('/signUp')}
-          }
-      ])
-  }
+   console.log(response);
+   if (response) {
+    if (response.isSignedIn) {
+        setUser(res.userId);
+        // Redirect based on user type
+        const redirectPath = userType === "Owner" ? '/home' : '/tenant_home';
+        router.replace(redirectPath);
+    } else if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {
+        router.push(`confirmEmail?email=${encodeURIComponent(signForm.email)}` as Href);
+    }
+} else {
+    console.log(error);
+    Alert.alert(
+        "Wrong Credentials",
+        "Please check your credentials; they do not match our records.",
+        [
+            {
+                text: "Try again",
+                onPress: () => {}
+            },
+            {
+                text: "Sign Up",
+                onPress: () => router.push('/signUp')
+            }
+        ]
+    );
+}
+
    
 }
    catch(error){
@@ -72,7 +78,7 @@ const signin = () => {
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
       
       {/* // appBar */}
-      <AppBar/>
+      <AppBar leading={false}/>
       {/* // Rest of the page */}
       {isLoading ?  <LoadingScreen /> : <View className='flex-1'>
           <View className='flex items-start'>

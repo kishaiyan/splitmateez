@@ -1,5 +1,6 @@
 import { Text,TouchableOpacity, TouchableOpacityProps} from "react-native";
 import React from 'react'
+import LottieView from "lottie-react-native";
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -27,7 +28,12 @@ const Button: React.FC<ButtonProps> = ({
       {...props}
       onPressIn={onPress}
     >
-      <Text className={`text-center font-bold text-lg text-white ${textStyle}`}>{title}</Text>
+      {isLoading?
+      <LottieView
+      source={require("../assets/images/sample.json")} autoPlay loop style={{width:25, height:25}}
+      />:
+      <Text className={`text-center font-bold text-lg text-white ${textStyle}`}>{title}</Text>}
+      
       </TouchableOpacity>
   );
 };

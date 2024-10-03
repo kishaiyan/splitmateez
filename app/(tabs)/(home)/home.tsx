@@ -6,7 +6,7 @@ import HomeTile from '../../../components/homeTile'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { useGlobalContext } from '../../../context/GlobalProvider'
 import LoadingScreen from '../../loadingScreen'
-import { Link, router } from 'expo-router'
+import { Href, Link, router } from 'expo-router'
 
 
 
@@ -16,7 +16,7 @@ const Home = () => {
     <View style={{ width: 10 }} /> // Adjust the width as needed
   );
 
-  const linkToAddProperty="/property/add";
+  const linkToAddProperty="/property/add" as Href;
   const {property,userDetails}=useGlobalContext();
   const [notifyNumber,setNotifyNumber]=useState(9);
   const [visible, setVisible] = useState(true)
@@ -51,16 +51,17 @@ const Home = () => {
        </Pressable>
       </View>
       {visible? 
-       <View className='flex-row items-center justify-center gap-2'>
+       <View className=' m-3 flex-row items-center justify-center gap-2'>
         <MaterialIcons name='swipe' color='#ffffff' size={20}/>
         <Text className='text-gray-200'>Swipe for more properties</Text>
-      </View>:<View className="mx-3 my-3 items-end">
-      <Link href={linkToAddProperty} passHref>
-        <View className="flex-row bg-secondary px-2 rounded-md">
-            <Text className="text-white">Add Prop</Text>
-            <Ionicons name="add" size={20} color={"#fff"} />
-        </View>
-        </Link>
+      </View>:
+      <View className="m-3 items-end">
+            <Link href={linkToAddProperty}>
+                <View className="flex-row bg-secondary p-3 rounded-md">
+                    <Text className="text-white">Add Prop</Text>
+                    <Ionicons name="add" size={20} color={"#fff"} />
+                </View>
+            </Link>
       </View>
     }
       <View className='h-[65%] items-center'>

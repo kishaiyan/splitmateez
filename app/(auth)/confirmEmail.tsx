@@ -40,7 +40,7 @@ const ConfirmEmail = () => {
 
   return (
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
-      <AppBar />
+      <AppBar leading/>
     {/* // appBar */}
     
       <View className='h-full bg-primary w-full items-center px-3'>

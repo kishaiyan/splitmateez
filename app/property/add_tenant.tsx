@@ -10,10 +10,12 @@ import { uploadData } from 'aws-amplify/storage';
 import { signUp } from 'aws-amplify/auth';
 import { createTenant } from '../../src/graphql/mutations';
 import { generateClient } from 'aws-amplify/api';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const AddTenant = () => {
   const client=generateClient();
   const params = useLocalSearchParams();
+  const {isLoading, setIsLoading}=useGlobalContext();
   const { id,address } = params;
   const [tenantForm, setTenantForm] = useState({
     firstname: '',
@@ -80,6 +82,7 @@ const AddTenant = () => {
   }
 
   const handleTenant=async()=>{ 
+    setIsLoading(true);
     const {userId}= await signUp({
       username: tenantForm.email,
         password:generate(tenantForm.firstname,tenantForm.lastname),
@@ -96,7 +99,8 @@ const AddTenant = () => {
     })
     if(userId){
     const photo=await uploadImage(userId);
-    await client.graphql({query:createTenant,variables:{
+    await client.graphql({
+      query:createTenant,variables:{
       input:{
         id:userId,
         propertyID:id.toString(),
@@ -105,8 +109,13 @@ const AddTenant = () => {
         phNo:tenantForm.phno,
         email:tenantForm.email,
         photo:photo,
+        useElectricity:true,
+        useInternet:true,
+        useWater:true,
+        useGas:true,
       }
     }})
+    setIsLoading(false)
     router.back();
   }
   }
@@ -187,7 +196,7 @@ const AddTenant = () => {
                 placeholder="04.."
                 error={""}
               />
-              <Button title='Add Tenant' containerStyle='mt-6 px-10 py-2' onPress={handleTenant}/>
+              <Button title='Add Tenant' containerStyle='mt-6 px-10 py-2' onPress={handleTenant} isLoading={isLoading}/>
             </View>
           </View>
         </ScrollView>
