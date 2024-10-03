@@ -5,11 +5,12 @@ import { router } from 'expo-router'
 const HomeTile = ({name,maximum,current,property}) => {
   const handlePress = () => {
     router.push(`/property?id=${property.id}`);
+    // router.push(`/(home)/${property.id}`);
   };
   return (
     
     <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
-    <View className='flex-col bg-tile p-4 h-[100%] w-[300px] rounded-3xl'>
+    <View className='flex-col bg-tile p-4 h-[90%] w-[300px] rounded-3xl'>
       
     <View className='flex-row mb-1 h-[70%] items-center'>
       {/**? left side of the card */}

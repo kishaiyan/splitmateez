@@ -23,17 +23,17 @@ export default function app(){
   const {isLoading,isLoggedIn,userType}=useGlobalContext();
  
   if(!isLoading && isLoggedIn && userType=="Owner") {
-    return <Redirect href="/home" />}
+    return <Redirect href="/(home)/home" />}
    
   else if(!isLoading && isLoggedIn && userType!="Owner") {
       return <Redirect href="/tenant_home" />}
-  
+  // return <Redirect href={"/(home)/home"}/>
   
   return(
   
   <SafeAreaView className="flex-1 items-center bg-primary">
    
-   <AppBar/>
+   <AppBar leading={false}/>
    
     <View className="realtive mt-8 h-full w-full">
       <Image

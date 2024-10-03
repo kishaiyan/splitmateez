@@ -6,6 +6,7 @@ import TextField from '../../components/textField';
 import Button from '../../components/customButton';
 import { uploadData } from 'aws-amplify/storage';
 import * as ImagePicker from "expo-image-picker";
+import { Stack } from 'expo-router';
 
 const AddProperty = () => {
   const [image,setImage]=useState(null);
@@ -14,7 +15,7 @@ const AddProperty = () => {
   
   
   const addProperty=()=>{
-
+    
   }
 
   const uploadImage=async()=>{
@@ -47,16 +48,21 @@ const AddProperty = () => {
     
 
     <SafeAreaView className='flex-1 bg-primary px-4'>
-      <AppBar/>
+      <Stack.Screen
+      options={{
+        headerShown:false
+      }}
+      />
+      <AppBar leading={true}/>
       <View>
-        <Text className='text-secondary text-xl'>
+        <Text className='text-secondary text-xl mb-5'>
             ADD PROPERTY
         </Text>
       </View>
       <View>
-        <ScrollView className='h-[74%]' showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:40}}>
+        <ScrollView className='h-[82%]' showsVerticalScrollIndicator={false} >
           <View className='items-center'>
-           <Pressable onPress={handleImage}>
+           <Pressable onPress={handleImage} className='mb-3'>
             <Image source={image ?{uri:image} :require("../../assets/images/home_holder.jpg")} style={{width:200,height:200,borderRadius:9}}/>
             </Pressable>
 
@@ -66,7 +72,7 @@ const AddProperty = () => {
           <TextField label="Parking_space" placeholder="4" value={""} onhandleChange={(e)=>{}} keyboardtype="numeric" error=""/>
           <TextField label="Maximum occupants" placeholder="4" value={""} onhandleChange={(e)=>{}} keyboardtype="numeric" error=""/>
           <TextField label="Maximum occupants" placeholder="4" value={""} onhandleChange={(e)=>{}} keyboardtype="numeric" error=""/>
-          <Button title="Add Property" className='px-10 py-3 mt-3'/>
+          <Button title="Add Property" className='px-10 py-3 my-3'/>
           </View>
         </ScrollView>
 

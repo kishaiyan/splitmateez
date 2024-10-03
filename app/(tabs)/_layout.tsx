@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import TabBar from '../../components/tabBar';
+import { AntDesign } from '@expo/vector-icons';
 
 const TabsLayout = () => {
   return (
@@ -9,20 +10,18 @@ const TabsLayout = () => {
         tabBar={(props) => <TabBar {...props} />}
         screenOptions={{
           headerShown: false,
+          
         }}
+        
       >
         <Tabs.Screen
-          name="home"
+          name="(home)"
           options={{
             title: 'Home',
+            
           }}
         />
-        <Tabs.Screen
-          name="add"
-          options={{
-            title: 'Add',
-          }}
-        />
+        
         <Tabs.Screen
           name="account"
           options={{

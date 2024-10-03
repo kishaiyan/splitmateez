@@ -1,12 +1,12 @@
-import { FlatList,View,Text, Pressable, KeyboardAvoidingView, Platform} from 'react-native'
+import { FlatList,View,Text, Pressable} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import AppBar from '../../components/appBar'
-import HomeTile from '../../components/homeTile'
+import AppBar from '../../../components/appBar'
+import HomeTile from '../../../components/homeTile'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
-import { useGlobalContext } from '../../context/GlobalProvider'
-import LoadingScreen from '../loadingScreen'
-import { router } from 'expo-router'
+import { useGlobalContext } from '../../../context/GlobalProvider'
+import LoadingScreen from '../../loadingScreen'
+import { Link, router } from 'expo-router'
 
 
 
@@ -16,9 +16,9 @@ const Home = () => {
     <View style={{ width: 10 }} /> // Adjust the width as needed
   );
 
-  const {property}=useGlobalContext();
-  const {userDetails}=useGlobalContext();
-  const [notifyNumber,setNotifyNumber]=useState(10);
+  const linkToAddProperty="/property/add";
+  const {property,userDetails}=useGlobalContext();
+  const [notifyNumber,setNotifyNumber]=useState(9);
   const [visible, setVisible] = useState(true)
   useEffect(()=>{
     const timer = setTimeout(()=>{
@@ -29,7 +29,7 @@ const Home = () => {
   return (
     <SafeAreaView className='flex-1 bg-primary  px-4'>
        
-      <AppBar />
+      <AppBar leading={false}/>
       {property && userDetails ? (
         <>
       <View className='h-[10%] flex-row justify-between'>
@@ -43,10 +43,10 @@ const Home = () => {
        </View>
        <Pressable onPress={()=>{router.push("/notifications"); setNotifyNumber(0)}}>
        <View className='items-end'>
-          <View className={`${notifyNumber>0 ? "bg-red-400":"bg-transparent"} items-center rounded-xl ${notifyNumber>9 ? "w-5":"w-4"}`}>
-            <Text className='text-white'>{notifyNumber>0 ? notifyNumber>9? "9+":notifyNumber:""  }</Text>
+          <View className={`${notifyNumber>0 ? "bg-red-400":"bg-transparent"} items-center rounded-xl ${notifyNumber>9 ? "w-4":"w-3"}`}>
+            <Text className='text-white text-xs'>{notifyNumber>0 ? notifyNumber>9? "9+":notifyNumber:""  }</Text>
           </View>
-          <Ionicons name='notifications' color={"#ffffff"} size={36}/>
+          <Ionicons name='notifications' color={"#ffffff"} size={24}/>
        </View>
        </Pressable>
       </View>
@@ -54,15 +54,20 @@ const Home = () => {
        <View className='flex-row items-center justify-center gap-2'>
         <MaterialIcons name='swipe' color='#ffffff' size={20}/>
         <Text className='text-gray-200'>Swipe for more properties</Text>
-      </View>:
-      <View>
-      </View>}
+      </View>:<View className="mx-3 my-3 items-end">
+      <Link href={linkToAddProperty} passHref>
+        <View className="flex-row bg-secondary px-2 rounded-md">
+            <Text className="text-white">Add Prop</Text>
+            <Ionicons name="add" size={20} color={"#fff"} />
+        </View>
+        </Link>
+      </View>
+    }
       <View className='h-[65%] items-center'>
-
+  
       <FlatList  
         ItemSeparatorComponent={ItemSeparator}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item)=>item.id}
+        showsHorizontalScrollIndicator={false}    
         data={property}
         renderItem={({item})=>(
           
@@ -86,5 +91,5 @@ const Home = () => {
     </SafeAreaView>
   )
 }
-
+ 
 export default Home

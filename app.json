@@ -29,7 +29,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-build-properties"
+      "expo-build-properties",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to verify.",
+          "cameraPermission": "Allow $(name) to access your camera."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

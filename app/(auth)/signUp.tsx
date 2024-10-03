@@ -1,4 +1,4 @@
-import { View, Text, ScrollView,Image, Pressable  } from 'react-native';
+import { View, Text, ScrollView,Image, Pressable, Alert  } from 'react-native';
 import React, { useState } from 'react';
 import TextField from '../../components/textField';
 import { signUp } from 'aws-amplify/auth';
@@ -58,18 +58,9 @@ const Signup = () => {
         }
       });
       if(userId){
-         console.log("Here");
          photo=await uploadImage(userId);
-         console.log("Photo is assigned",photo);
       }
-      console.log('Variables being sent:', {
-        id: userId,
-        firstName: firstname,
-        lastName: lastname,
-        phNo: phone,
-        email: email,
-        photo: photo,
-      });
+      
       await client.graphql({query:createOwner,variables:{
         input:{
           id:userId,
@@ -114,17 +105,45 @@ const Signup = () => {
   
   const handleImage=async()=>{
 
-    const result=await ImagePicker.launchImageLibraryAsync({
-      mediaTypes:ImagePicker.MediaTypeOptions.Images,
-      allowsEditing:true,
-      aspect:[1,1],
-      quality:1,
-    })
-    if(!result.canceled){
+    Alert.alert( 
       
-      setForm({...form, photo:result.assets[0]});
-     
-    }
+      "Select Image",
+      "Choose an image from your library or take a new photo.",
+      [
+        {
+          text: "Camera",
+          onPress: async () => {
+            const cameraResult = await ImagePicker.launchCameraAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: [1, 1],
+              quality: 1,
+            });
+            if (!cameraResult.canceled) {
+              setForm({ ...form, photo: cameraResult.assets[0] });
+            }
+          },
+        },
+        {
+          text: "Gallery",
+          onPress: async () => {
+            const libraryResult = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: [1, 1],
+              quality: 1,
+            });
+            if (!libraryResult.canceled) {
+              setForm({ ...form, photo: libraryResult.assets[0] });
+            }
+          },
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ]
+    );
   }
   const router = useRouter();
   const [form, setForm] = useState({
@@ -207,7 +226,7 @@ const Signup = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-primary px-5'>
-      <AppBar />
+      <AppBar leading={false}/>
       <View className='items-start'>
                 <Text className="text-secondary text-xl">REGISTER</Text>
       </View>

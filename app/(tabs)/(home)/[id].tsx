@@ -1,22 +1,21 @@
 import { Text, View, Image, ScrollView, Modal, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGlobalContext } from '../../context/GlobalProvider';
+import { useGlobalContext } from '../../../context/GlobalProvider';
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
-import TenantCard from '../../components/tenantCard';
+import TenantCard from '../../../components/tenantCard';
 
 const PropertyDetails = () => {
-  const params = useLocalSearchParams();
-  const { id } = params;
+  const {id}=useLocalSearchParams<{id:string}>();
   const [disProperty, setdisProperty] = useState(null); // Get the property ID from the route
   const { property, setProperty } = useGlobalContext();
   const [modelVisible,setModelVisible]=useState(false);
 
   // Fetch the property details from some data source or state, based on the id
   useEffect(() => {
-    function getProperty(id: any) {
-      const selectedProperty = property.find((prop: { id: any }) => String(prop.id) === String(id));
+    function getProperty(id: string) {
+      const selectedProperty = property.find((prop: { id: string }) => String(prop.id) === String(id));
       setdisProperty(selectedProperty);
     }
     if (id) {
@@ -64,28 +63,37 @@ const PropertyDetails = () => {
   const toggleWater = (tenantId: string) => toggleService(tenantId, 'waterAccess');
   const toggleGas = (tenantId: string) => toggleService(tenantId, 'gas');
   const toggleWifi = (tenantId: string) => toggleService(tenantId, 'internet');
+
   return (
     <SafeAreaView className=' flex-1 bg-primary px-3'>
       <Stack.Screen
         options={{
-          headerShown: false,
-          
+          headerShown: true,
+          headerBackTitle:"Home",
+          headerTitle: "Property",
+          headerTintColor: "#ffffff",
+          headerTitleAlign:"center",
+          headerStyle: {
+            backgroundColor:"#212121",
+          },
           
         }}
       />
         {modelVisible? <Modal />:
         (disProperty ? (
-          <>
-          <View className='mb-3 items-center flex-row justify-between'>
-            <Pressable onPress={()=>router.back()}>
-              <AntDesign name='arrowleft' size={26} color={"#fff"}/>
-            </Pressable>
-            <Text className='text-secondary text-xl'>{disProperty.address}</Text>
-            <View className='w-10 h-3'>
-
-            </View>
-          </View>
         <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom:10}} showsVerticalScrollIndicator={false}>
+        <View className='flex-row items-center justify-between'>
+          <View className='mb-3'>
+            <Text className='text-white text-md'>Address:</Text>
+            <Text className='text-secondary text-lg'>{disProperty.address}</Text>
+          </View>
+          <View className='bg-green-500'>
+            <Pressable onPress={openModel}>
+
+              <AntDesign name='adduser' color={"#ffffff"} size={32}/>
+            </Pressable>
+          </View>
+        </View>
 
         <Image
           source={{ uri: disProperty.photo }}
@@ -117,13 +125,7 @@ const PropertyDetails = () => {
         </View>
 
         <View>
-          <View className='flex-row justify-between m-2 items-center'>
-            <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
-            <Pressable onPress={()=>router.push(`/property/add_tenant?id=${disProperty.id}&address=${disProperty.address}`)}>
-
-              <AntDesign name='adduser' color={"#ffffff"} size={26}/>
-            </Pressable>
-          </View>
+          <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
           {disProperty.tenants.length > 0 ? disProperty.tenants.map((tenant: any) => (
             <TenantCard
               onPress={openModel()}
@@ -141,7 +143,6 @@ const PropertyDetails = () => {
         </View>
         
       </ScrollView>
-      </>
       ) : (
         <Text className='text-white'>Loading or Property not found...</Text>
       ))}

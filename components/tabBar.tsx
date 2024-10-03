@@ -7,7 +7,7 @@ const TabBar = ({state,descriptors,navigation}) => {
   const primary="#BD6A33";
   const gray="#BDBDBD"
   const icons={
-    home:(props)=><AntDesign name='home' size={22} color={gray}{...props}/>,
+    '(home)':(props)=><AntDesign name='home' size={22} color={gray}{...props}/>,
     add:(props)=><AntDesign name='pluscircleo' size={22} color={gray}{...props}/>,
     account:(props)=><AntDesign name='user' size={22} color={gray}{...props}/>
   }
@@ -74,15 +74,14 @@ const TabBar = ({state,descriptors,navigation}) => {
 const styles=StyleSheet.create({
   tabbar:{
     position:"absolute",
-    bottom:25,
+    bottom:10,
     flexDirection:"row",
     alignItems:'center',
-    backgroundColor:"#424242",
-    marginHorizontal:20,
+    backgroundColor: "rgba(66, 66, 66, 0.7)", 
+    marginHorizontal:50,
     paddingVertical:10,
     borderRadius:25,
     borderCurve:"continuous",
-    
   },
   tabbarItem:{
     flex:1,
