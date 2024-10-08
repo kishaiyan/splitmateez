@@ -75,7 +75,7 @@ const PropertyDetails = () => {
         {modelVisible? <Modal />:
         (disProperty ? (
           <>
-          <View className='mb-3 items-center flex-row justify-between'>
+          <View className='mb-3 items-center flex-row justify-between pt-2'>
             <Pressable onPress={()=>router.back()}>
               <AntDesign name='arrowleft' size={26} color={"#fff"}/>
             </Pressable>
@@ -107,7 +107,7 @@ const PropertyDetails = () => {
           </View>
           <View className='items-center gap-1'>
             <Text className='text-secondary text-md'>Max</Text>
-            <Text className='text-white text-md'>{disProperty.maximum_tenant}</Text>
+            <Text className='text-white text-md'>{disProperty.maximum}</Text>
           </View>
           <View className='items-center gap-1'>
             <Text className='text-secondary text-md'>Now</Text>

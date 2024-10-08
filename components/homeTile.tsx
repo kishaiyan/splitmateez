@@ -1,12 +1,27 @@
 import { View, Text,Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Href, router } from 'expo-router'
+import { getUrl } from 'aws-amplify/storage';
 
 const HomeTile = ({name,maximum,current,property}) => {
   const handlePress = () => {
     // router.push(`/property?id=${property.id}`);
     router.push(`/(home)/${property.id}` as Href);
   };
+
+  const[photoUrl,setPhotoUrl]=useState("");
+
+  const fetchImageUrl = async (url) => {
+    try {
+        const result = await getUrl({ path: url });
+        setPhotoUrl(result.url.toString());
+    } catch (error) {
+        console.log("Error fetching image URL: ", error);
+    }
+};
+  useEffect(()=>{fetchImageUrl(property.photo)},[]);
+
+  
   return (
     
     <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>

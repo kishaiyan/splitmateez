@@ -9,7 +9,7 @@ const GlobalContext= createContext();
 export const useGlobalContext=()=>useContext(GlobalContext);
 
 const GlobalProvider = ({children})=>{
- 
+  const client=generateClient();
   const [property,setProperty]=useState([
     {
       id: "1",
@@ -18,7 +18,7 @@ const GlobalProvider = ({children})=>{
       rooms: 3,
       bathroom: 2,
       parking_space: 1,
-      maximum_tenant: 4,
+      maximum: 4,
       tenants: [
         {
           id: "1",
@@ -65,7 +65,7 @@ const GlobalProvider = ({children})=>{
       rooms: 2,
       bathroom: 1,
       parking_space: 1,
-      maximum_tenant: 3,
+      maximum: 3,
       tenants: [
         // {
         //   id: "2",
@@ -86,7 +86,7 @@ const GlobalProvider = ({children})=>{
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user,setUser]=useState(null)
   const [isLoading,setIsLoading]=useState(true)
-  const client=generateClient();
+ 
   const [userDetails, setuserDetails] = useState(null)
   const userType="Owner"
   
@@ -131,7 +131,8 @@ const GlobalProvider = ({children})=>{
         const details=await getUserDetails(user);
         setuserDetails(details);
         console.log(details.Properties.items);
-        const properties=await getProperty();  
+        const properties=await getProperty();
+        // setProperty(properties);  
         console.log(properties);
       }
   }

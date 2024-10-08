@@ -147,7 +147,7 @@ const AddTenant = () => {
     <SafeAreaView className='bg-primary flex-1 px-4'>
       <Stack.Screen options={{ headerShown: false }} />
       <View className='flex-1'> 
-        <View className='flex-row items-center justify-between mb-4'> 
+        <View className='flex-row items-center justify-between mb-4 pt-2'> 
           <Pressable onPress={router.back}>
             <AntDesign name='arrowleft' color={"#fff"} size={26} />
           </Pressable>

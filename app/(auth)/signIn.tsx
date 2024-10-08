@@ -30,7 +30,6 @@ const signin = () => {
       }
       )
    setIsLoading(false)
-   console.log(response);
    if (response) {
     if (response.isSignedIn) {
         setUser(res.userId);
@@ -89,7 +88,7 @@ const signin = () => {
 
                 <TextField label="Password" value={signForm.password} onhandleChange={(e)=>setSignForm({...signForm,password:e})} keyboardtype="default" placeholder="Password" error=""/>
 
-                <Button title='Sign In' containerStyle={`mt-5 mb-3 px-10 py-3 ${isLoading?'opacity-30':'opacity-100 '}` }isLoading={isLoading} onPress={onsubmit}/>
+                <Button title='Sign In' containerStyle={`mt-5 mb-3 px-10 py-3 ${isLoading?'opacity-30':'opacity-100 '}` } isLoading={isLoading} onPress={onsubmit}/>
                 <Link href={'/forgotPass'} className='text-gray-300 text-xs font-thin'>Forgot your password?</Link>
             </View>
 

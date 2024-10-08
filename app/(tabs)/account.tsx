@@ -46,7 +46,7 @@ const Account = () => {
     <SafeAreaView className='flex-1 bg-primary px-4'>
       <KeyboardAvoidingView
       behavior='padding'>
-        <AppBar/>
+        <AppBar leading={false}/>
     <View>
       <View className="mb-5">
        <Text className='text-secondary text-xl'>ACCOUNT DETAILS</Text>

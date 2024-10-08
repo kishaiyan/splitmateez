@@ -11,6 +11,7 @@ import { generateClient } from 'aws-amplify/api';
 import * as ImagePicker from "expo-image-picker";
 import { uploadData } from 'aws-amplify/storage';
 import { createOwner } from '../../src/graphql/mutations';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 
 const client = generateClient();
@@ -31,16 +32,17 @@ type signupParameters = {
 
 
 const Signup = () => {
-  
+  const {isLoading,setIsLoading}=useGlobalContext();
   function getNumber(phone: string) {
     return phone.replace('0', '+61');
   }
-  
   async function handlesignUp(
     { firstname, lastname, email, phone,address, password }: signupParameters,
     router: any // Use appropriate type for navigation
   ) {
+
     try {
+      setIsLoading(true)
      let photo='';
       const {isSignUpComplete,userId,nextStep} = await signUp({
         username: email,
@@ -72,7 +74,7 @@ const Signup = () => {
         }
       }})
       
-
+      setIsLoading(false)
       if( !isSignUpComplete && nextStep.signUpStep === "CONFIRM_SIGN_UP" ){
         router.replace(`/confirmEmail?email=${encodeURIComponent(email)}&user=${encodeURIComponent(userId)}`)
       }
@@ -101,8 +103,7 @@ const Signup = () => {
     } catch (error) {   
       console.log("Error :",error);
     }
-  }
-  
+  } 
   const handleImage=async()=>{
 
     Alert.alert( 
@@ -278,7 +279,7 @@ const Signup = () => {
                       placeholder="Password"
                       error={errors.password}
                     />
-                    <Button title='Sign Up' containerStyle='mt-6 px-10 py-2' onPress={onSubmit} />
+                    <Button title='Sign Up' containerStyle='mt-6 px-10 py-2' onPress={onSubmit} isLoading={isLoading}/>
                     <View className='w-[80%] mt-5 pt-3 flex-row gap-2'>
                       <AntDesign name='checksquareo' color="green" size={16}/>
                       <Text className='text-gray-200 text-xs'>By signing up you agree to our terms and conditions</Text>

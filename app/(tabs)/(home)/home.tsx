@@ -74,8 +74,8 @@ const Home = () => {
           
           <HomeTile 
           name={item.address} 
-          maximum={item.maximum_tenant} 
-          current={item.tenants.length}
+          maximum={item.maximum} 
+          current={item.tenants? item.tenants.length: 0}
           property={item}
           />
         
