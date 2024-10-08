@@ -1,181 +1,111 @@
-
+import { createContext, useContext, useReducer, useEffect } from "react";
 import { getcurrentUser } from "../lib/aws-amplify";
-import { createContext,useContext,useState,useEffect } from "react";
-import { generateClient } from 'aws-amplify/api'
-import { getOwner,propertiesByOwnerID, } from '../src/graphql/queries'
+import { getOwner, propertiesByOwnerID } from '../src/graphql/queries';
+import client from "../lib/client";
 
+const GlobalContext = createContext();
 
-const GlobalContext= createContext();
-export const useGlobalContext=()=>useContext(GlobalContext);
+const initialState = {
+  isLoggedIn: false,
+  user: null,
+  isLoading: true,
+  properties: [],
+  userDetails: null,
+  userType:"Owner",
+};
 
-const GlobalProvider = ({children})=>{
-  const client=generateClient();
-  const [property,setProperty]=useState([
-    {
-      id: "1",
-      address: "123 Elm Street",
-      photo:"https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      rooms: 3,
-      bathroom: 2,
-      parking_space: 1,
-      maximum: 4,
-      tenants: [
-        {
-          id: "1",
-          fullName: "John Doe",
-          email: "john@example.com",
-          photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&s",
-          room_number: 1,
-          address: "123 Elm Street",
-          waterAccess: true,
-          electricity: true,
-          internet: true,
-          gas: false,
-        },
-        {
-          id: "2",
-          fullName: "Jane Doe",
-          email: "jane@example.com",
-          photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&s",
-          room_number: 1,
-          address: "456 Maple Avenue",
-          waterAccess: true,
-          electricity: true,
-          internet: true,
-          gas: true,
-        },{
-          id: "3",
-          fullName: "Jane Doe",
-          email: "jane@example.com",
-          photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&s",
-          room_number: 1,
-          address: "456 Maple Avenue",
-          waterAccess: true,
-          electricity: true,
-          internet: true,
-          gas: true,
-        },
-        // Add more tenants if needed
-      ],
-    },
-    {
-      id: "2",
-      address: "456 Maple Avenue",
-      photo:"https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      rooms: 2,
-      bathroom: 1,
-      parking_space: 1,
-      maximum: 3,
-      tenants: [
-        // {
-        //   id: "2",
-        //   fullName: "Jane Doe",
-        //   email: "jane@example.com",
-        //   photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpd4mJRIUwqgE8D_Z2znANEbtiz4GhI4M8NQ&s",
-        //   room_number: 1,
-        //   address: "456 Maple Avenue",
-        //   waterAccess: true,
-        //   electricity: true,
-        //   internet: true,
-        //   gas: true,
-        // },
-        // Add more tenants if needed
-      ],
-    },
-  ])
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [user,setUser]=useState(null)
-  const [isLoading,setIsLoading]=useState(true)
- 
-  const [userDetails, setuserDetails] = useState(null)
-  const userType="Owner"
-  
-  const getUserDetails=async()=>{
-    try{
-    const result=await client.graphql({query:getOwner, variables:{
-      id:user
-    }})
-    return result.data.getOwner;
-  
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_USER':
+      return { ...state, user: action.payload, isLoggedIn: !!action.payload };
+    case 'SET_LOADING':
+      return { ...state, isLoading: action.payload };
+    case 'SET_PROPERTIES':
+      return { ...state, properties: action.payload };
+    case 'SET_USER_DETAILS':
+      return { ...state, userDetails: action.payload };
+    default:
+      return state;
   }
-    catch(error){
-      console.log("User Details Error",error);
+};
+
+export const useGlobalContext = () => useContext(GlobalContext);
+
+const GlobalProvider = ({ children }) => {
+  
+  const [state, dispatch] = useReducer(reducer, initialState);
+  console.log(state);
+   // Function to fetch user details
+   const getUserDetails = async (userId) => {
+    try {
+      const result = await client.graphql({
+        query: getOwner,
+        variables: { id: userId }
+      });
+      return result.data.getOwner; // Return the user details
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      return null; // Return null on error
     }
-  }
+  };
 
-  const getProperty=async()=>{
-    if (!user) {
-      console.log("User ID is not set, skipping properties fetch.");
-      return;
+  // Function to fetch properties based on owner ID
+  const getProperty = async (ownerId) => {
+    if (!ownerId) {
+      console.log("Owner ID is not set, skipping properties fetch.");
+      return [];
     }
     try {
       const result = await client.graphql({
         query: propertiesByOwnerID,
-        variables: {
-          ownerID: user, // Use ownerID instead of input.ownerId
-        }
+        variables: { ownerID: ownerId }
       });
-      return result.data.propertiesByOwnerID.items; // Return the items directly
+      return result.data.propertiesByOwnerID.items; // Return the property items
     } catch (error) {
-      console.error("Error getting Properties:", error);
+      console.error("Error getting properties:", error);
+      return []; // Return empty array on error
     }
-  }
+  };
 
-  const getTenants=async()=>{
-
-  }
-
-  useEffect(()=>{
-    const fetchUserDetails=async()=>{
-      if(user){
-        const details=await getUserDetails(user);
-        setuserDetails(details);
-        console.log(details.Properties.items);
-        const properties=await getProperty();
-        // setProperty(properties);  
-        console.log(properties);
-      }
-  }
-   fetchUserDetails();
-  },[user])
-  useEffect(()=>{
+  useEffect(() => {
+    console.log("getting current user");
     getcurrentUser()
-    .then((res)=>{
-      if(res)
-        {
-          setUser(res)
-          setIsLoggedIn(true)
-        }
-        else{
-          setUser(null)
-          setIsLoggedIn(false)
-        }
-    })
-    .catch((error)=>{
-      setUser(null)
-     })
-    .finally(()=>setIsLoading(false))
-    
-  },[])
+      .then(res => {
+        dispatch({ type: 'SET_USER', payload: res });
+      })
+      .catch(error => {
+        dispatch({ type: 'SET_USER', payload: null });
+      })
+      .finally(() => dispatch({ type: 'SET_LOADING', payload: false }));
+  }, []);
 
-  return(
-    <GlobalContext.Provider
-    value={{
-      isLoggedIn,
-      setIsLoggedIn,
-      user,
-      setUser,
-      isLoading,
-      setIsLoading,
-      property,
-      setProperty,
-      userDetails,
-      userType,
-    }}
-    >
+  // useEffect(async()=>{
+  //   const properties = await getProperty(state.user);
+  //   dispatch({ type: 'SET_PROPERTIES', payload: properties });
+  // },[state.properties]);
+
+  useEffect(() => {
+    console.log("fetchUserDetails")
+    const fetchUserDetails = async () => {
+      if (state.user) {
+        const details = await getUserDetails(state.user);
+        dispatch({ type: 'SET_USER_DETAILS', payload: details });
+  
+        const properties = await getProperty(state.user);
+        dispatch({ type: 'SET_PROPERTIES', payload: properties });
+      }
+    };
+  
+    fetchUserDetails();
+  }, [state.user]); 
+
+  
+
+  return (
+    <GlobalContext.Provider value={{ state, dispatch }}>
       {children}
     </GlobalContext.Provider>
-  )
-}
+  );
+};
 
-export default GlobalProvider
+export default GlobalProvider;

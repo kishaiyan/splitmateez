@@ -33,17 +33,15 @@ export  async function getcurrentUser(){
 
 export async function handleSignIn({ username, password }) {
   try {
-    // const currentUser=await getCurrentUser();
-    // if(currentUser){
-    //   await signOut();
-    // }
+    const currentUser=await getCurrentUser();
+    if(currentUser){
+      await signOut();
+    }
     const response=await signIn({ username, password });
-    console.log(response);
     let res;
     if(response.isSignedIn){
       try{
         res = await getCurrentUser()
-        console.log(res);
       }
       catch(error){
         throw error

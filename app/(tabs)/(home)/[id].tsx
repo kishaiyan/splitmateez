@@ -8,14 +8,15 @@ import TenantCard from '../../../components/tenantCard';
 
 const PropertyDetails = () => {
   const {id}=useLocalSearchParams<{id:string}>();
-  const [disProperty, setdisProperty] = useState(null); // Get the property ID from the route
-  const { property, setProperty } = useGlobalContext();
+  const [disProperty, setdisProperty] = useState(null); 
+  const { state, dispatch } = useGlobalContext();
+  const { properties } = state;
   const [modelVisible,setModelVisible]=useState(false);
 
   // Fetch the property details from some data source or state, based on the id
   useEffect(() => {
     function getProperty(id: any) {
-      const selectedProperty = property.find((prop: { id: any }) => String(prop.id) === String(id));
+      const selectedProperty = properties.find((prop: { id: any }) => String(prop.id) === String(id));
       setdisProperty(selectedProperty);
     }
     if (id) {
@@ -23,7 +24,7 @@ const PropertyDetails = () => {
     } else {
       console.log("No Id");
     }
-  }, [id, property]); // Add id and property to the dependency array
+  }, [id, properties]); // Add id and property to the dependency array
 
   const toggleService = (tenantId: string, service: string) => {
     // Update the displayed property (disProperty)
@@ -38,21 +39,7 @@ const PropertyDetails = () => {
     });
 
     // Update the global property state
-    setProperty((prevProperties: any) => {
-      const updatedProperties = prevProperties.map((prop: any) => {
-        if (String(prop.id) === String(id)) {
-          const updatedTenants = prop.tenants.map((tenant: any) => {
-            if (tenant.id === tenantId) {
-              return { ...tenant, [service]: !tenant[service] };
-            }
-            return tenant;
-          });
-          return { ...prop, tenants: updatedTenants };
-        }
-        return prop;
-      });
-      return updatedProperties;
-    });
+   
   };
   const openModel=()=>{
     
@@ -111,7 +98,7 @@ const PropertyDetails = () => {
           </View>
           <View className='items-center gap-1'>
             <Text className='text-secondary text-md'>Now</Text>
-            <Text className='text-white text-md'>{disProperty.tenants.length}</Text>
+            <Text className='text-white text-md'>{disProperty.tenants}</Text>
           </View>
         </View>
 
@@ -123,7 +110,7 @@ const PropertyDetails = () => {
               <AntDesign name='adduser' color={"#ffffff"} size={26}/>
             </Pressable>
           </View>
-          {disProperty.tenants.length > 0 ? disProperty.tenants.map((tenant: any) => (
+          {/* {disProperty.tenants.length > 0 ? disProperty.tenants.map((tenant: any) => (
             <TenantCard
               onPress={openModel()}
               key={tenant.id}
@@ -134,9 +121,10 @@ const PropertyDetails = () => {
               onPressWifi={() => toggleWifi(tenant.id)} // Pass the tenant ID to toggle
             />
           ))
-        :<View className='items-center'>
+        :*/}
+        <View className='items-center'> 
           <Text className='text-white font-semibold'>Add Tenants to Monitor the property</Text>
-          </View>}
+          </View>
           <View className='h-10'>
 
           </View>

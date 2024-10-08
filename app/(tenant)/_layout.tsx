@@ -6,13 +6,13 @@
 //   return (
 //     <>
 //       <Tabs
-//         tabBar={(props) => <TabBar {...props} />}
+//         // tabBar={(props) => <TabBar {...props} />}
 //         screenOptions={{
 //           headerShown: false,
 //         }}
 //       >
 //         <Tabs.Screen
-//           name="home"
+//           name="tenant_home"
 //           options={{
 //             title: 'Home',
 //           }}

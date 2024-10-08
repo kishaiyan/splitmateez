@@ -7,6 +7,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { useGlobalContext } from '../../../context/GlobalProvider'
 import LoadingScreen from '../../loadingScreen'
 import { Href, Link, router } from 'expo-router'
+import AddProperty from '../../list_empty'
 
 
 
@@ -17,7 +18,8 @@ const Home = () => {
   );
 
   const linkToAddProperty="/property/add" as Href;
-  const {property,userDetails}=useGlobalContext();
+  const { state, dispatch } = useGlobalContext();
+  const { userDetails, properties } = state;
   const [notifyNumber,setNotifyNumber]=useState(9);
   const [visible, setVisible] = useState(true)
   useEffect(()=>{
@@ -30,7 +32,7 @@ const Home = () => {
     <SafeAreaView className='flex-1 bg-primary  px-4'>
        
       <AppBar leading={false}/>
-      {property && userDetails ? (
+      {properties && userDetails ? (
         <>
       <View className='h-[10%] flex-row justify-between'>
         
@@ -69,7 +71,7 @@ const Home = () => {
       <FlatList  
         ItemSeparatorComponent={ItemSeparator}
         showsHorizontalScrollIndicator={false}    
-        data={property}
+        data={properties}
         renderItem={({item})=>(
           
           <HomeTile 
@@ -81,7 +83,7 @@ const Home = () => {
         
         )}
         horizontal
-        
+        ListEmptyComponent={AddProperty}
         
         />
         </View>

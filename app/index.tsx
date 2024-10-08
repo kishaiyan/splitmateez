@@ -20,7 +20,8 @@ export default function app(){
   
   const icon=require('../assets/images/splash_screen.jpg')
   
-  const {isLoading,isLoggedIn,userType}=useGlobalContext();
+  const { state, dispatch } = useGlobalContext();
+  const { isLoading, userType,isLoggedIn } = state;
  
   if(!isLoading && isLoggedIn && userType=="Owner") {
     return <Redirect href="/(home)/home" />}

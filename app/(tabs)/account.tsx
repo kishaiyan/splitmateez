@@ -13,8 +13,8 @@ import { getUrl } from 'aws-amplify/storage';
 
 
 const Account = () => {
- 
-  const {userDetails,setUser,user}=useGlobalContext();
+  const { state, dispatch } = useGlobalContext();
+  const { userDetails } = state;
   const[photoUrl,setPhotoUrl]=useState("");
 
   const fetchImageUrl = async (url) => {
@@ -33,8 +33,6 @@ const Account = () => {
   const signOut=()=>{
     try{
       handleSignOut()
-      setUser(null);
-      console.log(user);
       router.replace('/signIn')
     }
     catch(error){

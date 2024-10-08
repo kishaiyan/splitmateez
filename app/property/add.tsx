@@ -14,7 +14,8 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 const AddProperty = () => {
 
   const [image,setImage]=useState(null);
-  const {userDetails}=useGlobalContext();
+  const { state, dispatch } = useGlobalContext();
+  const { userDetails } = state;
   const [propertyForm,setPropertyForm]=useState({
     address:"",
     rooms:"",
