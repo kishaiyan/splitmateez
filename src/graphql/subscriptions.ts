@@ -8,6 +8,81 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
+export const onCreateNotification = /* GraphQL */ `subscription OnCreateNotification(
+  $filter: ModelSubscriptionNotificationFilterInput
+) {
+  onCreateNotification(filter: $filter) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateNotificationSubscriptionVariables,
+  APITypes.OnCreateNotificationSubscription
+>;
+export const onUpdateNotification = /* GraphQL */ `subscription OnUpdateNotification(
+  $filter: ModelSubscriptionNotificationFilterInput
+) {
+  onUpdateNotification(filter: $filter) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateNotificationSubscriptionVariables,
+  APITypes.OnUpdateNotificationSubscription
+>;
+export const onDeleteNotification = /* GraphQL */ `subscription OnDeleteNotification(
+  $filter: ModelSubscriptionNotificationFilterInput
+) {
+  onDeleteNotification(filter: $filter) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteNotificationSubscriptionVariables,
+  APITypes.OnDeleteNotificationSubscription
+>;
 export const onCreateProperty = /* GraphQL */ `subscription OnCreateProperty($filter: ModelSubscriptionPropertyFilterInput) {
   onCreateProperty(filter: $filter) {
     id
@@ -23,6 +98,11 @@ export const onCreateProperty = /* GraphQL */ `subscription OnCreateProperty($fi
       __typename
     }
     ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -50,6 +130,11 @@ export const onUpdateProperty = /* GraphQL */ `subscription OnUpdateProperty($fi
       __typename
     }
     ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -77,6 +162,11 @@ export const onDeleteProperty = /* GraphQL */ `subscription OnDeleteProperty($fi
       __typename
     }
     ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -102,6 +192,11 @@ export const onCreateTenant = /* GraphQL */ `subscription OnCreateTenant($filter
     useGas
     propertyID
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -127,6 +222,11 @@ export const onUpdateTenant = /* GraphQL */ `subscription OnUpdateTenant($filter
     useGas
     propertyID
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -152,6 +252,11 @@ export const onDeleteTenant = /* GraphQL */ `subscription OnDeleteTenant($filter
     useGas
     propertyID
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -177,6 +282,11 @@ export const onCreateOwner = /* GraphQL */ `subscription OnCreateOwner($filter: 
       __typename
     }
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -202,6 +312,11 @@ export const onUpdateOwner = /* GraphQL */ `subscription OnUpdateOwner($filter: 
       __typename
     }
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -227,6 +342,11 @@ export const onDeleteOwner = /* GraphQL */ `subscription OnDeleteOwner($filter: 
       __typename
     }
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version

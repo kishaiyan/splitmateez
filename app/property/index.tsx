@@ -11,7 +11,6 @@ const PropertyDetails = () => {
   const { id } = params;
   const [disProperty, setdisProperty] = useState(null); // Get the property ID from the route
   const { property, setProperty } = useGlobalContext();
-  const [modelVisible,setModelVisible]=useState(false);
 
   // Fetch the property details from some data source or state, based on the id
   useEffect(() => {
@@ -55,9 +54,7 @@ const PropertyDetails = () => {
       return updatedProperties;
     });
   };
-  const openModel=()=>{
-    
-  }
+  
 
   // Toggling individual services
   const toggleElectricity = (tenantId: string) => toggleService(tenantId, 'electricity');
@@ -73,7 +70,7 @@ const PropertyDetails = () => {
           
         }}
       />
-        {modelVisible? <Modal />:
+        {
         (disProperty ? (
           <>
           <View className='mb-3 items-center flex-row justify-between'>
@@ -121,7 +118,7 @@ const PropertyDetails = () => {
             <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
             <Pressable
       onPress={() => {
-        router.push(`/property/add_tenant?id=${disProperty.id}&address=${disProperty.address}`);
+        router.push(`/property/add_tenant?id=${disProperty.id}&address=${disProperty.address}` as Href);
       }}
     >
 
@@ -130,7 +127,7 @@ const PropertyDetails = () => {
           </View>
           {disProperty.tenants.length > 0 ? disProperty.tenants.map((tenant: any) => (
             <TenantCard
-              onPress={openModel()}
+              onPress={router.push(`/tenant_about?id=${disProperty.tenants.id}` as Href)}
               key={tenant.id}
               tenant={tenant}
               onPressElectricity={() => toggleElectricity(tenant.id)} // Pass the tenant ID to toggle

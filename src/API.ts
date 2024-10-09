@@ -2,29 +2,31 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreatePropertyInput = {
+export type CreateNotificationInput = {
   id?: string | null,
-  address: string,
-  rooms: string,
-  maximum: string,
-  bathroom: string,
-  parking: string,
-  photo: string,
-  ownerID: string,
+  message: string,
+  timestamp: string,
+  isRead: boolean,
+  recipientID: string,
+  type: string,
+  ownerID?: string | null,
+  tenantID?: string | null,
+  propertyID?: string | null,
   _version?: number | null,
 };
 
-export type ModelPropertyConditionInput = {
-  address?: ModelStringInput | null,
-  rooms?: ModelStringInput | null,
-  maximum?: ModelStringInput | null,
-  bathroom?: ModelStringInput | null,
-  parking?: ModelStringInput | null,
-  photo?: ModelStringInput | null,
+export type ModelNotificationConditionInput = {
+  message?: ModelStringInput | null,
+  timestamp?: ModelStringInput | null,
+  isRead?: ModelBooleanInput | null,
+  recipientID?: ModelIDInput | null,
+  type?: ModelStringInput | null,
   ownerID?: ModelIDInput | null,
-  and?: Array< ModelPropertyConditionInput | null > | null,
-  or?: Array< ModelPropertyConditionInput | null > | null,
-  not?: ModelPropertyConditionInput | null,
+  tenantID?: ModelIDInput | null,
+  propertyID?: ModelIDInput | null,
+  and?: Array< ModelNotificationConditionInput | null > | null,
+  or?: Array< ModelNotificationConditionInput | null > | null,
+  not?: ModelNotificationConditionInput | null,
   _deleted?: ModelBooleanInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -70,6 +72,13 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type ModelIDInput = {
   ne?: string | null,
   eq?: string | null,
@@ -86,11 +95,68 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
+export type Notification = {
+  __typename: "Notification",
+  id: string,
+  message: string,
+  timestamp: string,
+  isRead: boolean,
+  recipientID: string,
+  type: string,
+  ownerID?: string | null,
+  tenantID?: string | null,
+  propertyID?: string | null,
+  createdAt: string,
+  updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+};
+
+export type UpdateNotificationInput = {
+  id: string,
+  message?: string | null,
+  timestamp?: string | null,
+  isRead?: boolean | null,
+  recipientID?: string | null,
+  type?: string | null,
+  ownerID?: string | null,
+  tenantID?: string | null,
+  propertyID?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteNotificationInput = {
+  id: string,
+  _version?: number | null,
+};
+
+export type CreatePropertyInput = {
+  id?: string | null,
+  address: string,
+  rooms: string,
+  maximum: string,
+  bathroom: string,
+  parking: string,
+  photo: string,
+  ownerID: string,
+  _version?: number | null,
+};
+
+export type ModelPropertyConditionInput = {
+  address?: ModelStringInput | null,
+  rooms?: ModelStringInput | null,
+  maximum?: ModelStringInput | null,
+  bathroom?: ModelStringInput | null,
+  parking?: ModelStringInput | null,
+  photo?: ModelStringInput | null,
+  ownerID?: ModelIDInput | null,
+  and?: Array< ModelPropertyConditionInput | null > | null,
+  or?: Array< ModelPropertyConditionInput | null > | null,
+  not?: ModelPropertyConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
 };
 
 export type Property = {
@@ -104,6 +170,7 @@ export type Property = {
   photo: string,
   Tenants?: ModelTenantConnection | null,
   ownerID: string,
+  Notifications?: ModelNotificationConnection | null,
   createdAt: string,
   updatedAt: string,
   _version: number,
@@ -131,11 +198,19 @@ export type Tenant = {
   useGas?: boolean | null,
   propertyID: string,
   photo: string,
+  Notifications?: ModelNotificationConnection | null,
   createdAt: string,
   updatedAt: string,
   _version: number,
   _deleted?: boolean | null,
   _lastChangedAt: number,
+};
+
+export type ModelNotificationConnection = {
+  __typename: "ModelNotificationConnection",
+  items:  Array<Notification | null >,
+  nextToken?: string | null,
+  startedAt?: number | null,
 };
 
 export type UpdatePropertyInput = {
@@ -242,6 +317,7 @@ export type Owner = {
   email: string,
   Properties?: ModelPropertyConnection | null,
   photo: string,
+  Notifications?: ModelNotificationConnection | null,
   createdAt: string,
   updatedAt: string,
   _version: number,
@@ -271,6 +347,30 @@ export type DeleteOwnerInput = {
   _version?: number | null,
 };
 
+export type ModelNotificationFilterInput = {
+  id?: ModelIDInput | null,
+  message?: ModelStringInput | null,
+  timestamp?: ModelStringInput | null,
+  isRead?: ModelBooleanInput | null,
+  recipientID?: ModelIDInput | null,
+  type?: ModelStringInput | null,
+  ownerID?: ModelIDInput | null,
+  tenantID?: ModelIDInput | null,
+  propertyID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelNotificationFilterInput | null > | null,
+  or?: Array< ModelNotificationFilterInput | null > | null,
+  not?: ModelNotificationFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelPropertyFilterInput = {
   id?: ModelIDInput | null,
   address?: ModelStringInput | null,
@@ -287,12 +387,6 @@ export type ModelPropertyFilterInput = {
   not?: ModelPropertyFilterInput | null,
   _deleted?: ModelBooleanInput | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelTenantFilterInput = {
   id?: ModelIDInput | null,
@@ -336,19 +430,20 @@ export type ModelOwnerConnection = {
   startedAt?: number | null,
 };
 
-export type ModelSubscriptionPropertyFilterInput = {
+export type ModelSubscriptionNotificationFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  address?: ModelSubscriptionStringInput | null,
-  rooms?: ModelSubscriptionStringInput | null,
-  maximum?: ModelSubscriptionStringInput | null,
-  bathroom?: ModelSubscriptionStringInput | null,
-  parking?: ModelSubscriptionStringInput | null,
-  photo?: ModelSubscriptionStringInput | null,
+  message?: ModelSubscriptionStringInput | null,
+  timestamp?: ModelSubscriptionStringInput | null,
+  isRead?: ModelSubscriptionBooleanInput | null,
+  recipientID?: ModelSubscriptionIDInput | null,
+  type?: ModelSubscriptionStringInput | null,
   ownerID?: ModelSubscriptionIDInput | null,
+  tenantID?: ModelSubscriptionIDInput | null,
+  propertyID?: ModelSubscriptionIDInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
+  and?: Array< ModelSubscriptionNotificationFilterInput | null > | null,
+  or?: Array< ModelSubscriptionNotificationFilterInput | null > | null,
   _deleted?: ModelBooleanInput | null,
 };
 
@@ -382,6 +477,27 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
+export type ModelSubscriptionPropertyFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  address?: ModelSubscriptionStringInput | null,
+  rooms?: ModelSubscriptionStringInput | null,
+  maximum?: ModelSubscriptionStringInput | null,
+  bathroom?: ModelSubscriptionStringInput | null,
+  parking?: ModelSubscriptionStringInput | null,
+  photo?: ModelSubscriptionStringInput | null,
+  ownerID?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
 export type ModelSubscriptionTenantFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   firstName?: ModelSubscriptionStringInput | null,
@@ -401,11 +517,6 @@ export type ModelSubscriptionTenantFilterInput = {
   _deleted?: ModelBooleanInput | null,
 };
 
-export type ModelSubscriptionBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-};
-
 export type ModelSubscriptionOwnerFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   firstName?: ModelSubscriptionStringInput | null,
@@ -418,6 +529,81 @@ export type ModelSubscriptionOwnerFilterInput = {
   and?: Array< ModelSubscriptionOwnerFilterInput | null > | null,
   or?: Array< ModelSubscriptionOwnerFilterInput | null > | null,
   _deleted?: ModelBooleanInput | null,
+};
+
+export type CreateNotificationMutationVariables = {
+  input: CreateNotificationInput,
+  condition?: ModelNotificationConditionInput | null,
+};
+
+export type CreateNotificationMutation = {
+  createNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type UpdateNotificationMutationVariables = {
+  input: UpdateNotificationInput,
+  condition?: ModelNotificationConditionInput | null,
+};
+
+export type UpdateNotificationMutation = {
+  updateNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type DeleteNotificationMutationVariables = {
+  input: DeleteNotificationInput,
+  condition?: ModelNotificationConditionInput | null,
+};
+
+export type DeleteNotificationMutation = {
+  deleteNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
 };
 
 export type CreatePropertyMutationVariables = {
@@ -441,6 +627,11 @@ export type CreatePropertyMutation = {
       startedAt?: number | null,
     } | null,
     ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -470,6 +661,11 @@ export type UpdatePropertyMutation = {
       startedAt?: number | null,
     } | null,
     ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -499,6 +695,11 @@ export type DeletePropertyMutation = {
       startedAt?: number | null,
     } | null,
     ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -526,6 +727,11 @@ export type CreateTenantMutation = {
     useGas?: boolean | null,
     propertyID: string,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -553,6 +759,11 @@ export type UpdateTenantMutation = {
     useGas?: boolean | null,
     propertyID: string,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -580,6 +791,11 @@ export type DeleteTenantMutation = {
     useGas?: boolean | null,
     propertyID: string,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -607,6 +823,11 @@ export type CreateOwnerMutation = {
       startedAt?: number | null,
     } | null,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -634,6 +855,11 @@ export type UpdateOwnerMutation = {
       startedAt?: number | null,
     } | null,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -661,11 +887,235 @@ export type DeleteOwnerMutation = {
       startedAt?: number | null,
     } | null,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+  } | null,
+};
+
+export type GetNotificationQueryVariables = {
+  id: string,
+};
+
+export type GetNotificationQuery = {
+  getNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type ListNotificationsQueryVariables = {
+  filter?: ModelNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListNotificationsQuery = {
+  listNotifications?:  {
+    __typename: "ModelNotificationConnection",
+    items:  Array< {
+      __typename: "Notification",
+      id: string,
+      message: string,
+      timestamp: string,
+      isRead: boolean,
+      recipientID: string,
+      type: string,
+      ownerID?: string | null,
+      tenantID?: string | null,
+      propertyID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncNotificationsQueryVariables = {
+  filter?: ModelNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncNotificationsQuery = {
+  syncNotifications?:  {
+    __typename: "ModelNotificationConnection",
+    items:  Array< {
+      __typename: "Notification",
+      id: string,
+      message: string,
+      timestamp: string,
+      isRead: boolean,
+      recipientID: string,
+      type: string,
+      ownerID?: string | null,
+      tenantID?: string | null,
+      propertyID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type NotificationsByRecipientIDQueryVariables = {
+  recipientID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type NotificationsByRecipientIDQuery = {
+  notificationsByRecipientID?:  {
+    __typename: "ModelNotificationConnection",
+    items:  Array< {
+      __typename: "Notification",
+      id: string,
+      message: string,
+      timestamp: string,
+      isRead: boolean,
+      recipientID: string,
+      type: string,
+      ownerID?: string | null,
+      tenantID?: string | null,
+      propertyID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type NotificationsByOwnerIDQueryVariables = {
+  ownerID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type NotificationsByOwnerIDQuery = {
+  notificationsByOwnerID?:  {
+    __typename: "ModelNotificationConnection",
+    items:  Array< {
+      __typename: "Notification",
+      id: string,
+      message: string,
+      timestamp: string,
+      isRead: boolean,
+      recipientID: string,
+      type: string,
+      ownerID?: string | null,
+      tenantID?: string | null,
+      propertyID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type NotificationsByTenantIDQueryVariables = {
+  tenantID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type NotificationsByTenantIDQuery = {
+  notificationsByTenantID?:  {
+    __typename: "ModelNotificationConnection",
+    items:  Array< {
+      __typename: "Notification",
+      id: string,
+      message: string,
+      timestamp: string,
+      isRead: boolean,
+      recipientID: string,
+      type: string,
+      ownerID?: string | null,
+      tenantID?: string | null,
+      propertyID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type NotificationsByPropertyIDQueryVariables = {
+  propertyID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelNotificationFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type NotificationsByPropertyIDQuery = {
+  notificationsByPropertyID?:  {
+    __typename: "ModelNotificationConnection",
+    items:  Array< {
+      __typename: "Notification",
+      id: string,
+      message: string,
+      timestamp: string,
+      isRead: boolean,
+      recipientID: string,
+      type: string,
+      ownerID?: string | null,
+      tenantID?: string | null,
+      propertyID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -689,6 +1139,11 @@ export type GetPropertyQuery = {
       startedAt?: number | null,
     } | null,
     ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -808,6 +1263,11 @@ export type GetTenantQuery = {
     useGas?: boolean | null,
     propertyID: string,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -936,6 +1396,11 @@ export type GetOwnerQuery = {
       startedAt?: number | null,
     } | null,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1001,6 +1466,78 @@ export type SyncOwnersQuery = {
   } | null,
 };
 
+export type OnCreateNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionNotificationFilterInput | null,
+};
+
+export type OnCreateNotificationSubscription = {
+  onCreateNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnUpdateNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionNotificationFilterInput | null,
+};
+
+export type OnUpdateNotificationSubscription = {
+  onUpdateNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnDeleteNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionNotificationFilterInput | null,
+};
+
+export type OnDeleteNotificationSubscription = {
+  onDeleteNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
 export type OnCreatePropertySubscriptionVariables = {
   filter?: ModelSubscriptionPropertyFilterInput | null,
 };
@@ -1021,6 +1558,11 @@ export type OnCreatePropertySubscription = {
       startedAt?: number | null,
     } | null,
     ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1049,6 +1591,11 @@ export type OnUpdatePropertySubscription = {
       startedAt?: number | null,
     } | null,
     ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1077,6 +1624,11 @@ export type OnDeletePropertySubscription = {
       startedAt?: number | null,
     } | null,
     ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1103,6 +1655,11 @@ export type OnCreateTenantSubscription = {
     useGas?: boolean | null,
     propertyID: string,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1129,6 +1686,11 @@ export type OnUpdateTenantSubscription = {
     useGas?: boolean | null,
     propertyID: string,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1155,6 +1717,11 @@ export type OnDeleteTenantSubscription = {
     useGas?: boolean | null,
     propertyID: string,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1181,6 +1748,11 @@ export type OnCreateOwnerSubscription = {
       startedAt?: number | null,
     } | null,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1207,6 +1779,11 @@ export type OnUpdateOwnerSubscription = {
       startedAt?: number | null,
     } | null,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1233,6 +1810,11 @@ export type OnDeleteOwnerSubscription = {
       startedAt?: number | null,
     } | null,
     photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
     _version: number,

@@ -11,7 +11,6 @@ import AppBar from '../../components/appBar';
 const ConfirmEmail = () => {
   
   const { email,user } = useLocalSearchParams();
-  const userEmail="something.@fmjrap.clm";
   const [code, setCode] = useState(null);
 
   async function handleSignUpConfirmation({
@@ -40,7 +39,7 @@ const ConfirmEmail = () => {
 
   return (
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
-      <AppBar leading/>
+      <AppBar leading={false}/>
     {/* // appBar */}
     
       <View className='h-full bg-primary w-full items-center px-3'>

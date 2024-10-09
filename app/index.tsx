@@ -1,10 +1,9 @@
 import Button from "../components/customButton";
 import React from 'react';
-import { View,Image,Text} from "react-native";
+import { View,Image} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, Redirect } from "expo-router";
 import { Amplify } from 'aws-amplify';
-import { generateClient } from 'aws-amplify/api';
 import config from "../src/amplifyconfiguration.json";
 import { useGlobalContext } from "../context/GlobalProvider";
 import AppBar from "../components/appBar";
@@ -14,8 +13,6 @@ global.Buffer=Buffer;
 
 Amplify.configure(config);
 
-const client = generateClient();
-
 export default function app(){
   
   const icon=require('../assets/images/splash_screen.jpg')
@@ -24,11 +21,10 @@ export default function app(){
   const { isLoading, userType,isLoggedIn } = state;
  
   if(!isLoading && isLoggedIn && userType=="Owner") {
-    return <Redirect href="/(home)/home" />}
+    return <Redirect href="/(home)" />}
    
   else if(!isLoading && isLoggedIn && userType!="Owner") {
-      return <Redirect href="/tenant_home" />}
-  // return <Redirect href={"/(home)/home"}/>
+      return <Redirect href="/(tenant)" />}
   
   return(
   

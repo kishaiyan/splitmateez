@@ -35,7 +35,6 @@ const Signin = () => {
         username: signForm.email,
         password: signForm.password,
       });
-
       if (response) {
         handleSignInResponse(response, res);
       } else {
@@ -53,7 +52,7 @@ const Signin = () => {
     if (response.isSignedIn) {
       dispatch({ type: 'SET_USER', payload: res.userId });
       console.log(res.userId);
-      const redirectPath = userType === "Owner" ? '/home' : '/tenant_home';
+      const redirectPath = userType === "Owner" ? '/(home)' : '/(tenant)';
       router.replace(redirectPath);
     } else if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {
       router.push(`confirmEmail?email=${encodeURIComponent(signForm.email)}` as Href);

@@ -8,15 +8,17 @@ import { useGlobalContext } from '../../../context/GlobalProvider'
 import LoadingScreen from '../../loadingScreen'
 import { Href, Link, router } from 'expo-router'
 import AddProperty from '../../list_empty'
-
-
-
+import { usePushNotification } from '../../../app/notification'
 
 const Home = () => {
+
+  const {expoPushToken,notification}=usePushNotification()
+  const data =JSON.stringify(notification,undefined,2);
+
   const ItemSeparator = () => (
     <View style={{ width: 10 }} /> // Adjust the width as needed
   );
-
+  console.log(expoPushToken,notification);
   const linkToAddProperty="/property/add" as Href;
   const { state, dispatch } = useGlobalContext();
   const { userDetails, properties } = state;

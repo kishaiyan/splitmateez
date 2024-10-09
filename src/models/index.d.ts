@@ -6,6 +6,48 @@ import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/
 
 
 
+type EagerNotification = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Notification, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly message: string;
+  readonly timestamp: string;
+  readonly isRead: boolean;
+  readonly recipientID: string;
+  readonly type: string;
+  readonly ownerID?: string | null;
+  readonly tenantID?: string | null;
+  readonly propertyID?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyNotification = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Notification, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly message: string;
+  readonly timestamp: string;
+  readonly isRead: boolean;
+  readonly recipientID: string;
+  readonly type: string;
+  readonly ownerID?: string | null;
+  readonly tenantID?: string | null;
+  readonly propertyID?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Notification = LazyLoading extends LazyLoadingDisabled ? EagerNotification : LazyNotification
+
+export declare const Notification: (new (init: ModelInit<Notification>) => Notification) & {
+  copyOf(source: Notification, mutator: (draft: MutableModel<Notification>) => MutableModel<Notification> | void): Notification;
+}
+
 type EagerProperty = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Property, 'id'>;
@@ -20,6 +62,7 @@ type EagerProperty = {
   readonly photo: string;
   readonly Tenants?: (Tenant | null)[] | null;
   readonly ownerID: string;
+  readonly Notifications?: (Notification | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -38,6 +81,7 @@ type LazyProperty = {
   readonly photo: string;
   readonly Tenants: AsyncCollection<Tenant>;
   readonly ownerID: string;
+  readonly Notifications: AsyncCollection<Notification>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -64,6 +108,7 @@ type EagerTenant = {
   readonly useGas?: boolean | null;
   readonly propertyID: string;
   readonly photo: string;
+  readonly Notifications?: (Notification | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -84,6 +129,7 @@ type LazyTenant = {
   readonly useGas?: boolean | null;
   readonly propertyID: string;
   readonly photo: string;
+  readonly Notifications: AsyncCollection<Notification>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -106,6 +152,7 @@ type EagerOwner = {
   readonly email: string;
   readonly Properties?: (Property | null)[] | null;
   readonly photo: string;
+  readonly Notifications?: (Notification | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -122,6 +169,7 @@ type LazyOwner = {
   readonly email: string;
   readonly Properties: AsyncCollection<Property>;
   readonly photo: string;
+  readonly Notifications: AsyncCollection<Notification>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

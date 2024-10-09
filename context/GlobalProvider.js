@@ -34,7 +34,7 @@ export const useGlobalContext = () => useContext(GlobalContext);
 const GlobalProvider = ({ children }) => {
   
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
+  
    // Function to fetch user details
    const getUserDetails = async (userId) => {
     try {
@@ -68,7 +68,6 @@ const GlobalProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("getting current user");
     getcurrentUser()
       .then(res => {
         dispatch({ type: 'SET_USER', payload: res });
@@ -79,13 +78,20 @@ const GlobalProvider = ({ children }) => {
       .finally(() => dispatch({ type: 'SET_LOADING', payload: false }));
   }, []);
 
-  // useEffect(async()=>{
-  //   const properties = await getProperty(state.user);
-  //   dispatch({ type: 'SET_PROPERTIES', payload: properties });
-  // },[state.properties]);
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const properties = await getProperty(state.user);
+        dispatch({ type: 'SET_PROPERTIES', payload: properties });
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+  
+    fetchProperties();
+  }, [state.user]); 
 
   useEffect(() => {
-    console.log("fetchUserDetails")
     const fetchUserDetails = async () => {
       if (state.user) {
         const details = await getUserDetails(state.user);

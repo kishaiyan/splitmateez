@@ -20,7 +20,7 @@ const Account = () => {
   const fetchImageUrl = async (url) => {
     try {
       const result=await getUrl({
-        path: "public/ca511d25-371d-4826-a02a-ef69a59a19c5.jpeg",
+        path: url,
       })
   setPhotoUrl(result.url.toString());
       

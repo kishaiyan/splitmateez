@@ -8,6 +8,259 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getNotification = /* GraphQL */ `query GetNotification($id: ID!) {
+  getNotification(id: $id) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetNotificationQueryVariables,
+  APITypes.GetNotificationQuery
+>;
+export const listNotifications = /* GraphQL */ `query ListNotifications(
+  $filter: ModelNotificationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listNotifications(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      message
+      timestamp
+      isRead
+      recipientID
+      type
+      ownerID
+      tenantID
+      propertyID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListNotificationsQueryVariables,
+  APITypes.ListNotificationsQuery
+>;
+export const syncNotifications = /* GraphQL */ `query SyncNotifications(
+  $filter: ModelNotificationFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncNotifications(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      message
+      timestamp
+      isRead
+      recipientID
+      type
+      ownerID
+      tenantID
+      propertyID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SyncNotificationsQueryVariables,
+  APITypes.SyncNotificationsQuery
+>;
+export const notificationsByRecipientID = /* GraphQL */ `query NotificationsByRecipientID(
+  $recipientID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelNotificationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  notificationsByRecipientID(
+    recipientID: $recipientID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      message
+      timestamp
+      isRead
+      recipientID
+      type
+      ownerID
+      tenantID
+      propertyID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.NotificationsByRecipientIDQueryVariables,
+  APITypes.NotificationsByRecipientIDQuery
+>;
+export const notificationsByOwnerID = /* GraphQL */ `query NotificationsByOwnerID(
+  $ownerID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelNotificationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  notificationsByOwnerID(
+    ownerID: $ownerID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      message
+      timestamp
+      isRead
+      recipientID
+      type
+      ownerID
+      tenantID
+      propertyID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.NotificationsByOwnerIDQueryVariables,
+  APITypes.NotificationsByOwnerIDQuery
+>;
+export const notificationsByTenantID = /* GraphQL */ `query NotificationsByTenantID(
+  $tenantID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelNotificationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  notificationsByTenantID(
+    tenantID: $tenantID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      message
+      timestamp
+      isRead
+      recipientID
+      type
+      ownerID
+      tenantID
+      propertyID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.NotificationsByTenantIDQueryVariables,
+  APITypes.NotificationsByTenantIDQuery
+>;
+export const notificationsByPropertyID = /* GraphQL */ `query NotificationsByPropertyID(
+  $propertyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelNotificationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  notificationsByPropertyID(
+    propertyID: $propertyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      message
+      timestamp
+      isRead
+      recipientID
+      type
+      ownerID
+      tenantID
+      propertyID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.NotificationsByPropertyIDQueryVariables,
+  APITypes.NotificationsByPropertyIDQuery
+>;
 export const getProperty = /* GraphQL */ `query GetProperty($id: ID!) {
   getProperty(id: $id) {
     id
@@ -23,6 +276,11 @@ export const getProperty = /* GraphQL */ `query GetProperty($id: ID!) {
       __typename
     }
     ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -155,6 +413,11 @@ export const getTenant = /* GraphQL */ `query GetTenant($id: ID!) {
     useGas
     propertyID
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -293,6 +556,11 @@ export const getOwner = /* GraphQL */ `query GetOwner($id: ID!) {
       __typename
     }
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version

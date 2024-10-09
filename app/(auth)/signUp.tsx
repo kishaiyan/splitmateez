@@ -16,7 +16,8 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 const client = generateClient();
 
 const Signup = () => {
-  const { isLoading, setIsLoading } = useGlobalContext();
+  const { state, dispatch } = useGlobalContext();
+  const { isLoading } = state;
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -151,7 +152,7 @@ const Signup = () => {
     if (!validateForm()) return;
 
     try {
-      setIsLoading(true);
+      dispatch({ type: 'SET_LOADING', payload: true });
       const { userId, nextStep, isSignUpComplete } = await signUp({
         username: form.email,
         password: form.password,
@@ -161,6 +162,7 @@ const Signup = () => {
             phone_number: getNumber(form.phno),
             given_name: form.firstname,
             family_name: form.lastname,
+            address:"address"
           },
           autoSignIn: { enabled: false },
         },
@@ -193,7 +195,7 @@ const Signup = () => {
       console.log('Error signing up:', error);
       Alert.alert("Sign Up Failed", "There was an error signing you up. Please try again later.");
     } finally {
-      setIsLoading(false);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
   };
 

@@ -8,6 +8,84 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createNotification = /* GraphQL */ `mutation CreateNotification(
+  $input: CreateNotificationInput!
+  $condition: ModelNotificationConditionInput
+) {
+  createNotification(input: $input, condition: $condition) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateNotificationMutationVariables,
+  APITypes.CreateNotificationMutation
+>;
+export const updateNotification = /* GraphQL */ `mutation UpdateNotification(
+  $input: UpdateNotificationInput!
+  $condition: ModelNotificationConditionInput
+) {
+  updateNotification(input: $input, condition: $condition) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateNotificationMutationVariables,
+  APITypes.UpdateNotificationMutation
+>;
+export const deleteNotification = /* GraphQL */ `mutation DeleteNotification(
+  $input: DeleteNotificationInput!
+  $condition: ModelNotificationConditionInput
+) {
+  deleteNotification(input: $input, condition: $condition) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteNotificationMutationVariables,
+  APITypes.DeleteNotificationMutation
+>;
 export const createProperty = /* GraphQL */ `mutation CreateProperty(
   $input: CreatePropertyInput!
   $condition: ModelPropertyConditionInput
@@ -26,6 +104,11 @@ export const createProperty = /* GraphQL */ `mutation CreateProperty(
       __typename
     }
     ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -56,6 +139,11 @@ export const updateProperty = /* GraphQL */ `mutation UpdateProperty(
       __typename
     }
     ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -86,6 +174,11 @@ export const deleteProperty = /* GraphQL */ `mutation DeleteProperty(
       __typename
     }
     ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -114,6 +207,11 @@ export const createTenant = /* GraphQL */ `mutation CreateTenant(
     useGas
     propertyID
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -142,6 +240,11 @@ export const updateTenant = /* GraphQL */ `mutation UpdateTenant(
     useGas
     propertyID
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -170,6 +273,11 @@ export const deleteTenant = /* GraphQL */ `mutation DeleteTenant(
     useGas
     propertyID
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -198,6 +306,11 @@ export const createOwner = /* GraphQL */ `mutation CreateOwner(
       __typename
     }
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -226,6 +339,11 @@ export const updateOwner = /* GraphQL */ `mutation UpdateOwner(
       __typename
     }
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version
@@ -254,6 +372,11 @@ export const deleteOwner = /* GraphQL */ `mutation DeleteOwner(
       __typename
     }
     photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
     createdAt
     updatedAt
     _version

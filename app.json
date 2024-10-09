@@ -13,13 +13,19 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.testapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": [
+        "android.permission.NOTIFICATION_SERVICE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "googleServicesFile": "./android/app/google-services.json",
       "package": "com.anonymous.testapp"
     },
     "web": {
@@ -40,6 +46,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c70fe63e-3d4e-4466-820d-f300cd59ddcc"
+      }
     }
   }
 }

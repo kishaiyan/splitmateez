@@ -1,3 +1,15 @@
+type Notification @model @auth(rules: [{ allow: public }, { allow: private }]) {
+  id: ID!
+  message: String!
+  timestamp: AWSDateTime!
+  isRead: Boolean!
+  recipientID: ID! @index(name: "byRecipient")
+  type: String! # e.g., "propertyUpdate", "tenantRequest", etc.
+  ownerID: ID @index(name: "byOwner") # Add this index for owner
+  tenantID: ID @index(name: "byTenant") # Index for tenant
+  propertyID: ID @index(name: "byProperty") # Optional, if linking to properties
+}
+
 type Property @model @auth(rules: [{ allow: public }]) {
   id: ID!
   address: String!
@@ -8,6 +20,8 @@ type Property @model @auth(rules: [{ allow: public }]) {
   photo: String!
   Tenants: [Tenant] @hasMany(indexName: "byProperty", fields: ["id"])
   ownerID: ID! @index(name: "byOwner")
+  Notifications: [Notification]
+    @hasMany(indexName: "byProperty", fields: ["id"]) # Link to notifications related to this property
 }
 
 type Tenant @model @auth(rules: [{ allow: public }]) {
@@ -22,6 +36,7 @@ type Tenant @model @auth(rules: [{ allow: public }]) {
   useGas: Boolean
   propertyID: ID! @index(name: "byProperty")
   photo: String!
+  Notifications: [Notification] @hasMany(indexName: "byTenant", fields: ["id"]) # Link to notifications for this tenant
 }
 
 type Owner @model @auth(rules: [{ allow: public }, { allow: private }]) {
@@ -32,4 +47,5 @@ type Owner @model @auth(rules: [{ allow: public }, { allow: private }]) {
   email: String!
   Properties: [Property] @hasMany(indexName: "byOwner", fields: ["id"])
   photo: String!
+  Notifications: [Notification] @hasMany(indexName: "byOwner", fields: ["id"]) # Link to notifications for this owner
 }

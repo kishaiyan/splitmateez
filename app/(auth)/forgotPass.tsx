@@ -48,7 +48,7 @@ const forgotPass = () => {
   }
   return (
     <SafeAreaView className='bg-primary flex-1 px-5 items-center'>
-      <AppBar />
+      <AppBar leading={false}/>
       <View>
         <Text className='text-secondary text-xl mb-5'>Password Recovery</Text>
       </View>
