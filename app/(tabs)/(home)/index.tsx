@@ -8,17 +8,16 @@ import { useGlobalContext } from '../../../context/GlobalProvider'
 import LoadingScreen from '../../loadingScreen'
 import { Href, Link, router } from 'expo-router'
 import AddProperty from '../../list_empty'
-import { usePushNotification } from '../../../app/notification'
 
 const Home = () => {
 
-  const {expoPushToken,notification}=usePushNotification()
-  const data =JSON.stringify(notification,undefined,2);
+  
+ 
 
   const ItemSeparator = () => (
     <View style={{ width: 10 }} /> // Adjust the width as needed
   );
-  console.log(expoPushToken,notification);
+
   const linkToAddProperty="/property/add" as Href;
   const { state, dispatch } = useGlobalContext();
   const { userDetails, properties } = state;
@@ -54,12 +53,17 @@ const Home = () => {
        </View>
        </Pressable>
       </View>
-      {visible? 
-       <View className=' m-3 flex-row items-center justify-center gap-2'>
+      
+      <View className="m-3 flex flex-row items-center">
+        {visible ?
+       <View className='flex-row gap-2 flex-1'>
         <MaterialIcons name='swipe' color='#ffffff' size={20}/>
         <Text className='text-gray-200'>Swipe for more properties</Text>
       </View>:
-      <View className="m-3 items-end">
+      <View className='flex-1 '>
+      </View>  
+      }
+      <View>
             <Link href={linkToAddProperty}>
                 <View className="flex-row bg-secondary p-3 rounded-md">
                     <Text className="text-white">Add Prop</Text>
@@ -67,7 +71,8 @@ const Home = () => {
                 </View>
             </Link>
       </View>
-    }
+      </View>
+      
       <View className='h-[65%] items-center'>
   
       <FlatList  
