@@ -12,6 +12,9 @@ import LoadingScreen from '../../app/loadingScreen';
 
 const Signin = () => {
   const { state, dispatch } = useGlobalContext();
+  if(!dispatch){
+    console.error("Dispatch not imported rightly")
+  }
   const { isLoading, userType } = state;
   const router = useRouter();
   const [signForm, setSignForm] = useState({
@@ -29,13 +32,13 @@ const Signin = () => {
 
   const handleSignInSubmit = async () => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      
       const { response, res, error } = await handleSignIn({
         username: signForm.email,
         password: signForm.password,
       });
+      console.info(response);
       if (response) {
+        dispatch({ type: 'SET_USER', payload: res.userId });
         handleSignInResponse(response, res);
       } else {
         handleSignInError(error);
@@ -43,15 +46,14 @@ const Signin = () => {
     } catch (error) {
       console.error("Sign in error:", error);
       showErrorToast(error);
-    } finally {
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
+    } 
+    
   };
 
   const handleSignInResponse = (response, res) => {
+  
     if (response.isSignedIn) {
       dispatch({ type: 'SET_USER', payload: res.userId });
-      console.log(res.userId);
       const redirectPath = userType === "Owner" ? '/(home)' : '/(tenant)';
       router.replace(redirectPath);
     } else if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {

@@ -15,24 +15,11 @@ import { getUrl } from 'aws-amplify/storage';
 const Account = () => {
   const { state, dispatch } = useGlobalContext();
   const { userDetails } = state;
-  const[photoUrl,setPhotoUrl]=useState("");
-
-  const fetchImageUrl = async (url) => {
-    try {
-      const result=await getUrl({
-        path: url,
-      })
-  setPhotoUrl(result.url.toString());
-      
-    }catch(error){
-      console.log("Error: ", error)
-    }
-  };
-  useEffect(()=>{fetchImageUrl(userDetails.photo)},[]);
 
   const signOut=()=>{
     try{
       handleSignOut()
+      dispatch
       router.replace('/signIn')
     }
     catch(error){
@@ -52,7 +39,7 @@ const Account = () => {
       <View className='mb-6'>
       <View className='items-center'>
       <Image 
-      source={photoUrl ? { uri: photoUrl } : require('../../assets/images/icon.png')}
+      source={{ uri: userDetails.photo }}
       style={{width:100,height:100,marginBottom:16,borderRadius:50}} 
       resizeMode='contain'
       onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)}/>

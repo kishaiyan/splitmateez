@@ -14,8 +14,8 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 
 const AddTenant = () => {
   const client=generateClient();
+  const { addTenantToProperty } = useGlobalContext(); 
   const params = useLocalSearchParams();
-  const {isLoading, setIsLoading}=useGlobalContext();
   const { id,address } = params;
   const [tenantForm, setTenantForm] = useState({
     firstname: '',
@@ -81,45 +81,68 @@ const AddTenant = () => {
       return result;
   }
 
-  const handleTenant=async()=>{ 
-    setIsLoading(true);
-    const {userId}= await signUp({
-      username: tenantForm.email,
-        password:generate(tenantForm.firstname,tenantForm.lastname),
-        options:{
+  const handleTenant = async () => {
+  
+    try {
+      const { userId } = await signUp({
+        username: tenantForm.email,
+        password: generate(tenantForm.firstname, tenantForm.lastname),
+        options: {
           userAttributes: {
-              email:tenantForm.email,
-              phone_number: getNumber(tenantForm.phno),
-              given_name: tenantForm.firstname,
-              family_name: tenantForm.lastname,
-              address:address.toString(),
+            email: tenantForm.email,
+            phone_number: getNumber(tenantForm.phno),
+            given_name: tenantForm.firstname,
+            family_name: tenantForm.lastname,
+            address: address.toString(),
+          },
+          autoSignIn: { enabled: false },
+        },
+      });
+  
+      console.log("Here Created signup");
+  
+      if (userId) {
+        const photo = await uploadImage(userId);
+        await client.graphql({
+          query: createTenant,
+          variables: {
+            input: {
+              id: userId,
+              propertyID: id.toString(),
+              firstName: tenantForm.firstname,
+              lastName: tenantForm.lastname,
+              phNo: tenantForm.phno,
+              email: tenantForm.email,
+              photo: photo,
+              useElectricity: true,
+              useInternet: true,
+              useWater: true,
+              useGas: true,
             },
-            autoSignIn: { enabled: false },
-        }
-    })
-    if(userId){
-    const photo=await uploadImage(userId);
-    await client.graphql({
-      query:createTenant,variables:{
-      input:{
-        id:userId,
-        propertyID:id.toString(),
-        firstName:tenantForm.firstname,
-        lastName:tenantForm.lastname,
-        phNo:tenantForm.phno,
-        email:tenantForm.email,
-        photo:photo,
-        useElectricity:true,
-        useInternet:true,
-        useWater:true,
-        useGas:true,
+          },
+        });
+        addTenantToProperty(id.toString(), {
+          id: userId,
+          firstName: tenantForm.firstname,
+          lastName: tenantForm.lastname,
+          phNo: tenantForm.phno,
+          email: tenantForm.email,
+          photo: photo,
+          useElectricity: true,
+          useInternet: true,
+          useWater: true,
+          useGas: true,
+        });
+    
+        router.back();
       }
-    }})
-    setIsLoading(false)
-    router.back();
-  }
-  }
-
+    } catch (error) {
+      console.error("Error during tenant handling:", error);
+      // Handle the error (e.g., show a message to the user)
+      
+    }
+  };
+  
   const uploadImage=async(userId)=>{
     try {
       if (!tenantForm.photo) {
@@ -196,7 +219,7 @@ const AddTenant = () => {
                 placeholder="04.."
                 error={""}
               />
-              <Button title='Add Tenant' containerStyle='mt-6 px-10 py-2' onPress={handleTenant} isLoading={isLoading}/>
+              <Button title='Add Tenant' containerStyle='mt-6 px-10 py-2' onPress={handleTenant} />
             </View>
           </View>
         </ScrollView>

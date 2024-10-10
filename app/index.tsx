@@ -18,7 +18,6 @@ Amplify.configure(config);
 export default function app(){
   const {expoPushToken,notification}=usePushNotification()
   const icon=require('../assets/images/splash_screen.jpg')
-  console.log(expoPushToken)
   const { state, dispatch } = useGlobalContext();
   const { isLoading, userType,isLoggedIn } = state;
  

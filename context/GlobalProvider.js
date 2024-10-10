@@ -1,7 +1,8 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
 import { getcurrentUser } from "../lib/aws-amplify";
-import { getOwner, propertiesByOwnerID } from '../src/graphql/queries';
+import { getOwner, propertiesByOwnerID, tenantsByPropertyID } from '../src/graphql/queries';
 import client from "../lib/client";
+import { getUrl } from 'aws-amplify/storage';
 
 const GlobalContext = createContext();
 
@@ -11,7 +12,7 @@ const initialState = {
   isLoading: true,
   properties: [],
   userDetails: null,
-  userType:"Owner",
+  userType: "Owner",
 };
 
 const reducer = (state, action) => {
@@ -24,6 +25,17 @@ const reducer = (state, action) => {
       return { ...state, properties: action.payload };
     case 'SET_USER_DETAILS':
       return { ...state, userDetails: action.payload };
+    case 'ADD_PROPERTY':
+      return { ...state, properties: [...state.properties, action.payload] };
+    case 'ADD_TENANT_TO_PROPERTY':
+      return {
+        ...state,
+        properties: state.properties.map(property => 
+          property.id === action.payload.propertyId
+            ? { ...property, tenants: [...(property.tenants || []), action.payload.tenant] }
+            : property
+        ),
+      };
     default:
       return state;
   }
@@ -34,23 +46,21 @@ export const useGlobalContext = () => useContext(GlobalContext);
 const GlobalProvider = ({ children }) => {
   
   const [state, dispatch] = useReducer(reducer, initialState);
-  
-   // Function to fetch user details
-   const getUserDetails = async (userId) => {
+
+  const fetchUserDetails = async (userId) => {
     try {
       const result = await client.graphql({
         query: getOwner,
         variables: { id: userId }
       });
-      return result.data.getOwner; // Return the user details
+      return result.data.getOwner;
     } catch (error) {
       console.error("Error fetching user details:", error);
-      return null; // Return null on error
+      return null;
     }
   };
 
-  // Function to fetch properties based on owner ID
-  const getProperty = async (ownerId) => {
+  const fetchProperties = async (ownerId) => {
     if (!ownerId) {
       console.log("Owner ID is not set, skipping properties fetch.");
       return [];
@@ -60,55 +70,104 @@ const GlobalProvider = ({ children }) => {
         query: propertiesByOwnerID,
         variables: { ownerID: ownerId }
       });
-      return result.data.propertiesByOwnerID.items; // Return the property items
+      const properties = result.data.propertiesByOwnerID.items;
+  
+      // Fetch tenants for each property
+      const propertiesWithTenants = await Promise.all(properties.map(async (property) => {
+        const tenants = await fetchTenants(property.id);
+        // Ensure you are correctly spreading the property and adding tenants
+        return { ...property, tenants };
+      }));
+     
+      return propertiesWithTenants;
     } catch (error) {
-      console.error("Error getting properties:", error);
-      return []; // Return empty array on error
+      console.error("Error fetching properties:", error);
+      return [];
     }
   };
-
+  
+  const fetchTenants = async (propertyId) => {
+    if (!propertyId) {
+      console.log("Property ID is not set");
+      return [];
+    }
+    try {
+      const result = await client.graphql({
+        query: tenantsByPropertyID,
+        variables: { propertyID: propertyId }
+      });
+      const Tenants=result.data.tenantsByPropertyID.items;
+      const tenantsWithImages = await Promise.all(Tenants.map(async (tenant) => {
+        const imageUrl = await getImageURL(tenant.photo);
+        return { ...tenant, photo: imageUrl }; // Return tenant with updated photo
+      }));
+      return tenantsWithImages; 
+    } catch (error) {
+      console.error("Error fetching tenants:", error);
+      return [];
+    }
+  };  
+  const getImageURL = async (url)=>{
+    try {
+      const result=await getUrl({
+        path: url,
+      })
+    
+      return result.url.toString();
+      
+    }catch(error){
+      console.log("Error: ", error)
+    }
+  }
   useEffect(() => {
-    getcurrentUser()
-      .then(res => {
-        dispatch({ type: 'SET_USER', payload: res });
-      })
-      .catch(error => {
+    const initializeUser = async () => {
+      try {
+        const user = await getcurrentUser();
+        dispatch({ type: 'SET_USER', payload: user });
+        if (user) {
+          const details = await fetchUserDetails(user);
+          details.photo= await getImageURL(details.photo);
+          dispatch({ type: 'SET_USER_DETAILS', payload: details });
+          const properties = await fetchProperties(user);
+
+          const updatedProperties = await Promise.all(properties.map(async (property) => {
+            if (property.photo) {
+              property.photo = await getImageURL(property.photo);
+            }
+            return property; // Return the updated property
+          }));
+          dispatch({ type: 'SET_PROPERTIES', payload: updatedProperties });
+        }
+      } catch (error) {
         dispatch({ type: 'SET_USER', payload: null });
-      })
-      .finally(() => dispatch({ type: 'SET_LOADING', payload: false }));
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+
+    initializeUser();
   }, []);
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const properties = await getProperty(state.user);
-        dispatch({ type: 'SET_PROPERTIES', payload: properties });
-      } catch (error) {
-        console.error('Error fetching properties:', error);
-      }
-    };
+  const addProperty = async(property) => {
+    dispatch({ type: 'ADD_PROPERTY', payload: property });
+    const ownerId = state.user?.id; // Assuming user has an 'id' field
+    if (ownerId) {
+      const updatedProperties = await fetchProperties(ownerId);
+      dispatch({ type: 'SET_PROPERTIES', payload: updatedProperties });
+    }
+  };
   
-    fetchProperties();
-  }, [state.user]); 
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      if (state.user) {
-        const details = await getUserDetails(state.user);
-        dispatch({ type: 'SET_USER_DETAILS', payload: details });
-  
-        const properties = await getProperty(state.user);
-        dispatch({ type: 'SET_PROPERTIES', payload: properties });
-      }
-    };
-  
-    fetchUserDetails();
-  }, [state.user]); 
-
-  
-
+  const addTenantToProperty = async(propertyId, tenant) => {
+    dispatch({ type: 'ADD_TENANT_TO_PROPERTY', payload: { propertyId, tenant } });
+    const ownerId = state.user?.id; // Get owner ID again
+    if (ownerId) {
+      const updatedProperties = await fetchProperties(ownerId);
+      dispatch({ type: 'SET_PROPERTIES', payload: updatedProperties });
+    }
+  };
+ 
   return (
-    <GlobalContext.Provider value={{ state, dispatch }}>
+    <GlobalContext.Provider value={{ state,dispatch, addProperty, addTenantToProperty }}>
       {children}
     </GlobalContext.Provider>
   );

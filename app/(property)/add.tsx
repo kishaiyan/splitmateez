@@ -6,7 +6,7 @@ import TextField from '../../components/textField';
 import Button from '../../components/customButton';
 import { uploadData } from 'aws-amplify/storage';
 import * as ImagePicker from "expo-image-picker";
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import client from "../../lib/client";
 import { createProperty } from '../../src/graphql/mutations';
 import { useGlobalContext } from '../../context/GlobalProvider';
@@ -14,7 +14,7 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 const AddProperty = () => {
 
   const [image,setImage]=useState(null);
-  const { state, dispatch } = useGlobalContext();
+  const { state, dispatch, AddProperty } = useGlobalContext();
   const { userDetails } = state;
   const [propertyForm,setPropertyForm]=useState({
     address:"",
@@ -25,28 +25,35 @@ const AddProperty = () => {
     maximun:"",
   })
   
-  const addProperty=async()=>{
-    try {
-      const response=await client.graphql({
-        query:createProperty,
-        variables:{
-          input:{
-            address:propertyForm.address,
-            rooms:propertyForm.rooms,
-            maximum:propertyForm.maximun,
-            bathroom:propertyForm.bathroom,
-            parking:propertyForm.parking,
-            photo:propertyForm.photo,
-            ownerID:userDetails.id
-          }
-        }
-      })
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-    
+  // Include addProperty
+
+const addProperty = async () => {
+  try {
+    const response = await client.graphql({
+      query: createProperty,
+      variables: {
+        input: {
+          address: propertyForm.address,
+          rooms: propertyForm.rooms,
+          maximum: propertyForm.maximun,
+          bathroom: propertyForm.bathroom,
+          parking: propertyForm.parking,
+          photo: propertyForm.photo,
+          ownerID: userDetails.id,
+        },
+      },
+    });
+
+    const newProperty = response.data.createProperty;
+    router.back() 
+   
+    AddProperty(newProperty);
+
+  } catch (error) {
+    console.log(error);
   }
+};
+
 
   const uploadImage=async(path)=>{
     try {
@@ -73,10 +80,10 @@ const AddProperty = () => {
   const handleImage=async()=>{
 
     const result=await ImagePicker.launchImageLibraryAsync({
-      allowsMultipleSelection:true,
       selectionLimit:10,
+      allowsEditing:true,
       mediaTypes:ImagePicker.MediaTypeOptions.Images,
-      aspect:[1,1],
+      aspect:[4,3],
       quality:1,
     })
     if(!result.canceled){

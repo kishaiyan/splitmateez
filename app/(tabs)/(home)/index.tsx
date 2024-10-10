@@ -18,11 +18,63 @@ const Home = () => {
     <View style={{ width: 10 }} /> // Adjust the width as needed
   );
 
-  const linkToAddProperty="/property/add" as Href;
+  const linkToAddProperty="/(property)/add" as Href;
   const { state, dispatch } = useGlobalContext();
-  const { userDetails, properties } = state;
+  const { userDetails, properties,user } = state;
   const [notifyNumber,setNotifyNumber]=useState(9);
   const [visible, setVisible] = useState(true)
+  const costs=[
+    {
+      propertyId:"fe9e1590-5be2-4050-8fa1-6d43ae8ab5f0",
+      tenant_cost:{
+        
+          "b9bef4f8-7061-7075-2b14-30381a1f0039":1234,
+        
+          "f9ceb498-5031-7095-4ab5-10598bbf77e4":3456,
+        
+          "390e2418-10b1-7016-9cf8-53d25a0af565":4567
+        
+      }
+    }
+  ]
+  const cost={
+    "property_costs": {
+      "fe9e1590-5be2-4050-8fa1-6d43ae8ab5f0": {
+        "b9bef4f8-7061-7075-2b14-30381a1f0039": 14400
+      }
+    }
+  }
+  
+  const initiateSocketConnection = () =>{
+    const ws=new WebSocket('wss://x93f2f8a41.execute-api.ap-southeast-2.amazonaws.com/production/');
+    ws.onopen=()=>{
+      ws.send(
+        JSON.stringify({
+          userId:user,
+        })
+      )
+    }
+
+    ws.onmessage=(e)=>{
+      const message = JSON.parse(e.data)
+    }
+    costs.forEach((cost)=>{
+      console.log(cost.propertyId)
+     const prop = properties.find((property) => cost.propertyId === property.id);
+     prop.tenants.forEach((tenant)=>{
+      
+     })
+     prop.tenants.forEach((tenant)=>{
+      if(tenant.id in cost.tenant_cost){
+        tenant.costAmount = cost.tenant_cost[tenant.id];
+      }
+     })
+    })
+  }
+  useEffect(()=>{
+    initiateSocketConnection()
+  },[])
+
   useEffect(()=>{
     const timer = setTimeout(()=>{
       setVisible(false);
@@ -82,9 +134,6 @@ const Home = () => {
         renderItem={({item})=>(
           
           <HomeTile 
-          name={item.address} 
-          maximum={item.maximum} 
-          current={item.tenants? item.tenants.length: 0}
           property={item}
           />
         
