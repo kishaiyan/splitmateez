@@ -81,6 +81,7 @@ const TenantAbout = () => {
                 },
               });
               console.log(response.data.updateTenant);
+
               if (response.data.updateTenant[service] !== newValue) {
                 console.error(`Failed to update ${service}. Expected ${newValue}, but got ${response.data.updateTenant[service]}`);
               } else {
