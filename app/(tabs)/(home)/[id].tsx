@@ -4,15 +4,40 @@ import { Href, router, Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../../context/GlobalProvider';
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
+import client from '../../../lib/client';
+import { deleteProperty } from '../../../src/graphql/mutations';
 import TenantCard from '../../../components/tenantCard';
 import Button from '../../../components/customButton';
 
 const PropertyDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { state, addTenantToProperty } = useGlobalContext();
+  const { state, deleteProperty: deleteGlobalProperty } = useGlobalContext();
   const { properties } = state;
   const [disProperty, setDisProperty] = useState(null);
 
+  const removeProperty = async () => {
+    try {
+      const response = await client.graphql({
+        query: deleteProperty,
+        variables: {
+          input: {
+            id: disProperty.id,
+            _version: disProperty._version
+          },
+        }
+      });
+      console.log(response)
+      if (response.data.deleteProperty) {
+        console.log("Property successfully removed");
+        await deleteGlobalProperty(disProperty.id);
+        router.back();
+      } else {
+        console.log("Property removal failed");
+      }
+    } catch (error) {
+      console.error("Error removing property:", JSON.stringify(error, null, 2));
+    }
+  }
 
   useEffect(() => {
     const getProperty = (id) => {
@@ -26,43 +51,16 @@ const PropertyDetails = () => {
       console.log("No Id");
     }
   }, [id, properties]);
-  
-  
-  const toggleService = (tenantId, service) => {
-    setDisProperty((prevProperty) => {
-      const updatedTenants = prevProperty.tenants.map((tenant) => {
-        if (tenant.id === tenantId) {
-          return { ...tenant, [service]: !tenant[service] };
-        }
-        return tenant;
-      });
-      return { ...prevProperty, tenants: updatedTenants };
-    });
 
-    // Optionally, update global state if needed
-    // You might want to dispatch an action here
-  };
-
-  const openModal=(tenant)=>{
-    router.push(`/(tenant)/${tenant.id}` as Href)
+  const openModal = (tenant) => {
+    router.push(`/(property)/(tenant)/${tenant.id}` as Href)
   }
 
-  const handleAddTenant = (newTenant) => {
-    addTenantToProperty(disProperty.id, newTenant);
-  };
-  const removeProperty=()=>{
-
-  }
-
-  const toggleElectricity = (tenantId) => toggleService(tenantId, 'electricity');
-  const toggleWater = (tenantId) => toggleService(tenantId, 'waterAccess');
-  const toggleGas = (tenantId) => toggleService(tenantId, 'gas');
-  const toggleWifi = (tenantId) => toggleService(tenantId, 'internet');
 
   return (
     <SafeAreaView className='flex-1 bg-primary px-3 pb-6'>
       <Stack.Screen options={{ headerShown: false }} />
-      { disProperty ? (
+      {disProperty ? (
         <>
           <View className='mb-3 items-center flex-row justify-between pt-2'>
             <Pressable onPress={() => router.back()}>
@@ -96,21 +94,21 @@ const PropertyDetails = () => {
               </View>
               <View className='items-center gap-1'>
                 <Text className='text-secondary text-md'>Now</Text>
-                <Text className='text-white text-md'>{disProperty.tenants.length}</Text>
+                <Text className='text-white text-md'>{disProperty.tenants ? disProperty.tenants.length : 0}</Text>
               </View>
             </View>
 
             <View>
               <View className='flex-row justify-between m-2 items-center'>
                 <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
-                <Pressable onPress={() => router.push(`/property/add_tenant?id=${disProperty.id}&address=${disProperty.address}` as Href)}>
+                <Pressable onPress={() => router.push(`/(property)/add_tenant?id=${disProperty.id}&address=${disProperty.address}` as Href)}>
                   <AntDesign name='adduser' color={"#ffffff"} size={26} />
                 </Pressable>
               </View>
-              {disProperty.tenants.length > 0 ? (
+              {disProperty.tenants && disProperty.tenants.length > 0 ? (
                 disProperty.tenants.map((tenant) => (
                   <TenantCard
-                    onPress={()=>openModal(tenant)}
+                    onPress={() => openModal(tenant)}
                     key={tenant.id}
                     tenant={tenant}
                   />
@@ -122,10 +120,10 @@ const PropertyDetails = () => {
               )}
               <View className='items-center'>
 
-                <Button 
-                title="Remove" 
-                className='px-5 py-1 bg-signOut border border-red-500 mt-3'
-                onPress={removeProperty}
+                <Button
+                  title="Remove"
+                  className='px-5 py-1 bg-signOut border border-red-500 mt-3'
+                  onPress={removeProperty}
                 />
               </View>
               <View className='h-20'></View>
