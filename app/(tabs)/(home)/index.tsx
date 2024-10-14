@@ -33,7 +33,7 @@ const Home = () => {
           "f9ceb498-5031-7095-4ab5-10598bbf77e4":3456,
         
           "390e2418-10b1-7016-9cf8-53d25a0af565":4567
-        
+    
       }
     }
   ]
@@ -47,6 +47,7 @@ const Home = () => {
   
   const initiateSocketConnection = () =>{
     const ws=new WebSocket('wss://x93f2f8a41.execute-api.ap-southeast-2.amazonaws.com/production/');
+    console.log('ws',ws);
     ws.onopen=()=>{
       ws.send(
         JSON.stringify({
@@ -57,13 +58,12 @@ const Home = () => {
 
     ws.onmessage=(e)=>{
       const message = JSON.parse(e.data)
+      console.info(message);
     }
     costs.forEach((cost)=>{
       console.log(cost.propertyId)
      const prop = properties.find((property) => cost.propertyId === property.id);
-     prop.tenants.forEach((tenant)=>{
-      
-     })
+     
      prop.tenants.forEach((tenant)=>{
       if(tenant.id in cost.tenant_cost){
         tenant.costAmount = cost.tenant_cost[tenant.id];
