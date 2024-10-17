@@ -7,8 +7,6 @@ import { useGlobalContext } from '../../context/GlobalProvider'
 import AppBar from '../../components/appBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
-import { Switch } from 'react-native-paper'
-import ThemeToggle from '../../components/ThemeToggle'
 
 // Function to get pre-signed URL for the image
 
@@ -19,12 +17,23 @@ const Account = () => {
 
   const signOut = async () => {
     try {
+      dispatch({ type: 'SET_LOADING', payload: true });
       await handleSignOut();
       dispatch({ type: 'SIGN_OUT' });
+      dispatch({ type: 'SET_LOADING', payload: false });
       router.replace('/(auth)/signIn');
     } catch (error) {
       console.error('Error during sign out:', error);
+      dispatch({ type: 'SET_LOADING', payload: false });
     }
+  }
+
+  if (!userDetails) {
+    return (
+      <SafeAreaView className='flex-1 bg-primary px-4'>
+        <Text className='text-zinc-200'>Loading user details...</Text>
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -36,11 +45,13 @@ const Account = () => {
 
           <View className='mb-6'>
             <View className='items-center flex-row justify-evenly bg-tile p-4 rounded-lg mb-4'>
-              <Image
-                source={{ uri: userDetails.photo }}
-                style={{ width: 100, height: 100, marginBottom: 16, borderRadius: 50 }}
-                resizeMode='cover'
-                onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)} />
+              {userDetails.photo && (
+                <Image
+                  source={{ uri: userDetails.photo }}
+                  style={{ width: 100, height: 100, marginBottom: 16, borderRadius: 50 }}
+                  resizeMode='cover'
+                  onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)} />
+              )}
               <View className='flex-col items-center justify-center'>
                 <Text className='text-zinc-200 text-xl'>{userDetails.firstName} {userDetails.lastName}</Text>
                 <Text className='text-secondary text-md'>{userDetails.email}</Text>
@@ -89,7 +100,7 @@ const Account = () => {
 
           </View>
           <View className='items-center'>
-            <Button title='Sign Out' containerStyle='px-10 py-3 bg-signOut border border-red-500' onPress={signOut} />
+            <Button title='Sign Out' containerStyle='px-10 py-3 bg-signOut border border-red-500' onPress={signOut} isLoading={state.isLoading} />
           </View>
         </View>
       </KeyboardAvoidingView>

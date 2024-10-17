@@ -156,26 +156,47 @@ const GlobalProvider = ({ children }) => {
     }
   }, [getImageURL, fetchTenants]);
 
+  const handleWebSocketMessage = useCallback((message) => {
+    console.log('Received WebSocket message:', message);
+    // Add your message handling logic here
+    // For example:
+    // if (message.type === 'PROPERTY_UPDATE') {
+    //   updateProperty(message.data);
+    // } else if (message.type === 'TENANT_UPDATE') {
+    //   updateTenant(message.data);
+    // }
+  }, [/* Add dependencies based on what you use in the handler */]);
+
+  const initializeWebSocket = useCallback(() => {
+    connectWebSocket();
+    setOnMessageHandler(handleWebSocketMessage);
+  }, [connectWebSocket, setOnMessageHandler, handleWebSocketMessage]);
+
+  const initializeUserData = useCallback(async (user) => {
+    try {
+      console.log("Trying to initialize user data", user)
+      const [details, properties] = await Promise.all([
+        fetchUserDetails(user),
+        fetchProperties(user)
+      ]);
+      dispatch({ type: 'SET_USER_DETAILS', payload: details });
+      dispatch({ type: 'SET_PROPERTIES', payload: properties });
+      dispatch({ type: 'SET_TENANTS', payload: properties.flatMap(property => property.tenants) });
+      initializeWebSocket();
+    } catch (error) {
+      console.error("Error initializing user data:", error);
+    }
+  }, [fetchUserDetails, fetchProperties, initializeWebSocket, dispatch]);
+
   useEffect(() => {
     const initializeUser = async () => {
-      if (isInitialized.current) return;
-      isInitialized.current = true;
-
+      if (isInitialized.current) return
+      isInitialized.current = true
       try {
         const user = await getcurrentUser();
         dispatch({ type: 'SET_USER', payload: user });
         if (user) {
-          const [details, properties] = await Promise.all([
-            fetchUserDetails(user),
-            fetchProperties(user)
-          ]);
-          dispatch({ type: 'SET_USER_DETAILS', payload: details });
-          dispatch({ type: 'SET_PROPERTIES', payload: properties });
-          dispatch({ type: 'SET_TENANTS', payload: properties.flatMap(property => property.tenants) });
-          connectWebSocket();
-          setOnMessageHandler((message) => {
-            console.log('Received WebSocket message:', message);
-          });
+          await initializeUserData(user);
         }
       } catch (error) {
         console.error("Error initializing user:", error);
@@ -188,15 +209,15 @@ const GlobalProvider = ({ children }) => {
     initializeUser();
 
     return disconnectWebSocket;
-  }, [fetchUserDetails, fetchProperties, connectWebSocket, disconnectWebSocket, setOnMessageHandler]);
+  }, [initializeUserData, disconnectWebSocket]);
 
   const updateStateAndProperties = useCallback(async () => {
-    if (state.user?.id) {
+    if (state?.user?.id) {
       const updatedProperties = await fetchProperties(state.user.id);
       dispatch({ type: 'SET_PROPERTIES', payload: updatedProperties });
       dispatch({ type: 'SET_TENANTS', payload: updatedProperties.flatMap(property => property.tenants) });
     }
-  }, [state.user, fetchProperties]);
+  }, [state, fetchProperties]);
 
   const addProperty = useCallback(async (property) => {
     property.photo = await getImageURL(property.photo);
@@ -244,7 +265,8 @@ const GlobalProvider = ({ children }) => {
     addTenant,
     updateTenant,
     deleteTenant,
-    addTenantToProperty
+    addTenantToProperty,
+    initializeUserData,
   };
 
   return (

@@ -11,7 +11,7 @@ import Toast from "react-native-toast-message";
 import LoadingScreen from '../../app/loadingScreen';
 
 const Signin = () => {
-  const { state, dispatch } = useGlobalContext();
+  const { state, dispatch, initializeUserData, } = useGlobalContext();
   if (!dispatch) {
     console.error("Dispatch not imported rightly")
   }
@@ -41,8 +41,13 @@ const Signin = () => {
 
       if (response) {
         if (response.isSignedIn) {
-          dispatch({ type: 'SET_USER', payload: res.userId });
-          handleSignInResponse(response, res);
+          dispatch({ type: 'SET_USER_DETAILS', payload: res.userId });
+          dispatch({ type: 'SET_LOADING', payload: true });
+
+          await initializeUserData(res.userId);
+          dispatch({ type: 'SET_LOADING', payload: false });
+          const redirectPath = userType === "Owner" ? '/(home)' : '/(tenant)';
+          router.replace(redirectPath);
         } else if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {
           navigateToConfirmEmail();
         }
@@ -55,15 +60,6 @@ const Signin = () => {
     }
   };
 
-  const handleSignInResponse = (response, res) => {
-    if (response.isSignedIn) {
-      dispatch({ type: 'SET_USER', payload: res.userId });
-      const redirectPath = userType === "Owner" ? '/(home)' : '/(tenant)';
-      router.replace(redirectPath);
-    } else if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {
-      navigateToConfirmEmail();
-    }
-  };
 
   const navigateToConfirmEmail = () => {
     router.push(`confirmEmail?email=${encodeURIComponent(signForm.email)}` as Href);
@@ -110,8 +106,8 @@ const Signin = () => {
 
             <Button
               title='Sign In'
-              containerStyle={`mt-5 mb-3 px-10 py-3 ${isLoading ? 'opacity-30' : 'opacity-100'}`}
-              isLoading={isLoading}
+              containerStyle={`mt-5 mb-3 px-10 py-3 ${state.isLoading ? 'opacity-30' : 'opacity-100'}`}
+              isLoading={state.isLoading}
               onPress={handleSignInSubmit}
             />
             <Link href={'/forgotPass'} className='text-gray-300 text-xs font-thin'>Forgot your password?</Link>
