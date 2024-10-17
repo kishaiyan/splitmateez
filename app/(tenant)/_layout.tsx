@@ -6,7 +6,7 @@ const TabsLayout = () => {
   return (
     <>
       <Tabs
-        // tabBar={(props) => <TabBar {...props} />}
+        tabBar={(props) => <TabBar {...props} />}
         screenOptions={{
           headerShown: false,
         }}
@@ -15,12 +15,6 @@ const TabsLayout = () => {
           name="index"
           options={{
             title: 'Home',
-          }}
-        />
-        <Tabs.Screen
-          name="add"
-          options={{
-            title: 'Add',
           }}
         />
         <Tabs.Screen

@@ -1,161 +1,139 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { View, Text, Image, Pressable, Alert } from 'react-native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Text, View, Image, ScrollView, Modal, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Href, router, Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import client from '../../../lib/client';
-import { updateTenant, deleteTenant } from '../../../src/graphql/mutations';
-import { getTenant } from '../../../src/graphql/queries';
 import { useGlobalContext } from '../../../context/GlobalProvider';
-import { AntDesign, FontAwesome5, FontAwesome6, Ionicons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons';
+import client from '../../../lib/client';
+import { deleteProperty } from '../../../src/graphql/mutations';
+import TenantCard from '../../../components/tenantCard';
 import Button from '../../../components/customButton';
 
-const TenantAbout = () => {
-  const { id } = useLocalSearchParams();
-  const { state, updateTenant: updateGlobalTenant, deleteTenant: deleteGlobalTenant } = useGlobalContext();
-  const [tenantDetails, setTenantDetails] = useState(null);
+const PropertyDetails = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { state, deleteProperty: deleteGlobalProperty } = useGlobalContext();
+  const { properties } = state;
+  const [disProperty, setDisProperty] = useState(null);
 
-  const fetchTenantDetails = useCallback(() => {
-    const tenant = state.tenants.find(tenant => tenant.id === id);
-    if (tenant) {
-      setTenantDetails(tenant);
-    } else {
-      console.error("Tenant not found in local state");
+  const removeProperty = async () => {
+    try {
+      const response = await client.graphql({
+        query: deleteProperty,
+        variables: {
+          input: {
+            id: disProperty.id,
+            _version: disProperty._version
+          },
+        }
+      });
+      console.log(response)
+      if (response.data.deleteProperty) {
+        console.log("Property successfully removed");
+        await deleteGlobalProperty(disProperty.id);
+        router.back();
+      } else {
+        console.log("Property removal failed");
+      }
+    } catch (error) {
+      console.error("Error removing property:", JSON.stringify(error, null, 2));
     }
-  }, [id, state.tenants]);
-
-  useEffect(() => {
-    fetchTenantDetails();
-  }, [fetchTenantDetails]);
-
-  const removeTenant = useCallback(async () => {
-    Alert.alert(
-      "Confirm Tenant Removal",
-      "Are you sure you want to remove this tenant?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Yes",
-          onPress: async () => {
-            try {
-              const response = await client.graphql({
-                query: deleteTenant,
-                variables: {
-                  input: {
-                    id: tenantDetails.id,
-                    _version: tenantDetails._version
-                  }
-                }
-              });
-              console.log("Deleted tenant response:", JSON.stringify(response, null, 2));
-              deleteGlobalTenant(tenantDetails.id);
-              console.log(state.properties)
-              router.back();
-            } catch (error) {
-              console.error("Error deleting tenant:", error);
-            }
-          }
-        }
-      ]
-    );
-  }, [tenantDetails, deleteGlobalTenant]);
-
-  const handleServiceToggle = useCallback(async (service) => {
-    Alert.alert(
-      "Confirm Service Update",
-      `Are you sure you want to ${tenantDetails[service] ? 'disable' : 'enable'} ${service.replace('use', '')}?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Yes",
-          onPress: async () => {
-            try {
-              const newValue = !tenantDetails[service];
-              const response = await client.graphql({
-                query: updateTenant,
-                variables: {
-                  input: {
-                    id: tenantDetails.id,
-                    [service]: newValue,
-                    _version: tenantDetails._version
-                  },
-                },
-              });
-              console.log(response.data.updateTenant);
-
-              if (response.data.updateTenant[service] !== newValue) {
-                console.error(`Failed to update ${service}. Expected ${newValue}, but got ${response.data.updateTenant[service]}`);
-              } else {
-                const updatedTenant = {
-                  ...tenantDetails,
-                  [service]: newValue,
-                  _version: response.data.updateTenant._version
-                };
-                updateGlobalTenant(updatedTenant);
-                fetchTenantDetails();  // Fetch updated tenant details
-              }
-            } catch (error) {
-              console.error(`Error updating ${service}:`, error);
-            }
-          }
-        }
-      ]
-    );
-  }, [tenantDetails, updateGlobalTenant, fetchTenantDetails]);
-
-  const ServiceButton = ({ service, icon }) => (
-    <Pressable className='items-center' onPress={() => handleServiceToggle(service)}>
-      {icon}
-      <Text className='text-gray-100 font-light text-xs'>{service.replace('use', '').toLowerCase()}</Text>
-    </Pressable>
-  );
-
-  if (!tenantDetails) {
-    return <Text className='text-white'>Loading or Tenant not found...</Text>;
   }
 
-  return (
-    <SafeAreaView className='flex-1 bg-primary px-4'>
-      <Stack.Screen options={{ headerShown: false }} />
-      <View>
-        <Pressable className='mr-2 h-10' onPress={() => router.back()}>
-          <AntDesign name="arrowleft" size={25} color="#fff" />
-        </Pressable>
-      </View>
-      <View className='items-center'>
-        <Image
-          source={{ uri: tenantDetails.photo }}
-          style={{ width: 200, height: 200, marginBottom: 16, borderRadius: 15 }}
-          resizeMode='contain'
-        />
-      </View>
-      <Text className='text-white text-xl'>{tenantDetails.firstName} {tenantDetails.lastName}</Text>
-      <Text className='text-white text-xs'>{tenantDetails.phNo}</Text>
-      <Text className='text-white text-md'>{tenantDetails.email}</Text>
+  useEffect(() => {
+    const getProperty = (id) => {
+      const selectedProperty = properties.find((prop) => String(prop.id) === String(id));
+      setDisProperty(selectedProperty);
+    };
 
-      <View className='items-center justify-evenly flex-row my-5'>
-        <ServiceButton service='useElectricity' icon={<Ionicons name='flash' size={35} color={tenantDetails.useElectricity ? "#BD6A33" : "#424242"} />} />
-        <ServiceButton service='useWater' icon={<Ionicons name='water' size={35} color={tenantDetails.useWater ? "#BD6A33" : "#424242"} />} />
-        <ServiceButton service='useInternet' icon={<Ionicons name='wifi' size={35} color={tenantDetails.useInternet ? "#BD6A33" : "#424242"} />} />
-        <ServiceButton service='useGas' icon={<FontAwesome5 name='fire' size={32} color={tenantDetails.useGas ? "#BD6A33" : "#424242"} />} />
-      </View>
-      <View>
-        <View className='w-full h-[50%] bg-tile items-center justify-evenly rounded flex-row'>
-          <FontAwesome6 name="money-bills" size={30} color={"#4f8a41"} />
-          <View className='h-[90%] justify-center'>
-            <Text className='text-xl text-orange-400 pb-2'>The Total utility cost</Text>
-            <Text className='text-3xl text-gray-300'>{'$'}{tenantDetails.costAmount}</Text>
+    if (id) {
+      getProperty(id);
+    } else {
+      console.log("No Id");
+    }
+  }, [id, properties]);
+
+  return (
+    <SafeAreaView className='flex-1 bg-primary px-3 pb-6'>
+      <Stack.Screen options={{ headerShown: false }} />
+      {disProperty ? (
+        <>
+          <View className='mb-3 items-center flex-row justify-between pt-2'>
+            <Pressable onPress={router.back}>
+              <View className="bg-tile rounded-full p-2">
+                <AntDesign name='arrowleft' color={"#c9c9c9"} size={22} />
+              </View>
+            </Pressable>
+            <Text className='text-secondary text-xl'>{disProperty.address}</Text>
+            <View className='w-10 h-3'></View>
           </View>
-        </View>
-        <View className='items-center'>
-          <Button
-            title="Remove"
-            className='px-5 py-1 bg-signOut border border-red-500 mt-5'
-            onPress={removeTenant}
-          />
-        </View>
-      </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 10 }} showsVerticalScrollIndicator={false}>
+            <Image
+              source={{ uri: disProperty.photo }}
+              style={{ width: '100%', height: 250 }}
+              resizeMode='contain'
+            />
+            <View className='flex-row justify-evenly p-3 items-center rounded-md bg-tile mt-4'>
+              <View className='items-center gap-1'>
+                <Ionicons name='bed' color={"#BD6A33"} size={20} />
+                <Text className='text-white text-md'>{disProperty.rooms}</Text>
+              </View>
+              <View className='items-center gap-1'>
+                <FontAwesome name='bath' color={"#BD6A33"} size={20} />
+                <Text className='text-white text-md'>{disProperty.bathroom}</Text>
+              </View>
+              <View className='items-center gap-1'>
+                <AntDesign name='car' color={"#BD6A33"} size={20} />
+                <Text className='text-white text-md'>{disProperty.parking}</Text>
+              </View>
+              <View className='items-center gap-1'>
+                <Text className='text-secondary text-md'>Max</Text>
+                <Text className='text-white text-md'>{disProperty.maximum}</Text>
+              </View>
+              <View className='items-center gap-1'>
+                <Text className='text-secondary text-md'>Now</Text>
+                <Text className='text-white text-md'>{disProperty.tenants ? disProperty.tenants.length : 0}</Text>
+              </View>
+            </View>
+
+            <View>
+              <View className='flex-row justify-between m-2 items-center'>
+                <Text className='text-white text-lg font-bold m-2'>Tenants</Text>
+                <Pressable onPress={() => router.push(`/(property)/add_tenant?id=${disProperty.id}&address=${disProperty.address}` as Href)}>
+                  <AntDesign name='adduser' color={"#ffffff"} size={26} />
+                </Pressable>
+              </View>
+              {disProperty.tenants && disProperty.tenants.length > 0 ? (
+                disProperty.tenants.map((tenant) => (
+                  <TenantCard
+                    onPress={() => router.push({
+                      pathname: `/(property)/(tenant)/${tenant.id}`,
+                    } as Href)}
+                    key={tenant.id}
+                    tenant={tenant}
+                  />
+                ))
+              ) : (
+                <View className='items-center'>
+                  <Text className='text-white font-semibold'>Add Tenants to Monitor the property</Text>
+                </View>
+              )}
+              <View className='items-center'>
+
+                <Button
+                  title="Remove"
+                  className='px-5 py-1 bg-signOut border border-red-500 mt-3'
+                  onPress={removeProperty}
+                />
+              </View>
+              <View className='h-20'></View>
+            </View>
+          </ScrollView>
+        </>
+      ) : (
+        <Text className='text-white'>Loading or Property not found...</Text>
+      )}
     </SafeAreaView>
   );
 };
 
-export default TenantAbout;
+export default PropertyDetails;

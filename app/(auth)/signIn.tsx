@@ -12,7 +12,7 @@ import LoadingScreen from '../../app/loadingScreen';
 
 const Signin = () => {
   const { state, dispatch } = useGlobalContext();
-  if(!dispatch){
+  if (!dispatch) {
     console.error("Dispatch not imported rightly")
   }
   const { isLoading, userType } = state;
@@ -27,6 +27,8 @@ const Signin = () => {
       type: "error",
       text1: message,
       position: "top",
+      visibilityTime: 2000, // Automatically dismiss after 3 seconds
+      autoHide: true,
     });
   };
 
@@ -36,29 +38,35 @@ const Signin = () => {
         username: signForm.email,
         password: signForm.password,
       });
-      console.info(response);
+
       if (response) {
-        dispatch({ type: 'SET_USER', payload: res.userId });
-        handleSignInResponse(response, res);
+        if (response.isSignedIn) {
+          dispatch({ type: 'SET_USER', payload: res.userId });
+          handleSignInResponse(response, res);
+        } else if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {
+          navigateToConfirmEmail();
+        }
       } else {
         handleSignInError(error);
       }
     } catch (error) {
       console.error("Sign in error:", error);
       showErrorToast(error);
-    } 
-    
+    }
   };
 
   const handleSignInResponse = (response, res) => {
-  
     if (response.isSignedIn) {
       dispatch({ type: 'SET_USER', payload: res.userId });
       const redirectPath = userType === "Owner" ? '/(home)' : '/(tenant)';
       router.replace(redirectPath);
     } else if (response.nextStep.signInStep === "CONFIRM_SIGN_UP") {
-      router.push(`confirmEmail?email=${encodeURIComponent(signForm.email)}` as Href);
+      navigateToConfirmEmail();
     }
+  };
+
+  const navigateToConfirmEmail = () => {
+    router.push(`confirmEmail?email=${encodeURIComponent(signForm.email)}` as Href);
   };
 
   const handleSignInError = (error) => {
@@ -67,14 +75,8 @@ const Signin = () => {
       "Wrong Credentials",
       "Please check your credentials; they do not match our records.",
       [
-        {
-          text: "Try again",
-          onPress: () => {}
-        },
-        {
-          text: "Sign Up",
-          onPress: () => router.push('/signUp')
-        }
+        { text: "Try again", onPress: () => { } },
+        { text: "Sign Up", onPress: () => router.push('/signUp') }
       ]
     );
   };
@@ -94,7 +96,7 @@ const Signin = () => {
               onhandleChange={(email) => setSignForm({ ...signForm, email })}
               placeholder="john.doe@something.com"
               keyboardtype="email-address"
-              error=""
+
             />
 
             <TextField
@@ -103,7 +105,7 @@ const Signin = () => {
               onhandleChange={(password) => setSignForm({ ...signForm, password })}
               keyboardtype="default"
               placeholder="Password"
-              error=""
+
             />
 
             <Button

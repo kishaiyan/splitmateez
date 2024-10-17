@@ -1,4 +1,4 @@
-import { Text,TouchableOpacity, TouchableOpacityProps} from "react-native";
+import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import React from 'react'
 import LottieView from "lottie-react-native";
 
@@ -22,19 +22,19 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      className={`bg-secondary rounded-md items-center justify-center ${containerStyle} ${isLoading ? 'opacity-50':''}`}
+      className={`bg-secondary rounded-md items-center justify-center ${containerStyle} ${isLoading ? 'opacity-50' : ''}`}
       onPress={handlePress}
       disabled={isLoading}
       {...props}
       onPressIn={onPress}
     >
-      {isLoading?
-      <LottieView
-      source={require("../assets/images/sample.json")} autoPlay loop style={{width:25, height:25}}
-      />:
-      <Text className={`text-center font-bold text-lg text-white ${textStyle}`}>{title}</Text>}
-      
-      </TouchableOpacity>
+      {isLoading ?
+        <LottieView
+          source={require("../assets/images/sample.json")} autoPlay loop style={{ width: 25, height: 25 }}
+        /> :
+        <Text className={`text-center font-bold text-lg text-white ${textStyle}`}>{title}</Text>}
+
+    </TouchableOpacity>
   );
 };
 

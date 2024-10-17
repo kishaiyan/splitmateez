@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, Image, Pressable } from 'react-native'
+import SelectDropdown from 'react-native-select-dropdown'
 import React, { useCallback, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AppBar from '../../components/appBar'
@@ -111,7 +112,7 @@ const AddProperty = () => {
         <ScrollView className='h-[82%]' showsVerticalScrollIndicator={false} >
           <View className='items-center'>
             <Pressable onPress={handleImage} className='mb-3'>
-              <Image source={image ? { uri: image } : require("../../assets/images/home_holder.jpg")} style={{ width: 200, height: 200, borderRadius: 9 }} />
+              <Image source={image ? { uri: image } : require("../../assets/images/home_holder.jpg")} style={{ width: 150, height: 150, borderRadius: 9 }} />
             </Pressable>
 
             <TextField
@@ -149,6 +150,7 @@ const AddProperty = () => {
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, maximun: e })}
               keyboardtype="numeric"
               error="" />
+
 
             <Button title="Add Property" className='px-10 py-3 my-3' onPress={addPropertytoUser} />
           </View>

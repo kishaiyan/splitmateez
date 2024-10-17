@@ -52,19 +52,16 @@ const PropertyDetails = () => {
     }
   }, [id, properties]);
 
-  const openModal = (tenant) => {
-    router.push(`/(property)/(tenant)/${tenant.id}` as Href)
-  }
-
-
   return (
     <SafeAreaView className='flex-1 bg-primary px-3 pb-6'>
       <Stack.Screen options={{ headerShown: false }} />
       {disProperty ? (
         <>
           <View className='mb-3 items-center flex-row justify-between pt-2'>
-            <Pressable onPress={() => router.back()}>
-              <AntDesign name='arrowleft' size={26} color={"#fff"} />
+            <Pressable onPress={router.back}>
+              <View className="bg-tile rounded-full p-2">
+                <AntDesign name='arrowleft' color={"#c9c9c9"} size={22} />
+              </View>
             </Pressable>
             <Text className='text-secondary text-xl'>{disProperty.address}</Text>
             <View className='w-10 h-3'></View>
@@ -108,7 +105,9 @@ const PropertyDetails = () => {
               {disProperty.tenants && disProperty.tenants.length > 0 ? (
                 disProperty.tenants.map((tenant) => (
                   <TenantCard
-                    onPress={() => openModal(tenant)}
+                    onPress={() => router.push({
+                      pathname: `/tenant/${tenant.id}`,
+                    } as Href)}
                     key={tenant.id}
                     tenant={tenant}
                   />

@@ -9,24 +9,29 @@ import Button from '../../components/customButton';
 import { uploadData } from 'aws-amplify/storage';
 import { signUp } from 'aws-amplify/auth';
 import { createTenant } from '../../src/graphql/mutations';
+import { RadioButton } from 'react-native-paper';
 import { generateClient } from 'aws-amplify/api';
 import { useGlobalContext } from '../../context/GlobalProvider';
 
 const AddTenant = () => {
-  const client=generateClient();
-  const { addTenantToProperty } = useGlobalContext(); 
+  const client = generateClient();
+  const { addTenantToProperty } = useGlobalContext();
   const params = useLocalSearchParams();
-  const { id,address } = params;
+  const { id, address } = params;
   const [tenantForm, setTenantForm] = useState({
     firstname: '',
     lastname: '',
     email: '',
     phno: '',
     photo: null,
+    useElectricity: true,
+    useInternet: true,
+    useWater: true,
+    useGas: true,
   });
-  const getImage=()=>{
-    Alert.alert( 
-      
+  const getImage = () => {
+    Alert.alert(
+
       "Select Image",
       "Choose an image from your library or take a new photo.",
       [
@@ -65,26 +70,26 @@ const AddTenant = () => {
       ]
     );
   }
-  useEffect(()=>{
+  useEffect(() => {
 
-  },[]);
+  }, []);
   function getNumber(phone: string) {
     return phone.replace('0', '+61');
   }
-  const generate=(firstname,lastname)=>{
-      const capitalize = (str) => str.trim().charAt(0).toUpperCase() + str.trim().slice(1).toLowerCase();
-      // Capitalize the first letter of both firstname and lastname
-      const capitalizedFirstName = capitalize(firstname);
-      const capitalizedLastName = capitalize(lastname);
-      const result = `${capitalizedFirstName}${capitalizedLastName}@1`;
+  const generate = (firstname, lastname) => {
+    const capitalize = (str) => str.trim().charAt(0).toUpperCase() + str.trim().slice(1).toLowerCase();
+    // Capitalize the first letter of both firstname and lastname
+    const capitalizedFirstName = capitalize(firstname);
+    const capitalizedLastName = capitalize(lastname);
+    const result = `${capitalizedFirstName}${capitalizedLastName}@1`;
 
-      return result;
+    return result;
   }
 
   const handleTenant = async () => {
-  
+
     try {
-      const { userId } = await signUp({
+      const { userId, nextStep } = await signUp({
         username: tenantForm.email,
         password: generate(tenantForm.firstname, tenantForm.lastname),
         options: {
@@ -95,12 +100,15 @@ const AddTenant = () => {
             family_name: tenantForm.lastname,
             address: address.toString(),
           },
-          autoSignIn: { enabled: false },
+          autoSignIn: {
+            enabled: false,
+            authFlowType: "CUSTOM_WITHOUT_SRP"
+          },
         },
       });
-  
-      console.log("Here Created signup");
-  
+
+      console.log("SignUp Response :", nextStep);
+
       if (userId) {
         const photo = await uploadImage(userId);
         await client.graphql({
@@ -128,51 +136,53 @@ const AddTenant = () => {
           phNo: tenantForm.phno,
           email: tenantForm.email,
           photo: photo,
-          useElectricity: true,
-          useInternet: true,
-          useWater: true,
-          useGas: true,
+          useElectricity: tenantForm.useElectricity,
+          useInternet: tenantForm.useInternet,
+          useWater: tenantForm.useWater,
+          useGas: tenantForm.useGas,
         });
-    
+
         router.back();
       }
     } catch (error) {
       console.error("Error during tenant handling:", error);
       // Handle the error (e.g., show a message to the user)
-      
+
     }
   };
-  
-  const uploadImage=async(userId)=>{
+
+  const uploadImage = async (userId) => {
     try {
       if (!tenantForm.photo) {
         throw new Error("No photo selected");
       }
       const response = await fetch(tenantForm.photo.uri);
       const blob = await response.blob();
-      const result=await uploadData({
-        path:`public/${userId}.jpeg`,
-        data:blob,
-        options:{
-          contentType:'image/jpeg',
+      const result = await uploadData({
+        path: `public/${userId}.jpeg`,
+        data: blob,
+        options: {
+          contentType: 'image/jpeg',
         }
       }).result;
       return result.path;
-   
-    } catch (error) {   
-      console.log("Error :",error);
+
+    } catch (error) {
+      console.log("Error :", error);
     }
   }
 
-  
+
 
   return (
-    <SafeAreaView className='bg-primary flex-1 px-4'>
+    <SafeAreaView style={{ backgroundColor: '#212121' }} className='flex-1 px-4'>
       <Stack.Screen options={{ headerShown: false }} />
-      <View className='flex-1'> 
-        <View className='flex-row items-center justify-between mb-4 pt-2'> 
+      <View className='flex-1'>
+        <View className='flex-row items-center justify-between mb-4 pt-2'>
           <Pressable onPress={router.back}>
-            <AntDesign name='arrowleft' color={"#fff"} size={26} />
+            <View className="bg-tile rounded-full p-2">
+              <AntDesign name='arrowleft' color={"#c9c9c9"} size={22} />
+            </View>
           </Pressable>
           <Text className='text-xl text-secondary'>Add Tenant</Text>
           <View className='w-6'></View>
@@ -193,7 +203,7 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, email: e })}
                 placeholder="john.doe@something.com"
                 keyboardtype="email-address"
-                error={""}
+
               />
               <TextField
                 label="First Name"
@@ -201,7 +211,7 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, firstname: e })}
                 placeholder="John"
                 keyboardtype="default"
-                error={""}
+
               />
               <TextField
                 label="Last Name"
@@ -209,7 +219,7 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, lastname: e })}
                 placeholder="Doe"
                 keyboardtype="default"
-                error={""}
+
               />
               <TextField
                 label="Phone Number"
@@ -217,8 +227,42 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, phno: e })}
                 keyboardtype="number-pad"
                 placeholder="04.."
-                error={""}
+
               />
+              <View className="flex-row items-center justify-between w-full">
+                <View className="flex-col items-center ">
+                  <Text className="text-white rounded-full bg-tile p-2">Electricity</Text>
+                  <RadioButton
+                    value="useElectricity"
+                    status={tenantForm.useElectricity ? 'checked' : 'unchecked'}
+                    onPress={() => setTenantForm({ ...tenantForm, useElectricity: !tenantForm.useElectricity })}
+                  />
+                </View>
+                <View className="flex-col items-center">
+                  <Text className="text-white rounded-full bg-tile p-2">Internet</Text>
+                  <RadioButton
+                    value="useInternet"
+                    status={tenantForm.useInternet ? 'checked' : 'unchecked'}
+                    onPress={() => setTenantForm({ ...tenantForm, useInternet: !tenantForm.useInternet })}
+                  />
+                </View>
+                <View className="flex-col items-center">
+                  <Text className="text-white rounded-full bg-tile p-2">Water</Text>
+                  <RadioButton
+                    value="useWater"
+                    status={tenantForm.useWater ? 'checked' : 'unchecked'}
+                    onPress={() => setTenantForm({ ...tenantForm, useWater: !tenantForm.useWater })}
+                  />
+                </View>
+                <View className="flex-col items-center">
+                  <Text className="text-white rounded-full bg-tile p-2">Gas</Text>
+                  <RadioButton
+                    value="useGas"
+                    status={tenantForm.useGas ? 'checked' : 'unchecked'}
+                    onPress={() => setTenantForm({ ...tenantForm, useGas: !tenantForm.useGas })}
+                  />
+                </View>
+              </View>
               <Button title='Add Tenant' containerStyle='mt-6 px-10 py-2' onPress={handleTenant} />
             </View>
           </View>

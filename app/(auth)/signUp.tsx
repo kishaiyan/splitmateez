@@ -12,6 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import { uploadData } from 'aws-amplify/storage';
 import { createOwner } from '../../src/graphql/mutations';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import { HelperText } from 'react-native-paper';
 
 const client = generateClient();
 
@@ -128,11 +129,11 @@ const Signup = () => {
   const uploadImage = async (userId) => {
     try {
       if (!form.photo) throw new Error("No photo selected");
-      
+
       const response = await fetch(form.photo.uri);
       const blob = await response.blob();
-      
-      const result  = await uploadData({
+
+      const result = await uploadData({
         path: `public/${userId}.jpeg`,
         data: blob,
         options: {
@@ -162,7 +163,7 @@ const Signup = () => {
             phone_number: getNumber(form.phno),
             given_name: form.firstname,
             family_name: form.lastname,
-            address:"address"
+            address: "address"
           },
           autoSignIn: { enabled: false },
         },
@@ -214,6 +215,9 @@ const Signup = () => {
           <Pressable onPress={handleImage}>
             <Image source={form.photo ? { uri: form.photo.uri } : require("../../assets/images/Avatar.jpg")} style={{ width: 100, height: 100, borderRadius: 50 }} resizeMode='contain' />
           </Pressable>
+          <HelperText type="error" visible={!!form.errors.photo}>
+            {form.errors.photo}
+          </HelperText>
           <View className="items-center">
             <TextField
               label="Email"
@@ -221,40 +225,50 @@ const Signup = () => {
               onhandleChange={(e) => handleChange('email', e)}
               placeholder="john.doe@something.com"
               keyboardtype="email-address"
-              error={form.errors.email}
             />
+            <HelperText type="error" visible={!!form.errors.email}>
+              {form.errors.email}
+            </HelperText>
             <TextField
               label="First Name"
               value={form.firstname}
               onhandleChange={(e) => handleChange('firstname', e)}
               placeholder="John"
               keyboardtype="default"
-              error={form.errors.firstname}
             />
+            <HelperText type="error" visible={!!form.errors.firstname}>
+              {form.errors.firstname}
+            </HelperText>
             <TextField
               label="Last Name"
               value={form.lastname}
               onhandleChange={(e) => handleChange('lastname', e)}
               placeholder="Doe"
               keyboardtype="default"
-              error={form.errors.lastname}
             />
+            <HelperText type="error" visible={!!form.errors.lastname}>
+              {form.errors.lastname}
+            </HelperText>
             <TextField
               label="Phone Number"
               value={form.phno}
               onhandleChange={(e) => handleChange('phno', e)}
               keyboardtype="number-pad"
               placeholder="04.."
-              error={form.errors.phno}
             />
+            <HelperText type="error" visible={!!form.errors.phno}>
+              {form.errors.phno}
+            </HelperText>
             <TextField
               label="Password"
               value={form.password}
               onhandleChange={(e) => handleChange('password', e)}
               keyboardtype="default"
               placeholder="Password"
-              error={form.errors.password}
             />
+            <HelperText type="error" visible={!!form.errors.password}>
+              {form.errors.password}
+            </HelperText>
             <Button title='Sign Up' containerStyle='mt-6 px-10 py-2' onPress={onSubmit} isLoading={isLoading} />
             <View className='w-[80%] mt-5 pt-3 flex-row gap-2'>
               <AntDesign name='checksquareo' color="green" size={16} />

@@ -1,74 +1,66 @@
-import { signIn,signOut, getCurrentUser, fetchAuthSession,resetPassword,confirmResetPassword  } from "aws-amplify/auth";
+import { signIn, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword, type UpdatePasswordInput } from "aws-amplify/auth";
 
-export async function currentSess(){
-  try{
-    const {accessToken,idToken} =(await fetchAuthSession()).tokens??{};
-    console.log("Access Token:",accessToken);
-    console.log("Id Token:",idToken);
-    // return credentials.sessionToken;
-  }
-  catch(error){
-    return(error)
-  }
-  
-}
 
-export  async function handleSignOut() {
+export const changePassword = async ({ oldPassword, newPassword }: UpdatePasswordInput) => {
+  try {
+    await updatePassword({ oldPassword, newPassword });
+    console.log("Password updated successfully");
+  } catch (error) {
+    console.log("Error updating password:", error);
+  }
+};
+
+export const handleSignOut = async () => {
   try {
     await signOut();
-    console.log("Signed Out")
+    console.log("Signed Out");
   } catch (error) {
     console.log('error signing out: ', error);
   }
-}
-export  async function getcurrentUser(){
-  try{
+};
+
+export const getcurrentUser = async () => {
+  try {
     const response = await getCurrentUser();
     return response.userId;
+  } catch (error) {
+    console.log("Current User Error", error);
   }
-  catch(error){
-    console.log("Current User Error",error);
-  }
-}
+};
 
-export async function handleSignIn({ username, password }) {
+export const handleSignIn = async ({ username, password }) => {
   try {
-    // const currentUser=await getCurrentUser();
-    // if(currentUser){
-    //   await signOut();
-    // }
-    const response=await signIn({ username, password });
-    let res;
-    if(response.isSignedIn){
-      try{
-        res = await getCurrentUser()
-      }
-      catch(error){
-        throw error
+    const response = await signIn({ username, password });
+    if (response.isSignedIn) {
+      try {
+        const res = await getCurrentUser();
+        return { response, res };
+      } catch (error) {
+        throw error;
       }
     }
-    return {response,res};
+    return { response };
   } catch (error) {
-    console.log(error.underlyingError)
+    console.log(error.underlyingError);
     return error;
-    
   }
-}
+};
 
-export async function handleResetPassword({ username}){
+export const handleResetPassword = async ({ username }) => {
   try {
-    const output=await resetPassword({username})
-    return output;
+    return await resetPassword({ username });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
-export async function handleCRP({username,confirmationCode,newPassword}){
+export const handleCRP = async ({ username, confirmationCode, newPassword }) => {
   try {
-    await confirmResetPassword({username,confirmationCode,newPassword})
-    console.log("Changed Successfully")
+    await confirmResetPassword({ username, confirmationCode, newPassword });
+    console.log("Changed Successfully");
   } catch (error) {
-    
+    console.log("Error changing password:", error);
   }
-}
+};
+
+

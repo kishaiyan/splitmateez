@@ -10,18 +10,18 @@ const TabsLayout = () => {
         tabBar={(props) => <TabBar {...props} />}
         screenOptions={{
           headerShown: false,
-          
+
         }}
-        
+
       >
         <Tabs.Screen
           name="(home)"
           options={{
             title: 'Home',
-            
+
           }}
         />
-        
+
         <Tabs.Screen
           name="account"
           options={{
