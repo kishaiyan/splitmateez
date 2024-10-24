@@ -3,15 +3,22 @@ import { View, Text, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import axios from 'axios'
+
 
 const tenant_home = () => {
   const { state } = useGlobalContext()
-  const { userDetails, userId } = state
+  const { userDetails, user } = state
+  console.log("userId", user)
   useEffect(() => {
     const getTenantUsage = async () => {
-      const response = await fetch(`https://akbv2v78o7.execute-api.ap-southeast-2.amazonaws.com/Production/tenant/${userId}/costs`)
-      const data = await response.json()
-      console.log("tenant usage", data)
+      try {
+        const response = await axios.get(`https://akbv2v78o7.execute-api.ap-southeast-2.amazonaws.com/Production/tenant/${user}/costs`)
+        const data = response.data
+        console.log("tenant usage", data)
+      } catch (error) {
+        console.error("Error fetching tenant usage:", error)
+      }
     }
     getTenantUsage()
   }, [])

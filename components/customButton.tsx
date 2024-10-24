@@ -32,7 +32,7 @@ const Button: React.FC<ButtonProps> = ({
         <LottieView
           source={require("../assets/images/sample.json")} autoPlay loop style={{ width: 25, height: 25 }}
         /> :
-        <Text className={`text-center font-bold text-lg text-white ${textStyle}`}>{title}</Text>}
+        <Text className={`text-center font-bold text-lg text-zinc-300 ${textStyle}`}>{title}</Text>}
 
     </TouchableOpacity>
   );

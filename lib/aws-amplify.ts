@@ -1,6 +1,14 @@
-import { signIn, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword, type UpdatePasswordInput, fetchUserAttributes, confirmSignUp, updateUserAttributes, type UpdateUserAttributesOutput } from "aws-amplify/auth";
+import { signIn, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword, type UpdatePasswordInput, fetchUserAttributes, confirmSignUp, updateUserAttributes, resendSignUpCode } from "aws-amplify/auth";
 
 
+export const resendVerificationCode = async (username: string) => {
+  try {
+    await resendSignUpCode({ username });
+    console.log("Verification code resent successfully");
+  } catch (error) {
+    console.log("Error resending verification code:", error);
+  }
+}
 export const changePassword = async ({ oldPassword, newPassword }: UpdatePasswordInput) => {
   try {
     await updatePassword({ oldPassword, newPassword });

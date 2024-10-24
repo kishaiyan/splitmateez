@@ -1,4 +1,4 @@
-import { Text, View, Image, ScrollView, Modal, Pressable } from 'react-native';
+import { Text, View, Image, ScrollView, Modal, Pressable, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Href, router, Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,27 +16,43 @@ const PropertyDetails = () => {
   const [disProperty, setDisProperty] = useState(null);
 
   const removeProperty = async () => {
-    try {
-      const response = await client.graphql({
-        query: deleteProperty,
-        variables: {
-          input: {
-            id: disProperty.id,
-            _version: disProperty._version
+    Alert.alert(
+      "Delete Property",
+      "Are you sure you want to delete this property?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            try {
+              const response = await client.graphql({
+                query: deleteProperty,
+                variables: {
+                  input: {
+                    id: disProperty.id,
+                    _version: disProperty._version
+                  },
+                }
+              });
+              if (response.data.deleteProperty) {
+                console.log("Property successfully removed");
+                await deleteGlobalProperty(disProperty.id);
+                router.back();
+              } else {
+                Alert.alert("Error", "Property removal failed");
+              }
+            } catch (error) {
+              console.error("Error removing property:", JSON.stringify(error, null, 2));
+              Alert.alert("Error", "An error occurred while deleting the property");
+            }
           },
+          style: "destructive"
         }
-      });
-      console.log(response)
-      if (response.data.deleteProperty) {
-        console.log("Property successfully removed");
-        await deleteGlobalProperty(disProperty.id);
-        router.back();
-      } else {
-        console.log("Property removal failed");
-      }
-    } catch (error) {
-      console.error("Error removing property:", JSON.stringify(error, null, 2));
-    }
+      ]
+    );
   }
 
   useEffect(() => {

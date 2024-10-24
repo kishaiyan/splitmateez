@@ -17,11 +17,10 @@ const Account = () => {
 
   const signOut = async () => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
+      router.replace('/(auth)/signIn');
       await handleSignOut();
       dispatch({ type: 'SIGN_OUT' });
-      dispatch({ type: 'SET_LOADING', payload: false });
-      router.replace('/(auth)/signIn');
+
     } catch (error) {
       console.error('Error during sign out:', error);
       dispatch({ type: 'SET_LOADING', payload: false });

@@ -13,7 +13,7 @@ const initialOwnerState = {
   isLoading: true,
   properties: [],
   userDetails: null,
-  userType: "Owner",
+  userType: "owner",
   tenants: [],
   changePassword: false,
 };
@@ -23,7 +23,7 @@ const initialTenantState = {
   user: null,
   isLoading: true,
   userDetails: null,
-  userType: "Tenant",
+  userType: "tenant",
   changePassword: false,
 };
 
@@ -121,7 +121,7 @@ export const useGlobalContext = () => useContext(GlobalContext);
 const GlobalProvider = ({ children }) => {
   const { connectWebSocket, disconnectWebSocket, setOnMessageHandler } = useWebSocket();
   const [state, dispatch] = useReducer((state, action) => {
-    if (state.userType === "Owner") {
+    if (state.userType === "owner") {
       return ownerReducer(state, action);
     } else {
       return tenantReducer(state, action);
@@ -142,21 +142,29 @@ const GlobalProvider = ({ children }) => {
 
   const fetchUserDetails = useCallback(async (userId, userType) => {
     try {
+      console.log(userId, userType)
       let details;
-      if (userType === "Owner") {
+      if (userType === "owner") {
+        console.log("Fetching owner details");
         const { data } = await client.graphql({
           query: getOwner,
           variables: { id: userId }
         });
         details = data.getOwner;
       } else {
+        console.log("Fetching tenant details");
         const { data } = await client.graphql({
           query: getTenant,
           variables: { id: userId }
         });
         details = data.getTenant;
       }
-      details.photo = await getImageURL(details.photo);
+      console.log("Fetched user details:", details);
+      if (details) {
+        details.photo = await getImageURL(details.photo);
+      } else {
+        console.warn(`No ${userType} details found for user ID: ${userId}`);
+      }
       return details;
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -165,7 +173,7 @@ const GlobalProvider = ({ children }) => {
   }, [getImageURL]);
 
   const fetchTenants = useCallback(async (propertyId) => {
-    if (!propertyId || state.userType !== "Owner") return [];
+    if (!propertyId || state.userType !== "owner") return [];
     try {
       const { data: { tenantsByPropertyID: { items: tenants } } } = await client.graphql({
         query: tenantsByPropertyID,
@@ -185,7 +193,7 @@ const GlobalProvider = ({ children }) => {
   }, [getImageURL, state.userType]);
 
   const fetchProperties = useCallback(async (ownerId) => {
-    if (!ownerId || state.userType !== "Owner") return [];
+    if (!ownerId || state.userType !== "owner") return [];
     try {
       const { data: { propertiesByOwnerID: { items: properties } } } = await client.graphql({
         query: propertiesByOwnerID,
@@ -219,13 +227,18 @@ const GlobalProvider = ({ children }) => {
   const initializeUserData = useCallback(async (user, userType) => {
     try {
       const details = await fetchUserDetails(user, userType);
-      dispatch({ type: 'SET_USER_DETAILS', payload: details });
-      if (userType === "Owner") {
-        const properties = await fetchProperties(user);
-        dispatch({ type: 'SET_PROPERTIES', payload: properties });
-        dispatch({ type: 'SET_TENANTS', payload: properties.flatMap(property => property.tenants) });
+      if (details) {
+        dispatch({ type: 'SET_USER_DETAILS', payload: details });
+        if (userType === "owner") {
+          const properties = await fetchProperties(user);
+          dispatch({ type: 'SET_PROPERTIES', payload: properties });
+          dispatch({ type: 'SET_TENANTS', payload: properties.flatMap(property => property.tenants) });
+        }
+        initializeWebSocket();
+      } else {
+        console.error(`Failed to fetch user details for ${userType} with ID: ${user}`);
+        // You might want to handle this case, e.g., by showing an error message to the user
       }
-      initializeWebSocket();
     } catch (error) {
       console.error("Error initializing user data:", error);
     }
@@ -244,7 +257,7 @@ const GlobalProvider = ({ children }) => {
           await initializeUserData(userId, userType);
         }
       } catch (error) {
-        console.error("Error initializing user:", error);
+        // console.error("Error initializing user:", error);
         dispatch({ type: 'SET_USER', payload: null });
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
@@ -257,7 +270,7 @@ const GlobalProvider = ({ children }) => {
   }, [initializeUserData, disconnectWebSocket]);
 
   const updateStateAndProperties = useCallback(async () => {
-    if (state?.user && state.userType === "Owner") {
+    if (state?.user && state.userType === "owner") {
       const updatedProperties = await fetchProperties(state.user);
       dispatch({ type: 'SET_PROPERTIES', payload: updatedProperties });
       dispatch({ type: 'SET_TENANTS', payload: updatedProperties.flatMap(property => property.tenants) });
@@ -265,44 +278,44 @@ const GlobalProvider = ({ children }) => {
   }, [state, fetchProperties]);
 
   const addProperty = useCallback(async (property) => {
-    if (state.userType !== "Owner") return;
+    if (state.userType !== "owner") return;
     property.photo = await getImageURL(property.photo);
     dispatch({ type: 'ADD_PROPERTY', payload: property });
     await updateStateAndProperties();
   }, [getImageURL, updateStateAndProperties, state.userType]);
 
   const addTenant = useCallback(async (tenant) => {
-    if (state.userType !== "Owner") return;
+    if (state.userType !== "owner") return;
     tenant.photo = await getImageURL(tenant.photo);
     dispatch({ type: 'ADD_TENANT', payload: tenant });
     await updateStateAndProperties();
   }, [getImageURL, updateStateAndProperties, state.userType]);
 
   const updateProperty = useCallback(async (property) => {
-    if (state.userType !== "Owner") return;
+    if (state.userType !== "owner") return;
     dispatch({ type: 'UPDATE_PROPERTY', payload: property });
     await updateStateAndProperties();
   }, [updateStateAndProperties, state.userType]);
 
   const deleteProperty = useCallback(async (propertyId) => {
-    if (state.userType !== "Owner") return;
+    if (state.userType !== "owner") return;
     dispatch({ type: 'DELETE_PROPERTY', payload: propertyId });
     await updateStateAndProperties();
   }, [updateStateAndProperties, state.userType]);
 
   const updateTenant = useCallback((tenant) => {
-    if (state.userType !== "Owner") return;
+    if (state.userType !== "owner") return;
     dispatch({ type: 'UPDATE_TENANT', payload: tenant });
   }, [state.userType]);
 
   const deleteTenant = useCallback(async (tenantId) => {
-    if (state.userType !== "Owner") return;
+    if (state.userType !== "owner") return;
     dispatch({ type: 'DELETE_TENANT', payload: { tenantId } });
     await updateStateAndProperties();
   }, [updateStateAndProperties, state.userType]);
 
   const addTenantToProperty = useCallback(async (propertyId, tenant) => {
-    if (state.userType !== "Owner") return;
+    if (state.userType !== "owner") return;
     tenant.photo = await getImageURL(tenant.photo);
     dispatch({ type: 'ADD_TENANT', payload: tenant });
     await updateStateAndProperties();
@@ -320,7 +333,7 @@ const GlobalProvider = ({ children }) => {
   const contextValue = {
     state,
     dispatch,
-    ...(state.userType === "Owner" ? {
+    ...(state.userType === "owner" ? {
       addProperty,
       updateProperty,
       deleteProperty,

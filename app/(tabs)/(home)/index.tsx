@@ -5,7 +5,6 @@ import AppBar from '../../../components/appBar'
 import HomeTile from '../../../components/homeTile'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { useGlobalContext } from '../../../context/GlobalProvider'
-import LoadingScreen from '../../loadingScreen'
 import { Href, Link, router } from 'expo-router'
 import AddProperty from '../../list_empty'
 
@@ -89,10 +88,11 @@ const Home = () => {
 
             />
           </View>
-        </>) : (<View className='flex-1 items-center justify-center'>
-          <LoadingScreen />
+        </>) : (
+        <View className='flex-1'>
 
-        </View>)}
+        </View>
+      )}
     </SafeAreaView>
   )
 }

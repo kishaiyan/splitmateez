@@ -1,47 +1,29 @@
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/customButton';
-import { useLocalSearchParams, router } from 'expo-router';
-import { confirmSignUp , type ConfirmSignUpInput} from 'aws-amplify/auth';
+import { useLocalSearchParams } from 'expo-router';
 import AppBar from '../../components/appBar';
+import { confirmUserSignUp, resendVerificationCode } from '../../lib/aws-amplify';
 
 
 
 const ConfirmEmail = () => {
-  
-  const { email,user } = useLocalSearchParams();
+
+  const { email } = useLocalSearchParams();
   const [code, setCode] = useState(null);
 
-  async function handleSignUpConfirmation({
-    username,
-    confirmationCode
-  }: ConfirmSignUpInput ){
-    try{
-      const {isSignUpComplete}=await confirmSignUp({
-        username,confirmationCode
-      });
-      if(isSignUpComplete){
-        router.replace('/signIn');
-      }
-    }
-    catch (err){
-      console.log(err);
-    }
-  }
+
 
   const onSubmit = () => {
-    handleSignUpConfirmation({
-      username:user.toString(),
-      confirmationCode:code
-    })
+    confirmUserSignUp(email.toString(), code);
   };
 
   return (
     <SafeAreaView className='flex-1 items-center bg-primary px-5'>
-      <AppBar leading={false}/>
-    {/* // appBar */}
-    
+      <AppBar leading={false} />
+      {/* // appBar */}
+
       <View className='h-full bg-primary w-full items-center px-3'>
         <View className=' w-full h-[5%] my-5'>
           <Text className='text-white text-center text-2xl font-sans'>Confirm your Email</Text>
@@ -64,6 +46,9 @@ const ConfirmEmail = () => {
           />
         </View>
         <Button title='Confirm Email' containerStyle='px-10 py-3' onPress={onSubmit} />
+        <Pressable onPress={() => resendVerificationCode(email.toString())}>
+          Resend Verification Code
+        </Pressable>
       </View>
     </SafeAreaView>
   );

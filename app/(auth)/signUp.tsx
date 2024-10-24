@@ -187,7 +187,7 @@ const Signup = () => {
       });
 
       if (!isSignUpComplete && nextStep.signUpStep === "CONFIRM_SIGN_UP") {
-        router.replace(`/confirmEmail?email=${encodeURIComponent(form.email)}&user=${encodeURIComponent(userId)}`);
+        router.replace(`/confirmEmail?email=${encodeURIComponent(form.email)}`);
       }
 
     } catch (error) {
