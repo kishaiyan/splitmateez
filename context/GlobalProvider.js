@@ -1,13 +1,13 @@
 import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from "react";
-import { getcurrentUser } from "../lib/aws-amplify";
-import { getOwner, propertiesByOwnerID, tenantsByPropertyID } from '../src/graphql/queries';
+import { getcurrentUser, handleSignOut } from "../lib/aws-amplify";
+import { getOwner, propertiesByOwnerID, tenantsByPropertyID, getTenant } from '../src/graphql/queries';
 import client from "../lib/client";
 import { getUrl } from 'aws-amplify/storage';
 import { useWebSocket } from "./webSocketProvider";
 
 const GlobalContext = createContext();
 
-const initialState = {
+const initialOwnerState = {
   isLoggedIn: false,
   user: null,
   isLoading: true,
@@ -15,12 +15,22 @@ const initialState = {
   userDetails: null,
   userType: "Owner",
   tenants: [],
+  changePassword: false,
 };
 
-const reducer = (state, action) => {
+const initialTenantState = {
+  isLoggedIn: false,
+  user: null,
+  isLoading: true,
+  userDetails: null,
+  userType: "Tenant",
+  changePassword: false,
+};
+
+const ownerReducer = (state, action) => {
   switch (action.type) {
     case 'SIGN_OUT':
-      return { ...initialState, isLoading: false };
+      return { ...initialOwnerState, isLoading: false };
     case 'SET_USER':
       return { ...state, user: action.payload, isLoggedIn: !!action.payload };
     case 'SET_LOADING':
@@ -29,6 +39,10 @@ const reducer = (state, action) => {
       return { ...state, properties: action.payload };
     case 'SET_USER_DETAILS':
       return { ...state, userDetails: action.payload };
+    case 'SET_USER_TYPE':
+      return { ...state, userType: action.payload };
+    case 'SET_CHANGE_PASSWORD':
+      return { ...state, changePassword: action.payload };
     case 'ADD_PROPERTY':
       return { ...state, properties: [...state.properties, action.payload] };
     case 'UPDATE_PROPERTY':
@@ -83,11 +97,36 @@ const reducer = (state, action) => {
   }
 };
 
+const tenantReducer = (state, action) => {
+  switch (action.type) {
+    case 'SIGN_OUT':
+      return { ...initialTenantState, isLoading: false };
+    case 'SET_USER':
+      return { ...state, user: action.payload, isLoggedIn: !!action.payload };
+    case 'SET_LOADING':
+      return { ...state, isLoading: action.payload };
+    case 'SET_USER_DETAILS':
+      return { ...state, userDetails: action.payload };
+    case 'SET_USER_TYPE':
+      return { ...state, userType: action.payload };
+    case 'SET_CHANGE_PASSWORD':
+      return { ...state, changePassword: action.payload };
+    default:
+      return state;
+  }
+};
+
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const { connectWebSocket, disconnectWebSocket, setOnMessageHandler } = useWebSocket();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer((state, action) => {
+    if (state.userType === "Owner") {
+      return ownerReducer(state, action);
+    } else {
+      return tenantReducer(state, action);
+    }
+  }, initialOwnerState);
   const isInitialized = useRef(false);
 
   const getImageURL = useCallback(async (url) => {
@@ -101,12 +140,22 @@ const GlobalProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchUserDetails = useCallback(async (userId) => {
+  const fetchUserDetails = useCallback(async (userId, userType) => {
     try {
-      const { data: { getOwner: details } } = await client.graphql({
-        query: getOwner,
-        variables: { id: userId }
-      });
+      let details;
+      if (userType === "Owner") {
+        const { data } = await client.graphql({
+          query: getOwner,
+          variables: { id: userId }
+        });
+        details = data.getOwner;
+      } else {
+        const { data } = await client.graphql({
+          query: getTenant,
+          variables: { id: userId }
+        });
+        details = data.getTenant;
+      }
       details.photo = await getImageURL(details.photo);
       return details;
     } catch (error) {
@@ -116,7 +165,7 @@ const GlobalProvider = ({ children }) => {
   }, [getImageURL]);
 
   const fetchTenants = useCallback(async (propertyId) => {
-    if (!propertyId) return [];
+    if (!propertyId || state.userType !== "Owner") return [];
     try {
       const { data: { tenantsByPropertyID: { items: tenants } } } = await client.graphql({
         query: tenantsByPropertyID,
@@ -133,10 +182,10 @@ const GlobalProvider = ({ children }) => {
       console.error("Error fetching tenants:", error);
       return [];
     }
-  }, [getImageURL]);
+  }, [getImageURL, state.userType]);
 
   const fetchProperties = useCallback(async (ownerId) => {
-    if (!ownerId) return [];
+    if (!ownerId || state.userType !== "Owner") return [];
     try {
       const { data: { propertiesByOwnerID: { items: properties } } } = await client.graphql({
         query: propertiesByOwnerID,
@@ -154,49 +203,45 @@ const GlobalProvider = ({ children }) => {
       console.error("Error fetching properties:", error);
       return [];
     }
-  }, [getImageURL, fetchTenants]);
+  }, [getImageURL, fetchTenants, state.userType]);
 
   const handleWebSocketMessage = useCallback((message) => {
     console.log('Received WebSocket message:', message);
-    // Add your message handling logic here
-    // For example:
-    // if (message.type === 'PROPERTY_UPDATE') {
-    //   updateProperty(message.data);
-    // } else if (message.type === 'TENANT_UPDATE') {
-    //   updateTenant(message.data);
-    // }
-  }, [/* Add dependencies based on what you use in the handler */]);
+    const parsedMessage = JSON.parse(message);
+    // Handle the parsed message here
+  }, []);
 
   const initializeWebSocket = useCallback(() => {
     connectWebSocket();
     setOnMessageHandler(handleWebSocketMessage);
   }, [connectWebSocket, setOnMessageHandler, handleWebSocketMessage]);
 
-  const initializeUserData = useCallback(async (user) => {
+  const initializeUserData = useCallback(async (user, userType) => {
     try {
-      console.log("Trying to initialize user data", user)
-      const [details, properties] = await Promise.all([
-        fetchUserDetails(user),
-        fetchProperties(user)
-      ]);
+      const details = await fetchUserDetails(user, userType);
       dispatch({ type: 'SET_USER_DETAILS', payload: details });
-      dispatch({ type: 'SET_PROPERTIES', payload: properties });
-      dispatch({ type: 'SET_TENANTS', payload: properties.flatMap(property => property.tenants) });
+      if (userType === "Owner") {
+        const properties = await fetchProperties(user);
+        dispatch({ type: 'SET_PROPERTIES', payload: properties });
+        dispatch({ type: 'SET_TENANTS', payload: properties.flatMap(property => property.tenants) });
+      }
       initializeWebSocket();
     } catch (error) {
       console.error("Error initializing user data:", error);
     }
-  }, [fetchUserDetails, fetchProperties, initializeWebSocket, dispatch]);
+  }, [fetchUserDetails, fetchProperties, initializeWebSocket]);
 
   useEffect(() => {
     const initializeUser = async () => {
-      if (isInitialized.current) return
-      isInitialized.current = true
+      if (isInitialized.current) return;
+      isInitialized.current = true;
       try {
-        const user = await getcurrentUser();
-        dispatch({ type: 'SET_USER', payload: user });
-        if (user) {
-          await initializeUserData(user);
+        const { userId, userType, changePassword } = await getcurrentUser();
+        dispatch({ type: 'SET_USER', payload: userId });
+        dispatch({ type: 'SET_USER_TYPE', payload: userType });
+        dispatch({ type: 'SET_CHANGE_PASSWORD', payload: changePassword });
+        if (userId) {
+          await initializeUserData(userId, userType);
         }
       } catch (error) {
         console.error("Error initializing user:", error);
@@ -212,61 +257,80 @@ const GlobalProvider = ({ children }) => {
   }, [initializeUserData, disconnectWebSocket]);
 
   const updateStateAndProperties = useCallback(async () => {
-    if (state?.user?.id) {
-      const updatedProperties = await fetchProperties(state.user.id);
+    if (state?.user && state.userType === "Owner") {
+      const updatedProperties = await fetchProperties(state.user);
       dispatch({ type: 'SET_PROPERTIES', payload: updatedProperties });
       dispatch({ type: 'SET_TENANTS', payload: updatedProperties.flatMap(property => property.tenants) });
     }
   }, [state, fetchProperties]);
 
   const addProperty = useCallback(async (property) => {
+    if (state.userType !== "Owner") return;
     property.photo = await getImageURL(property.photo);
     dispatch({ type: 'ADD_PROPERTY', payload: property });
     await updateStateAndProperties();
-  }, [getImageURL, updateStateAndProperties]);
+  }, [getImageURL, updateStateAndProperties, state.userType]);
 
   const addTenant = useCallback(async (tenant) => {
+    if (state.userType !== "Owner") return;
     tenant.photo = await getImageURL(tenant.photo);
     dispatch({ type: 'ADD_TENANT', payload: tenant });
     await updateStateAndProperties();
-  }, [getImageURL, updateStateAndProperties]);
+  }, [getImageURL, updateStateAndProperties, state.userType]);
 
   const updateProperty = useCallback(async (property) => {
+    if (state.userType !== "Owner") return;
     dispatch({ type: 'UPDATE_PROPERTY', payload: property });
     await updateStateAndProperties();
-  }, [updateStateAndProperties]);
+  }, [updateStateAndProperties, state.userType]);
 
   const deleteProperty = useCallback(async (propertyId) => {
+    if (state.userType !== "Owner") return;
     dispatch({ type: 'DELETE_PROPERTY', payload: propertyId });
     await updateStateAndProperties();
-  }, [updateStateAndProperties]);
+  }, [updateStateAndProperties, state.userType]);
 
   const updateTenant = useCallback((tenant) => {
+    if (state.userType !== "Owner") return;
     dispatch({ type: 'UPDATE_TENANT', payload: tenant });
-  }, []);
+  }, [state.userType]);
 
   const deleteTenant = useCallback(async (tenantId) => {
+    if (state.userType !== "Owner") return;
     dispatch({ type: 'DELETE_TENANT', payload: { tenantId } });
     await updateStateAndProperties();
-  }, [updateStateAndProperties]);
+  }, [updateStateAndProperties, state.userType]);
 
   const addTenantToProperty = useCallback(async (propertyId, tenant) => {
+    if (state.userType !== "Owner") return;
     tenant.photo = await getImageURL(tenant.photo);
     dispatch({ type: 'ADD_TENANT', payload: tenant });
     await updateStateAndProperties();
-  }, [getImageURL, updateStateAndProperties]);
+  }, [getImageURL, updateStateAndProperties, state.userType]);
+
+  const signOut = useCallback(async () => {
+    try {
+      await handleSignOut();
+      dispatch({ type: 'SIGN_OUT' });
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  }, []);
 
   const contextValue = {
     state,
     dispatch,
-    addProperty,
-    updateProperty,
-    deleteProperty,
-    addTenant,
-    updateTenant,
-    deleteTenant,
-    addTenantToProperty,
+    ...(state.userType === "Owner" ? {
+      addProperty,
+      updateProperty,
+      deleteProperty,
+      addTenant,
+      updateTenant,
+      deleteTenant,
+      addTenantToProperty,
+    } : {}),
     initializeUserData,
+    signOut,
   };
 
   return (

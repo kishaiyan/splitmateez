@@ -191,7 +191,7 @@ const TenantAbout = () => {
               <FontAwesome6 name="money-bills" size={30} color={"#4f8a41"} />
               <View className='justify-center ml-4'>
                 <Text className='text-xl text-orange-400 pb-2'>The Total utility cost</Text>
-                <Text className='text-3xl text-gray-300'>{'$'}{tenantDetails.costAmount}</Text>
+                <Text className='text-3xl text-gray-300'>{'$'}{tenantDetails.cost}</Text>
               </View>
             </View>
           </ScrollView>

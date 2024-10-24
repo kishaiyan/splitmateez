@@ -7,26 +7,22 @@
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "splitmate"
+          "resourceName": "splitmate82f2de8e"
         }
       ],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AWS_IAM"
-            },
-            {
               "authenticationType": "AMAZON_COGNITO_USER_POOLS",
               "userPoolConfig": {
-                "userPoolId": "authsplitmate"
+                "userPoolId": "authsplitmate82f2de8e"
               }
             }
           ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
+              "apiKeyExpirationDays": 7
             },
             "authenticationType": "API_KEY"
           }
@@ -37,7 +33,7 @@
     }
   },
   "auth": {
-    "splitmate": {
+    "splitmate82f2de8e": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -46,20 +42,11 @@
           "SMS"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [
-            "REQUIRES_LOWERCASE",
-            "REQUIRES_NUMBERS",
-            "REQUIRES_SYMBOLS",
-            "REQUIRES_UPPERCASE"
-          ],
+          "passwordPolicyCharacters": [],
           "passwordPolicyMinLength": 8
         },
         "signupAttributes": [
-          "EMAIL",
-          "PHONE_NUMBER",
-          "GIVEN_NAME",
-          "FAMILY_NAME",
-          "ADDRESS"
+          "EMAIL"
         ],
         "socialProviders": [],
         "usernameAttributes": [
@@ -74,8 +61,9 @@
     }
   },
   "function": {},
+  "hosting": {},
   "storage": {
-    "splitsavvy": {
+    "s39e3cc477": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"

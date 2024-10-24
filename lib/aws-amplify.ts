@@ -1,4 +1,4 @@
-import { signIn, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword, type UpdatePasswordInput } from "aws-amplify/auth";
+import { signIn, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword, type UpdatePasswordInput, fetchUserAttributes, confirmSignUp, updateUserAttributes, type UpdateUserAttributesOutput } from "aws-amplify/auth";
 
 
 export const changePassword = async ({ oldPassword, newPassword }: UpdatePasswordInput) => {
@@ -9,7 +9,13 @@ export const changePassword = async ({ oldPassword, newPassword }: UpdatePasswor
     console.log("Error updating password:", error);
   }
 };
-
+export const updateAttribute = async () => {
+  await updateUserAttributes({
+    userAttributes: {
+      "custom:changePassword": "false"
+    },
+  });
+}
 export const handleSignOut = async () => {
   try {
     await signOut();
@@ -22,7 +28,8 @@ export const handleSignOut = async () => {
 export const getcurrentUser = async () => {
   try {
     const response = await getCurrentUser();
-    return response.userId;
+    const attributes = await fetchUserAttributes();
+    return { userId: response.userId, userType: attributes["custom:userType"], changePassword: attributes["custom:changePassword"] }
   } catch (error) {
     console.log("Current User Error", error);
   }
@@ -33,11 +40,14 @@ export const handleSignIn = async ({ username, password }) => {
     const response = await signIn({ username, password });
     if (response.isSignedIn) {
       try {
-        const res = await getCurrentUser();
-        return { response, res };
+        const { userId, userType, changePassword } = await getcurrentUser();
+        return { response, userId, userType, changePassword };
       } catch (error) {
         throw error;
       }
+    } else if (response.nextStep?.signInStep === "CONFIRM_SIGN_UP") {
+      // User needs to confirm sign-up
+      return { response, needsConfirmation: true, username };
     }
     return { response };
   } catch (error) {
@@ -60,6 +70,17 @@ export const handleCRP = async ({ username, confirmationCode, newPassword }) => 
     console.log("Changed Successfully");
   } catch (error) {
     console.log("Error changing password:", error);
+  }
+};
+
+export const confirmUserSignUp = async (username: string, code: string) => {
+  try {
+    await confirmSignUp({ username, confirmationCode: code });
+    console.log("User confirmed successfully");
+    return true;
+  } catch (error) {
+    console.error("Error confirming user:", error);
+    return false;
   }
 };
 

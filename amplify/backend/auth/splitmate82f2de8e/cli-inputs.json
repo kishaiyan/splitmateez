@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "testAuthIdentityPool",
+    "identityPoolName": "splitmate82f2de8e_identitypool_82f2de8e",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "splitm159a2a70",
-    "userPoolName": "splitmate",
+    "resourceNameTruncated": "splitm82f2de8e",
+    "userPoolName": "splitmate82f2de8e_userpool_82f2de8e",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -14,43 +14,34 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Verifiy your email",
-    "emailVerificationMessage": "Verify your email to start using SMEZ application by entering the following verification code\n\nVerification code: {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [
-      "Requires Lowercase",
-      "Requires Numbers",
-      "Requires Symbols",
-      "Requires Uppercase"
-    ],
+    "passwordPolicyCharacters": [],
     "requiredAttributes": [
-      "email",
-      "phone_number",
-      "given_name",
-      "family_name",
-      "address"
+      "email"
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [],
-    "userpoolClientReadAttributes": [],
-    "userpoolClientLambdaRole": "splitm159a2a70_userpoolclient_lambda_role",
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientLambdaRole": "splitm82f2de8e_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "159a2a70",
-    "resourceName": "splitmate",
+    "sharedId": "82f2de8e",
+    "resourceName": "splitmate82f2de8e",
     "authSelections": "identityPoolAndUserPool",
-    "serviceName": "Cognito",
+    "useDefault": "default",
     "usernameAttributes": [
       "email"
     ],
-    "useDefault": "manual",
-    "userPoolGroups": false,
     "userPoolGroupList": [],
-    "adminQueries": false,
-    "thirdPartyAuth": false,
-    "authProviders": [],
+    "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,
     "authRoleArn": {
@@ -66,7 +57,6 @@
       ]
     },
     "breakCircularDependency": true,
-    "dependsOn": [],
-    "hostedUI": false
+    "dependsOn": []
   }
 }

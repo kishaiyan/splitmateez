@@ -160,12 +160,10 @@ const Signup = () => {
         options: {
           userAttributes: {
             email: form.email,
-            phone_number: getNumber(form.phno),
-            given_name: form.firstname,
-            family_name: form.lastname,
-            address: "address"
+            "custom:userType": "owner",
+            "custom:changePassword": "false",
           },
-          autoSignIn: { enabled: false },
+          autoSignIn: { enabled: true },
         },
       });
 
@@ -225,6 +223,7 @@ const Signup = () => {
               onhandleChange={(e) => handleChange('email', e)}
               placeholder="john.doe@something.com"
               keyboardtype="email-address"
+              secureTextEntry={false}
             />
             <HelperText type="error" visible={!!form.errors.email}>
               {form.errors.email}
@@ -235,6 +234,7 @@ const Signup = () => {
               onhandleChange={(e) => handleChange('firstname', e)}
               placeholder="John"
               keyboardtype="default"
+              secureTextEntry={false}
             />
             <HelperText type="error" visible={!!form.errors.firstname}>
               {form.errors.firstname}
@@ -245,6 +245,7 @@ const Signup = () => {
               onhandleChange={(e) => handleChange('lastname', e)}
               placeholder="Doe"
               keyboardtype="default"
+              secureTextEntry={false}
             />
             <HelperText type="error" visible={!!form.errors.lastname}>
               {form.errors.lastname}
@@ -255,6 +256,7 @@ const Signup = () => {
               onhandleChange={(e) => handleChange('phno', e)}
               keyboardtype="number-pad"
               placeholder="04.."
+              secureTextEntry={false}
             />
             <HelperText type="error" visible={!!form.errors.phno}>
               {form.errors.phno}
@@ -265,6 +267,7 @@ const Signup = () => {
               onhandleChange={(e) => handleChange('password', e)}
               keyboardtype="default"
               placeholder="Password"
+              secureTextEntry={true}
             />
             <HelperText type="error" visible={!!form.errors.password}>
               {form.errors.password}

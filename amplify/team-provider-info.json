@@ -31,13 +31,13 @@
     },
     "categories": {
       "auth": {
-        "splitmate": {}
+        "splitmate82f2de8e": {}
+      },
+      "storage": {
+        "s39e3cc477": {}
       },
       "api": {
         "splitmate": {}
-      },
-      "storage": {
-        "splitsavvy": {}
       }
     }
   }
