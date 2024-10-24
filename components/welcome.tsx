@@ -13,11 +13,11 @@ const Welcome = () => {
   const { state, dispatch } = useGlobalContext();
   const { isLoading, userType, isLoggedIn } = state;
 
-  if (!isLoading && isLoggedIn && userType == "Owner") {
+  if (!isLoading && isLoggedIn && userType == "owner") {
     return <Redirect href="/(home)" />
   }
 
-  else if (!isLoading && isLoggedIn && userType != "Owner") {
+  else if (!isLoading && isLoggedIn && userType != "owner") {
     return <Redirect href="/(tenant)" />
   }
   return (

@@ -7,9 +7,8 @@ import { useGlobalContext } from '../../context/GlobalProvider'
 import AppBar from '../../components/appBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
+import { Alert } from 'react-native'
 
-
-// Function to get pre-signed URL for the image
 
 
 const Account = () => {
@@ -19,10 +18,16 @@ const Account = () => {
   const signOut = async () => {
     try {
       await handleSignOut();
-      dispatch({ type: 'SIGN_OUT' });
       router.replace('/(auth)/signIn');
+      dispatch({ type: 'SIGN_OUT' });
     } catch (error) {
       console.error('Error during sign out:', error);
+      // Add user feedback for sign out failure
+      Alert.alert(
+        "Sign Out Failed",
+        "There was an error signing out. Please try again.",
+        [{ text: "OK" }]
+      );
     }
   }
 

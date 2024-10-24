@@ -4,9 +4,8 @@
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authsplitmate",
+      "authsplitmate82f2de8e",
       "Outputs.UserPoolId"
     ]
-  },
-  "AuthModeLastUpdated": "2024-09-16T01:19:12.919Z"
+  }
 }

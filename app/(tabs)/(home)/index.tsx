@@ -11,9 +11,6 @@ import AddProperty from '../../list_empty'
 
 const Home = () => {
 
-
-
-
   const ItemSeparator = () => (
     <View style={{ width: 10 }} /> // Adjust the width as needed
   );
@@ -23,12 +20,6 @@ const Home = () => {
   const { userDetails, properties, user } = state;
   const [notifyNumber, setNotifyNumber] = useState(9);
   const [visible, setVisible] = useState(true)
-
-
-
-
-
-
 
   useEffect(() => {
     const timer = setTimeout(() => {

@@ -2,7 +2,7 @@ import { View, Text, TextInput, Keyboard, TouchableWithoutFeedback, TouchableOpa
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 
-const TextField = ({ label, placeholder, value, onhandleChange, keyboardtype, }) => {
+const TextField = ({ label, placeholder, value, onhandleChange, keyboardtype, secureTextEntry }) => {
 
   const [showpassword, setShowPassword] = useState(false);
 

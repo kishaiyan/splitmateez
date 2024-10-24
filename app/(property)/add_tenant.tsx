@@ -87,22 +87,17 @@ const AddTenant = () => {
   }
 
   const handleTenant = async () => {
-
     try {
       const { userId, nextStep } = await signUp({
         username: tenantForm.email,
         password: generate(tenantForm.firstname, tenantForm.lastname),
         options: {
           userAttributes: {
-            email: tenantForm.email,
-            phone_number: getNumber(tenantForm.phno),
-            given_name: tenantForm.firstname,
-            family_name: tenantForm.lastname,
-            address: address.toString(),
+            "custom:userType": "tenant",
+            "custom:changePassword": "true",
           },
           autoSignIn: {
             enabled: false,
-            authFlowType: "CUSTOM_WITHOUT_SRP"
           },
         },
       });
@@ -111,26 +106,9 @@ const AddTenant = () => {
 
       if (userId) {
         const photo = await uploadImage(userId);
-        await client.graphql({
-          query: createTenant,
-          variables: {
-            input: {
-              id: userId,
-              propertyID: id.toString(),
-              firstName: tenantForm.firstname,
-              lastName: tenantForm.lastname,
-              phNo: tenantForm.phno,
-              email: tenantForm.email,
-              photo: photo,
-              useElectricity: true,
-              useInternet: true,
-              useWater: true,
-              useGas: true,
-            },
-          },
-        });
-        addTenantToProperty(id.toString(), {
+        const newTenant = {
           id: userId,
+          propertyID: id.toString(),
           firstName: tenantForm.firstname,
           lastName: tenantForm.lastname,
           phNo: tenantForm.phno,
@@ -140,14 +118,23 @@ const AddTenant = () => {
           useInternet: tenantForm.useInternet,
           useWater: tenantForm.useWater,
           useGas: tenantForm.useGas,
+        };
+
+        await client.graphql({
+          query: createTenant,
+          variables: {
+            input: newTenant,
+          },
         });
 
-        router.back();
+        addTenantToProperty(id.toString(), newTenant);
+
+        // Force a refresh of the property page
+        router.replace(`/(tabs)/(home)/${id}`);
       }
     } catch (error) {
       console.error("Error during tenant handling:", error);
-      // Handle the error (e.g., show a message to the user)
-
+      Alert.alert("Error", "Failed to add tenant. Please try again.");
     }
   };
 
@@ -203,7 +190,7 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, email: e })}
                 placeholder="john.doe@something.com"
                 keyboardtype="email-address"
-
+                secureTextEntry={false}
               />
               <TextField
                 label="First Name"
@@ -211,7 +198,7 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, firstname: e })}
                 placeholder="John"
                 keyboardtype="default"
-
+                secureTextEntry={false}
               />
               <TextField
                 label="Last Name"
@@ -219,7 +206,7 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, lastname: e })}
                 placeholder="Doe"
                 keyboardtype="default"
-
+                secureTextEntry={false}
               />
               <TextField
                 label="Phone Number"
@@ -227,7 +214,7 @@ const AddTenant = () => {
                 onhandleChange={(e) => setTenantForm({ ...tenantForm, phno: e })}
                 keyboardtype="number-pad"
                 placeholder="04.."
-
+                secureTextEntry={false}
               />
               <View className="flex-row items-center justify-between w-full">
                 <View className="flex-col items-center ">
