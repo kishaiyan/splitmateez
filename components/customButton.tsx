@@ -21,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity
+      testID="button"
       activeOpacity={0.7}
       className={`bg-secondary rounded-md items-center justify-center ${containerStyle} ${isLoading ? 'opacity-50' : ''}`}
       onPress={handlePress}

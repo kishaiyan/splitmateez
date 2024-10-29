@@ -12,7 +12,7 @@ const initialOwnerState = {
   user: null,
   isLoading: true,
   properties: [],
-  userDetails: null,
+  userDetails: {},
   userType: "owner",
   tenants: [],
   changePassword: false,
@@ -120,6 +120,7 @@ export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const { connectWebSocket, disconnectWebSocket, setOnMessageHandler } = useWebSocket();
+  const stateRef = useRef();
   const [state, dispatch] = useReducer((state, action) => {
     if (state.userType === "owner") {
       return ownerReducer(state, action);
@@ -128,6 +129,7 @@ const GlobalProvider = ({ children }) => {
     }
   }, initialOwnerState);
   const isInitialized = useRef(false);
+  const isWebSocketInitialized = useRef(false);
 
   const getImageURL = useCallback(async (url) => {
     if (!url) return null;
@@ -142,24 +144,21 @@ const GlobalProvider = ({ children }) => {
 
   const fetchUserDetails = useCallback(async (userId, userType) => {
     try {
-      console.log(userId, userType)
       let details;
       if (userType === "owner") {
-        console.log("Fetching owner details");
         const { data } = await client.graphql({
           query: getOwner,
           variables: { id: userId }
         });
         details = data.getOwner;
       } else {
-        console.log("Fetching tenant details");
         const { data } = await client.graphql({
           query: getTenant,
           variables: { id: userId }
         });
         details = data.getTenant;
       }
-      console.log("Fetched user details:", details);
+
       if (details) {
         details.photo = await getImageURL(details.photo);
       } else {
@@ -201,11 +200,14 @@ const GlobalProvider = ({ children }) => {
       });
       return await Promise.all(properties
         .filter(property => !property._deleted)
-        .map(async property => ({
-          ...property,
-          photo: await getImageURL(property.photo),
-          tenants: await fetchTenants(property.id)
-        }))
+        .map(async property => {
+          const photoUrl = await getImageURL(property.photo);
+          return {
+            ...property,
+            photo: photoUrl,
+            tenants: await fetchTenants(property.id)
+          };
+        })
       );
     } catch (error) {
       console.error("Error fetching properties:", error);
@@ -213,16 +215,59 @@ const GlobalProvider = ({ children }) => {
     }
   }, [getImageURL, fetchTenants, state.userType]);
 
-  const handleWebSocketMessage = useCallback((message) => {
-    console.log('Received WebSocket message:', message);
-    const parsedMessage = JSON.parse(message);
-    // Handle the parsed message here
-  }, []);
+  console.log("Properties in the local State:", state.properties.map((prop) => prop.id));
+  function handleWebSocketMessage(message) {
+    try {
+      const parsedMessage = JSON.parse(message);
+      const { propertyId, tenant_cost } = parsedMessage.property_costs?.[0] || {};
+
+      const currentState = stateRef.current;
+
+      if (!propertyId || !tenant_cost) {
+        console.warn("Unexpected message format:", parsedMessage);
+        return;
+      }
+
+      if (!Array.isArray(currentState.properties) || currentState.properties.length === 0) {
+        console.warn("Properties array is empty or undefined. State:", currentState);
+        return;
+      }
+
+      const property = currentState.properties.find(prop => prop.id === propertyId);
+
+      if (property) {
+        if (Array.isArray(tenant_cost)) {
+          tenant_cost.forEach(({ id, value }) => {
+
+            const tenant = property.tenants.find(t => t.id === id);
+            if (tenant) {
+              console.log("Utility Cost:", value, " Type :", typeof value)
+              tenant.utilityCost = value;
+            }
+          });
+        }
+        console.log("Updated tenants utility cost:", property.tenants.map((tenant) => {
+          return {
+            id: tenant.id,
+            utilityCost: tenant.utilityCost
+          }
+        }))
+      } else {
+        console.warn(`Property not found for ID: ${propertyId}. Available properties:`,
+          currentState.properties.map(p => p.id));
+      }
+    } catch (error) {
+      console.error("Error in handleWebSocketMessage:", error);
+    }
+  }
 
   const initializeWebSocket = useCallback(() => {
-    connectWebSocket();
+    if (isWebSocketInitialized.current) return;
+    console.log("Initializing WebSocket");
     setOnMessageHandler(handleWebSocketMessage);
-  }, [connectWebSocket, setOnMessageHandler, handleWebSocketMessage]);
+    connectWebSocket();
+    isWebSocketInitialized.current = true;
+  }, [connectWebSocket, setOnMessageHandler]);
 
   const initializeUserData = useCallback(async (user, userType) => {
     try {
@@ -237,7 +282,6 @@ const GlobalProvider = ({ children }) => {
         initializeWebSocket();
       } else {
         console.error(`Failed to fetch user details for ${userType} with ID: ${user}`);
-        // You might want to handle this case, e.g., by showing an error message to the user
       }
     } catch (error) {
       console.error("Error initializing user data:", error);
@@ -257,7 +301,7 @@ const GlobalProvider = ({ children }) => {
           await initializeUserData(userId, userType);
         }
       } catch (error) {
-        // console.error("Error initializing user:", error);
+        console.error("Error initializing user:", error);
         dispatch({ type: 'SET_USER', payload: null });
       } finally {
         dispatch({ type: 'SET_LOADING', payload: false });
@@ -345,6 +389,10 @@ const GlobalProvider = ({ children }) => {
     initializeUserData,
     signOut,
   };
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   return (
     <GlobalContext.Provider value={contextValue}>

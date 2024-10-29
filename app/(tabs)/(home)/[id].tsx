@@ -57,6 +57,7 @@ const PropertyDetails = () => {
 
   useEffect(() => {
     const getProperty = (id) => {
+      // console.log("Properties:", properties, "Type:", typeof properties)
       const selectedProperty = properties.find((prop) => String(prop.id) === String(id));
       setDisProperty(selectedProperty);
     };

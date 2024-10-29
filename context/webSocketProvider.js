@@ -6,8 +6,7 @@ const WebSocketContext = createContext();
 export const WebSocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [messageHandler, setMessageHandler] = useState(null);
-  const reconnectTimeoutRef = useRef(null);
+  const messageHandlerRef = useRef(null);
 
   const connectWebSocket = useCallback(() => {
     if (socket) {
@@ -19,23 +18,18 @@ export const WebSocketProvider = ({ children }) => {
     ws.onopen = () => {
       console.log('WebSocket connected');
       setIsConnected(true);
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-        reconnectTimeoutRef.current = null;
-      }
     };
 
     ws.onmessage = (event) => {
-      console.log('Message from server:', event.data);
-      if (messageHandler) {
-        messageHandler(event.data);
+      if (messageHandlerRef.current) {
+        messageHandlerRef.current(event.data);
       }
     };
 
     ws.onclose = () => {
       console.log('WebSocket disconnected');
       setIsConnected(false);
-      reconnectTimeoutRef.current = setTimeout(connectWebSocket, 5000);
+
     };
 
     ws.onerror = (error) => {
@@ -44,22 +38,19 @@ export const WebSocketProvider = ({ children }) => {
     };
 
     setSocket(ws);
-  }, [messageHandler]);
+  }, []);
 
   const disconnectWebSocket = useCallback(() => {
     if (socket) {
       socket.close();
     }
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-      reconnectTimeoutRef.current = null;
-    }
+
     setSocket(null);
     setIsConnected(false);
   }, [socket]);
 
   const setOnMessageHandler = useCallback((handler) => {
-    setMessageHandler(() => handler);
+    messageHandlerRef.current = handler;
   }, []);
 
   return (

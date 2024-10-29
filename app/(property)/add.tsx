@@ -1,5 +1,4 @@
 import { View, Text, ScrollView, Image, Pressable } from 'react-native'
-import SelectDropdown from 'react-native-select-dropdown'
 import React, { useCallback, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AppBar from '../../components/appBar'
@@ -61,7 +60,7 @@ const AddProperty = () => {
       const response = await fetch(path);
       const blob = await response.blob();
       const result = await uploadData({
-        path: `public/${Date.now()}.jpeg`,
+        path: `property/${Date.now()}.jpeg`,
         data: blob,
         options: {
           contentType: 'image/jpeg',
@@ -121,35 +120,39 @@ const AddProperty = () => {
               value={propertyForm.address}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, address: e })}
               keyboardtype=""
-              error="" />
+              secureTextEntry={false}/>
             <TextField
               label="Rooms"
               placeholder="2"
               value={propertyForm.rooms}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, rooms: e })}
               keyboardtype="numeric"
-              error="" />
+              secureTextEntry={false}/>
+              
             <TextField
               label="Bathroom"
               placeholder="4"
               value={propertyForm.bathroom}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, bathroom: e })}
               keyboardtype="numeric"
-              error="" />
+              secureTextEntry={false}/>
+
             <TextField
               label="Parking_space"
               placeholder="4"
               value={propertyForm.parking}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, parking: e })}
               keyboardtype="numeric"
-              error="" />
+              secureTextEntry={false}/>
+
             <TextField
               label="Maximum occupants"
               placeholder="4"
               value={propertyForm.maximun}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, maximun: e })}
               keyboardtype="numeric"
-              error="" />
+              secureTextEntry={false}/>
+
 
 
             <Button title="Add Property" className='px-10 py-3 my-3' onPress={addPropertytoUser} />

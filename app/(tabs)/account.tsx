@@ -14,7 +14,6 @@ import { MaterialIcons } from '@expo/vector-icons'
 const Account = () => {
   const { state, dispatch } = useGlobalContext();
   const { userDetails } = state;
-
   const signOut = async () => {
     try {
       router.replace('/(auth)/signIn');
@@ -76,7 +75,7 @@ const Account = () => {
               <View className='mr-5'>
                 <MaterialIcons name="notifications" size={22} color="#cdcdcd" />
               </View>
-              <Link href="/notificationSettings">
+              <Link href="../(settings)/notificationSettings">
                 <Text className='text-zinc-200 text-md'>Notification Settings</Text>
               </Link>
             </View>
@@ -84,7 +83,7 @@ const Account = () => {
               <View className='mr-5'>
                 <MaterialIcons name="help" size={22} color="#cdcdcd" />
               </View>
-              <Link href="/help">
+              <Link href="../(settings)/help">
                 <Text className='text-zinc-200 text-md'>Help & Support</Text>
               </Link>
             </View>
@@ -92,7 +91,7 @@ const Account = () => {
               <View className='mr-5'>
                 <MaterialIcons name="privacy-tip" size={22} color="#cdcdcd" />
               </View>
-              <Link href="/privacyPolicy">
+              <Link href="../(settings)/privacyPolicy">
                 <Text className='text-zinc-200 text-md'>Privacy Policy</Text>
               </Link>
             </View>

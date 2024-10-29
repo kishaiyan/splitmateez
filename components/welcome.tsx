@@ -4,11 +4,9 @@ import { View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, Redirect } from "expo-router";
 import Button from "./customButton";
-import { usePushNotification } from '../app/notification'
 import { useGlobalContext } from "../context/GlobalProvider";
 
 const Welcome = () => {
-  const { expoPushToken, notification } = usePushNotification()
   const icon = require('../assets/images/splash_screen.jpg')
   const { state, dispatch } = useGlobalContext();
   const { isLoading, userType, isLoggedIn } = state;

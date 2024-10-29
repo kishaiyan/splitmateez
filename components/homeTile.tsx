@@ -3,6 +3,7 @@ import React from 'react';
 import { Href, router } from 'expo-router';
 
 const HomeTile = ({ property }) => {
+
   const handlePress = () => {
     router.push(`/(home)/${property.id}` as Href);
   };

@@ -8,13 +8,16 @@ jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
 }));
 
+// Mock the Image component
+jest.mock('react-native/Libraries/Image/Image', () => 'Image');
+
 describe('AppBar', () => {
   const mockRouter = {
     back: jest.fn(),
   };
 
   beforeEach(() => {
-    useRouter.mockReturnValue(mockRouter);
+    (useRouter as jest.Mock).mockReturnValue(mockRouter);
   });
 
   it('renders correctly without leading prop', () => {
@@ -41,15 +44,24 @@ describe('AppBar', () => {
     expect(getByTestId('app-logo')).toBeTruthy();
   });
 
-  it('has correct styling', () => {
+  it('has correct styling for the container', () => {
     const { getByTestId } = render(<AppBar leading={false} />);
     const container = getByTestId('app-bar-container');
     expect(container.props.style).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({
-          flexDirection: 'row',
-          paddingTop: 8
-        })
+        expect.objectContaining({ flexDirection: 'row' }),
+        expect.objectContaining({ paddingTop: 8 })
+      ])
+    );
+  });
+
+  it('has correct styling for the title', () => {
+    const { getByTestId } = render(<AppBar leading={false} />);
+    const title = getByTestId('app-bar-title');
+    expect(title.props.style).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ fontWeight: '800' }),
+        expect.objectContaining({ color: '#e5e7eb' })
       ])
     );
   });

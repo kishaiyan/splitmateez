@@ -1,7 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import TabBar from '../../components/tabBar';
-import { AntDesign } from '@expo/vector-icons';
 
 const TabsLayout = () => {
   return (

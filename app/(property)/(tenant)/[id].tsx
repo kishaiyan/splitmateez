@@ -52,6 +52,13 @@ const PropertyDetails = () => {
     }
   }, [id, properties]);
 
+  useEffect(() => {
+    if (disProperty) {
+      const updatedProperty = properties.find((prop) => prop.id === disProperty.id);
+      setDisProperty(updatedProperty);
+    }
+  }, [properties, disProperty]);
+
   return (
     <SafeAreaView className='flex-1 bg-primary px-3 pb-6'>
       <Stack.Screen options={{ headerShown: false }} />

@@ -16,7 +16,7 @@ const Home = () => {
 
   const linkToAddProperty = "/(property)/add" as Href;
   const { state, dispatch } = useGlobalContext();
-  const { userDetails, properties, user } = state;
+  const { userDetails, properties } = state;
   const [notifyNumber, setNotifyNumber] = useState(9);
   const [visible, setVisible] = useState(true)
 
@@ -84,7 +84,7 @@ const Home = () => {
 
               )}
               horizontal
-              ListEmptyComponent={AddProperty}
+            //ListEmptyComponent={AddProperty}
 
             />
           </View>
