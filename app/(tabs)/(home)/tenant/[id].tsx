@@ -23,7 +23,7 @@ const TenantAbout = () => {
       console.error("Tenant not found in local state");
     }
     setIsLoading(false);
-  }, [id, state.tenants]);
+  }, [id, state.properties]);
 
   useEffect(() => {
     fetchTenantDetails();
