@@ -8,81 +8,6 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
-export const onCreateNotification = /* GraphQL */ `subscription OnCreateNotification(
-  $filter: ModelSubscriptionNotificationFilterInput
-) {
-  onCreateNotification(filter: $filter) {
-    id
-    message
-    timestamp
-    isRead
-    recipientID
-    type
-    ownerID
-    tenantID
-    propertyID
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnCreateNotificationSubscriptionVariables,
-  APITypes.OnCreateNotificationSubscription
->;
-export const onUpdateNotification = /* GraphQL */ `subscription OnUpdateNotification(
-  $filter: ModelSubscriptionNotificationFilterInput
-) {
-  onUpdateNotification(filter: $filter) {
-    id
-    message
-    timestamp
-    isRead
-    recipientID
-    type
-    ownerID
-    tenantID
-    propertyID
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnUpdateNotificationSubscriptionVariables,
-  APITypes.OnUpdateNotificationSubscription
->;
-export const onDeleteNotification = /* GraphQL */ `subscription OnDeleteNotification(
-  $filter: ModelSubscriptionNotificationFilterInput
-) {
-  onDeleteNotification(filter: $filter) {
-    id
-    message
-    timestamp
-    isRead
-    recipientID
-    type
-    ownerID
-    tenantID
-    propertyID
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedSubscription<
-  APITypes.OnDeleteNotificationSubscriptionVariables,
-  APITypes.OnDeleteNotificationSubscription
->;
 export const onCreateProperty = /* GraphQL */ `subscription OnCreateProperty($filter: ModelSubscriptionPropertyFilterInput) {
   onCreateProperty(filter: $filter) {
     id
@@ -268,6 +193,81 @@ export const onDeleteTenant = /* GraphQL */ `subscription OnDeleteTenant($filter
 ` as GeneratedSubscription<
   APITypes.OnDeleteTenantSubscriptionVariables,
   APITypes.OnDeleteTenantSubscription
+>;
+export const onCreateNotification = /* GraphQL */ `subscription OnCreateNotification(
+  $filter: ModelSubscriptionNotificationFilterInput
+) {
+  onCreateNotification(filter: $filter) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateNotificationSubscriptionVariables,
+  APITypes.OnCreateNotificationSubscription
+>;
+export const onUpdateNotification = /* GraphQL */ `subscription OnUpdateNotification(
+  $filter: ModelSubscriptionNotificationFilterInput
+) {
+  onUpdateNotification(filter: $filter) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateNotificationSubscriptionVariables,
+  APITypes.OnUpdateNotificationSubscription
+>;
+export const onDeleteNotification = /* GraphQL */ `subscription OnDeleteNotification(
+  $filter: ModelSubscriptionNotificationFilterInput
+) {
+  onDeleteNotification(filter: $filter) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteNotificationSubscriptionVariables,
+  APITypes.OnDeleteNotificationSubscription
 >;
 export const onCreateOwner = /* GraphQL */ `subscription OnCreateOwner($filter: ModelSubscriptionOwnerFilterInput) {
   onCreateOwner(filter: $filter) {

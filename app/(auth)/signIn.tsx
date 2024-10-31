@@ -48,33 +48,29 @@ const Signin = () => {
 
       if (needsConfirmation) {
         setNeedsConfirmation(true);
+        navigateToConfirmEmail();
         return;
       }
 
       if (response?.isSignedIn) {
-        dispatch({ type: 'SET_USER_DETAILS', payload: userId });
+        dispatch({ type: 'SET_USER', payload: userId });
         dispatch({ type: 'SET_USER_TYPE', payload: userType });
         dispatch({ type: 'SET_CHANGE_PASSWORD', payload: needsChangePassword });
 
-        await initializeUserData(userId, userType);
-
         if (userType === "owner") {
-          if (response.nextStep?.signInStep === "CONFIRM_SIGN_UP") {
-            navigateToConfirmEmail();
-          } else {
-            router.replace('/(home)');
-          }
+          router.replace('/(home)');
         } else if (userType === "tenant") {
           if (needsChangePassword === "true") {
-            setShowChangePassword(true);
-            setOldPassword(signForm.password);
+            // For tenants signing in for the first time, we'll handle email confirmation and password change in one flow
+            await handleTenantFirstSignIn(userId);
           } else {
             router.replace('/(tenant)');
           }
         } else {
-          disableResendButton();
           throw new Error("Unknown user type");
         }
+
+        await initializeUserData(userId, userType);
       } else if (response?.nextStep.signInStep === "CONFIRM_SIGN_UP") {
         navigateToConfirmEmail();
       } else {
@@ -97,6 +93,34 @@ const Signin = () => {
       showErrorToast("Failed to confirm user. Please try again.");
     }
   }, [signForm.email, confirmationCode, handleSignInSubmit, showErrorToast]);
+
+  const handleTenantFirstSignIn = useCallback(async (userId) => {
+    try {
+      // First, handle email confirmation
+      await handleConfirmSignUp();
+
+      // Then, prompt for password change
+      setShowChangePassword(true);
+      setOldPassword(signForm.password);
+
+      // Wait for the user to change their password
+      await new Promise<void>((resolve) => {
+        // Use event listener instead of router.addListener
+        const handleBeforeNavigate = () => {
+          window.removeEventListener('beforeunload', handleBeforeNavigate);
+          resolve();
+        };
+        window.addEventListener('beforeunload', handleBeforeNavigate);
+      });
+
+      // After password change, navigate to tenant home
+      router.replace('/(tenant)');
+    } catch (error) {
+      console.error("Error during tenant first sign-in:", error);
+      showErrorToast("An error occurred during sign-in. Please try again.");
+    }
+  }, [handleConfirmSignUp, router, showErrorToast, signForm.password]);
+
 
   const handleChangePassword = useCallback(async () => {
     if (newPassword !== confirmNewPassword) {

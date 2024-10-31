@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from "react";
-import { getcurrentUser, handleSignOut } from "../lib/aws-amplify";
+import { getcurrentUser, handleSignOut, getAuthSession } from "../lib/aws-amplify";
 import { getOwner, propertiesByOwnerID, tenantsByPropertyID, getTenant } from '../src/graphql/queries';
 import client from "../lib/client";
 import { getUrl } from 'aws-amplify/storage';
@@ -144,17 +144,20 @@ const GlobalProvider = ({ children }) => {
 
   const fetchUserDetails = useCallback(async (userId, userType) => {
     try {
+      const session = await getAuthSession()
       let details;
+
       if (userType === "owner") {
         const { data } = await client.graphql({
           query: getOwner,
-          variables: { id: userId }
+          variables: { id: userId },
         });
         details = data.getOwner;
       } else {
         const { data } = await client.graphql({
           query: getTenant,
-          variables: { id: userId }
+          variables: { id: userId },
+
         });
         details = data.getTenant;
       }
@@ -166,7 +169,12 @@ const GlobalProvider = ({ children }) => {
       }
       return details;
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.error("Error fetching user details:", {
+        userId,
+        userType,
+        error: error,
+        response: error.response ? error.response.data : null
+      });
       return null;
     }
   }, [getImageURL]);
@@ -214,19 +222,22 @@ const GlobalProvider = ({ children }) => {
       return [];
     }
   }, [getImageURL, fetchTenants, state.userType]);
-
-  console.log("Properties in the local State:", state.properties.map((prop) => prop.id));
   function handleWebSocketMessage(message) {
+    console.log("Received message:", message)
     try {
       const parsedMessage = JSON.parse(message);
       const { propertyId, tenant_cost } = parsedMessage.property_costs?.[0] || {};
+      const { propertyId: propertyId2, tenant_cost: tenant_cost2 } = parsedMessage.property_costs?.[1] || {};
 
+      // await client.graphql({
+      //   query:getNotification
+      // })
       const currentState = stateRef.current;
 
-      if (!propertyId || !tenant_cost) {
-        console.warn("Unexpected message format:", parsedMessage);
-        return;
-      }
+      // if (!propertyId || !tenant_cost) {
+      //   console.warn("Unexpected message format:", parsedMessage);
+      //   return;
+      // }
 
       if (!Array.isArray(currentState.properties) || currentState.properties.length === 0) {
         console.warn("Properties array is empty or undefined. State:", currentState);
@@ -241,11 +252,11 @@ const GlobalProvider = ({ children }) => {
 
             const tenant = property.tenants.find(t => t.id === id);
             if (tenant) {
-              console.log("Utility Cost:", value, " Type :", typeof value)
               tenant.utilityCost = value;
             }
           });
         }
+        dispatch({ type: 'UPDATE_PROPERTY', payload: property })
         console.log("Updated tenants utility cost:", property.tenants.map((tenant) => {
           return {
             id: tenant.id,
@@ -271,6 +282,7 @@ const GlobalProvider = ({ children }) => {
 
   const initializeUserData = useCallback(async (user, userType) => {
     try {
+
       const details = await fetchUserDetails(user, userType);
       if (details) {
         dispatch({ type: 'SET_USER_DETAILS', payload: details });
@@ -278,13 +290,18 @@ const GlobalProvider = ({ children }) => {
           const properties = await fetchProperties(user);
           dispatch({ type: 'SET_PROPERTIES', payload: properties });
           dispatch({ type: 'SET_TENANTS', payload: properties.flatMap(property => property.tenants) });
+          initializeWebSocket();
         }
-        initializeWebSocket();
       } else {
         console.error(`Failed to fetch user details for ${userType} with ID: ${user}`);
       }
     } catch (error) {
-      console.error("Error initializing user data:", error);
+      console.error("Error fetching user details:", {
+        userId,
+        userType,
+        error: error.message,
+        response: error.response ? error.response.data : null
+      });
     }
   }, [fetchUserDetails, fetchProperties, initializeWebSocket]);
 

@@ -8,84 +8,6 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
-export const createNotification = /* GraphQL */ `mutation CreateNotification(
-  $input: CreateNotificationInput!
-  $condition: ModelNotificationConditionInput
-) {
-  createNotification(input: $input, condition: $condition) {
-    id
-    message
-    timestamp
-    isRead
-    recipientID
-    type
-    ownerID
-    tenantID
-    propertyID
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.CreateNotificationMutationVariables,
-  APITypes.CreateNotificationMutation
->;
-export const updateNotification = /* GraphQL */ `mutation UpdateNotification(
-  $input: UpdateNotificationInput!
-  $condition: ModelNotificationConditionInput
-) {
-  updateNotification(input: $input, condition: $condition) {
-    id
-    message
-    timestamp
-    isRead
-    recipientID
-    type
-    ownerID
-    tenantID
-    propertyID
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.UpdateNotificationMutationVariables,
-  APITypes.UpdateNotificationMutation
->;
-export const deleteNotification = /* GraphQL */ `mutation DeleteNotification(
-  $input: DeleteNotificationInput!
-  $condition: ModelNotificationConditionInput
-) {
-  deleteNotification(input: $input, condition: $condition) {
-    id
-    message
-    timestamp
-    isRead
-    recipientID
-    type
-    ownerID
-    tenantID
-    propertyID
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedMutation<
-  APITypes.DeleteNotificationMutationVariables,
-  APITypes.DeleteNotificationMutation
->;
 export const createProperty = /* GraphQL */ `mutation CreateProperty(
   $input: CreatePropertyInput!
   $condition: ModelPropertyConditionInput
@@ -289,6 +211,84 @@ export const deleteTenant = /* GraphQL */ `mutation DeleteTenant(
 ` as GeneratedMutation<
   APITypes.DeleteTenantMutationVariables,
   APITypes.DeleteTenantMutation
+>;
+export const createNotification = /* GraphQL */ `mutation CreateNotification(
+  $input: CreateNotificationInput!
+  $condition: ModelNotificationConditionInput
+) {
+  createNotification(input: $input, condition: $condition) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateNotificationMutationVariables,
+  APITypes.CreateNotificationMutation
+>;
+export const updateNotification = /* GraphQL */ `mutation UpdateNotification(
+  $input: UpdateNotificationInput!
+  $condition: ModelNotificationConditionInput
+) {
+  updateNotification(input: $input, condition: $condition) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateNotificationMutationVariables,
+  APITypes.UpdateNotificationMutation
+>;
+export const deleteNotification = /* GraphQL */ `mutation DeleteNotification(
+  $input: DeleteNotificationInput!
+  $condition: ModelNotificationConditionInput
+) {
+  deleteNotification(input: $input, condition: $condition) {
+    id
+    message
+    timestamp
+    isRead
+    recipientID
+    type
+    ownerID
+    tenantID
+    propertyID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteNotificationMutationVariables,
+  APITypes.DeleteNotificationMutation
 >;
 export const createOwner = /* GraphQL */ `mutation CreateOwner(
   $input: CreateOwnerInput!

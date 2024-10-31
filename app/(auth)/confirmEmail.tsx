@@ -2,7 +2,7 @@ import { View, Text, TextInput, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/customButton';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import AppBar from '../../components/appBar';
 import { confirmUserSignUp, resendVerificationCode } from '../../lib/aws-amplify';
 
@@ -16,7 +16,10 @@ const ConfirmEmail = () => {
 
 
   const onSubmit = () => {
-    confirmUserSignUp(email.toString(), code);
+    const status = confirmUserSignUp(email.toString(), code);
+    if (status) {
+      router.replace("/signIn")
+    }
   };
 
   return (
@@ -47,7 +50,10 @@ const ConfirmEmail = () => {
         </View>
         <Button title='Confirm Email' containerStyle='px-10 py-3' onPress={onSubmit} />
         <Pressable onPress={() => resendVerificationCode(email.toString())}>
-          Resend Verification Code
+          <View className='mt-3 px-2 py-3 bg-blue-400/40 rounded-md'>
+            <Text className='text-white font-bold'>Resend Code</Text>
+
+          </View>
         </Pressable>
       </View>
     </SafeAreaView>

@@ -9,13 +9,15 @@ import Button from '../../components/customButton';
 import { uploadData } from 'aws-amplify/storage';
 import { signUp } from 'aws-amplify/auth';
 import { createTenant } from '../../src/graphql/mutations';
-import { RadioButton } from 'react-native-paper';
 import { generateClient } from 'aws-amplify/api';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import { RadioButton } from 'react-native-paper';
+import LoadingScreen from '../loadingScreen';
 
 const AddTenant = () => {
   const client = generateClient();
-  const { addTenantToProperty } = useGlobalContext();
+  const { addTenantToProperty, state, dispatch } = useGlobalContext();
+  const { isLoading } = state
   const params = useLocalSearchParams();
   const { id, address } = params;
   const [tenantForm, setTenantForm] = useState({
@@ -29,6 +31,7 @@ const AddTenant = () => {
     useWater: true,
     useGas: true,
   });
+  const [isFormComplete, setIsFormComplete] = useState(false); // Added to track form completeness
   const getImage = () => {
     Alert.alert(
 
@@ -46,6 +49,7 @@ const AddTenant = () => {
             });
             if (!cameraResult.canceled) {
               setTenantForm({ ...tenantForm, photo: cameraResult.assets[0] });
+              checkFormCompleteness(); // Check form completeness after photo selection
             }
           },
         },
@@ -60,6 +64,7 @@ const AddTenant = () => {
             });
             if (!libraryResult.canceled) {
               setTenantForm({ ...tenantForm, photo: libraryResult.assets[0] });
+              checkFormCompleteness(); // Check form completeness after photo selection
             }
           },
         },
@@ -71,7 +76,7 @@ const AddTenant = () => {
     );
   }
   useEffect(() => {
-
+    checkFormCompleteness(); // Check form completeness on mount
   }, []);
   function getNumber(phone: string) {
     return phone.replace('0', '+61');
@@ -88,6 +93,7 @@ const AddTenant = () => {
 
   const handleTenant = async () => {
     try {
+      dispatch({ type: "SET_LOADING", payload: true })
       const { userId, nextStep } = await signUp({
         username: tenantForm.email,
         password: generate(tenantForm.firstname, tenantForm.lastname),
@@ -128,12 +134,13 @@ const AddTenant = () => {
         });
 
         addTenantToProperty(id.toString(), newTenant);
-
+        dispatch({ type: "SET_LOADING", payload: false })
         // Force a refresh of the property page
-        router.replace(`/(tabs)/(home)/${id}`);
+        router.back();
       }
     } catch (error) {
-      console.error("Error during tenant handling:", error);
+      dispatch({ type: "SET_LOADING", payload: false })
+      // console.error("Error during tenant handling:", error);
       Alert.alert("Error", "Failed to add tenant. Please try again.");
     }
   };
@@ -159,8 +166,20 @@ const AddTenant = () => {
     }
   }
 
-
-
+  const checkFormCompleteness = () => {
+    const { firstname, lastname, email, phno, photo, useElectricity, useInternet, useWater, useGas } = tenantForm;
+    if (firstname && lastname && email && phno && photo && useElectricity !== undefined && useInternet !== undefined && useWater !== undefined && useGas !== undefined) {
+      setIsFormComplete(true);
+    } else {
+      setIsFormComplete(false);
+    }
+  }
+  if (isLoading) {
+    return (
+      <SafeAreaView className='bg-primary flex-1 items-center justify-center'>
+        <LoadingScreen />
+      </SafeAreaView>)
+  }
   return (
     <SafeAreaView style={{ backgroundColor: '#212121' }} className='flex-1 px-4'>
       <Stack.Screen options={{ headerShown: false }} />

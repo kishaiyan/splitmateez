@@ -1,4 +1,4 @@
-import { signIn, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword, type UpdatePasswordInput, fetchUserAttributes, confirmSignUp, updateUserAttributes, resendSignUpCode } from "aws-amplify/auth";
+import { signIn, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword, type UpdatePasswordInput, fetchUserAttributes, confirmSignUp, updateUserAttributes, resendSignUpCode, fetchAuthSession } from "aws-amplify/auth";
 
 
 export const resendVerificationCode = async (username: string) => {
@@ -7,6 +7,14 @@ export const resendVerificationCode = async (username: string) => {
     console.log("Verification code resent successfully");
   } catch (error) {
     console.log("Error resending verification code:", error);
+  }
+}
+export const getAuthSession = async () => {
+  try {
+    const { tokens } = await fetchAuthSession({ forceRefresh: true })
+    return tokens
+  } catch (error) {
+    console.log("Error fetching auth session: ", error)
   }
 }
 export const changePassword = async ({ oldPassword, newPassword }: UpdatePasswordInput) => {
@@ -44,23 +52,27 @@ export const getcurrentUser = async () => {
 };
 
 export const handleSignIn = async ({ username, password }) => {
+  await signOut()
   try {
+
     const response = await signIn({ username, password });
+
+
     if (response.isSignedIn) {
       try {
         const { userId, userType, changePassword } = await getcurrentUser();
         return { response, userId, userType, changePassword };
       } catch (error) {
+        console.error("Error fetching user details:", error);
         throw error;
       }
     } else if (response.nextStep?.signInStep === "CONFIRM_SIGN_UP") {
-      // User needs to confirm sign-up
       return { response, needsConfirmation: true, username };
     }
     return { response };
   } catch (error) {
-    console.log(error.underlyingError);
-    return error;
+    console.error("Sign in error:", error);
+    throw error;
   }
 };
 

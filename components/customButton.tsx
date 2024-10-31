@@ -7,6 +7,7 @@ interface ButtonProps extends TouchableOpacityProps {
   handlePress?: () => void;
   containerStyle?: string;
   textStyle?: string;
+  disabled?: boolean;
   isLoading?: boolean;
 }
 
@@ -16,6 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   containerStyle = '',
   textStyle = '',
   isLoading = false,
+  disabled = false,
   onPress,
   ...props
 }) => {
@@ -23,9 +25,9 @@ const Button: React.FC<ButtonProps> = ({
     <TouchableOpacity
       testID="button"
       activeOpacity={0.7}
-      className={`bg-secondary rounded-md items-center justify-center ${containerStyle} ${isLoading ? 'opacity-50' : ''}`}
+      className={`bg-secondary rounded-md items-center justify-center ${containerStyle} ${isLoading || disabled ? 'opacity-50' : ''}`}
       onPress={handlePress}
-      disabled={isLoading}
+      disabled={disabled || isLoading}
       {...props}
       onPressIn={onPress}
     >

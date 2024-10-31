@@ -1,3 +1,4 @@
+
 type Notification @model @auth(rules: [{ allow: public }, { allow: private }]) {
   id: ID!
   message: String!

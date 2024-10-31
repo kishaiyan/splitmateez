@@ -8,6 +8,288 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getProperty = /* GraphQL */ `query GetProperty($id: ID!) {
+  getProperty(id: $id) {
+    id
+    address
+    rooms
+    maximum
+    bathroom
+    parking
+    photo
+    Tenants {
+      nextToken
+      startedAt
+      __typename
+    }
+    ownerID
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetPropertyQueryVariables,
+  APITypes.GetPropertyQuery
+>;
+export const listProperties = /* GraphQL */ `query ListProperties(
+  $filter: ModelPropertyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listProperties(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      address
+      rooms
+      maximum
+      bathroom
+      parking
+      photo
+      ownerID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListPropertiesQueryVariables,
+  APITypes.ListPropertiesQuery
+>;
+export const syncProperties = /* GraphQL */ `query SyncProperties(
+  $filter: ModelPropertyFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncProperties(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      address
+      rooms
+      maximum
+      bathroom
+      parking
+      photo
+      ownerID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SyncPropertiesQueryVariables,
+  APITypes.SyncPropertiesQuery
+>;
+export const getTenant = /* GraphQL */ `query GetTenant($id: ID!) {
+  getTenant(id: $id) {
+    id
+    firstName
+    lastName
+    email
+    phNo
+    useElectricity
+    useInternet
+    useWater
+    useGas
+    propertyID
+    photo
+    Notifications {
+      nextToken
+      startedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    __typename
+  }
+}
+` as GeneratedQuery<APITypes.GetTenantQueryVariables, APITypes.GetTenantQuery>;
+export const listTenants = /* GraphQL */ `query ListTenants(
+  $filter: ModelTenantFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTenants(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      firstName
+      lastName
+      email
+      phNo
+      useElectricity
+      useInternet
+      useWater
+      useGas
+      propertyID
+      photo
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListTenantsQueryVariables,
+  APITypes.ListTenantsQuery
+>;
+export const syncTenants = /* GraphQL */ `query SyncTenants(
+  $filter: ModelTenantFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncTenants(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      firstName
+      lastName
+      email
+      phNo
+      useElectricity
+      useInternet
+      useWater
+      useGas
+      propertyID
+      photo
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SyncTenantsQueryVariables,
+  APITypes.SyncTenantsQuery
+>;
+export const propertiesByOwnerID = /* GraphQL */ `query PropertiesByOwnerID(
+  $ownerID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelPropertyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  propertiesByOwnerID(
+    ownerID: $ownerID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      address
+      rooms
+      maximum
+      bathroom
+      parking
+      photo
+      ownerID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.PropertiesByOwnerIDQueryVariables,
+  APITypes.PropertiesByOwnerIDQuery
+>;
+export const tenantsByPropertyID = /* GraphQL */ `query TenantsByPropertyID(
+  $propertyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelTenantFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  tenantsByPropertyID(
+    propertyID: $propertyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      firstName
+      lastName
+      email
+      phNo
+      useElectricity
+      useInternet
+      useWater
+      useGas
+      propertyID
+      photo
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+    nextToken
+    startedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.TenantsByPropertyIDQueryVariables,
+  APITypes.TenantsByPropertyIDQuery
+>;
 export const getNotification = /* GraphQL */ `query GetNotification($id: ID!) {
   getNotification(id: $id) {
     id
@@ -260,288 +542,6 @@ export const notificationsByPropertyID = /* GraphQL */ `query NotificationsByPro
 ` as GeneratedQuery<
   APITypes.NotificationsByPropertyIDQueryVariables,
   APITypes.NotificationsByPropertyIDQuery
->;
-export const getProperty = /* GraphQL */ `query GetProperty($id: ID!) {
-  getProperty(id: $id) {
-    id
-    address
-    rooms
-    maximum
-    bathroom
-    parking
-    photo
-    Tenants {
-      nextToken
-      startedAt
-      __typename
-    }
-    ownerID
-    Notifications {
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.GetPropertyQueryVariables,
-  APITypes.GetPropertyQuery
->;
-export const listProperties = /* GraphQL */ `query ListProperties(
-  $filter: ModelPropertyFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listProperties(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      address
-      rooms
-      maximum
-      bathroom
-      parking
-      photo
-      ownerID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListPropertiesQueryVariables,
-  APITypes.ListPropertiesQuery
->;
-export const syncProperties = /* GraphQL */ `query SyncProperties(
-  $filter: ModelPropertyFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncProperties(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      address
-      rooms
-      maximum
-      bathroom
-      parking
-      photo
-      ownerID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.SyncPropertiesQueryVariables,
-  APITypes.SyncPropertiesQuery
->;
-export const propertiesByOwnerID = /* GraphQL */ `query PropertiesByOwnerID(
-  $ownerID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelPropertyFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  propertiesByOwnerID(
-    ownerID: $ownerID
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      address
-      rooms
-      maximum
-      bathroom
-      parking
-      photo
-      ownerID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.PropertiesByOwnerIDQueryVariables,
-  APITypes.PropertiesByOwnerIDQuery
->;
-export const getTenant = /* GraphQL */ `query GetTenant($id: ID!) {
-  getTenant(id: $id) {
-    id
-    firstName
-    lastName
-    email
-    phNo
-    useElectricity
-    useInternet
-    useWater
-    useGas
-    propertyID
-    photo
-    Notifications {
-      nextToken
-      startedAt
-      __typename
-    }
-    createdAt
-    updatedAt
-    _version
-    _deleted
-    _lastChangedAt
-    __typename
-  }
-}
-` as GeneratedQuery<APITypes.GetTenantQueryVariables, APITypes.GetTenantQuery>;
-export const listTenants = /* GraphQL */ `query ListTenants(
-  $filter: ModelTenantFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listTenants(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      firstName
-      lastName
-      email
-      phNo
-      useElectricity
-      useInternet
-      useWater
-      useGas
-      propertyID
-      photo
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.ListTenantsQueryVariables,
-  APITypes.ListTenantsQuery
->;
-export const syncTenants = /* GraphQL */ `query SyncTenants(
-  $filter: ModelTenantFilterInput
-  $limit: Int
-  $nextToken: String
-  $lastSync: AWSTimestamp
-) {
-  syncTenants(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-    lastSync: $lastSync
-  ) {
-    items {
-      id
-      firstName
-      lastName
-      email
-      phNo
-      useElectricity
-      useInternet
-      useWater
-      useGas
-      propertyID
-      photo
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.SyncTenantsQueryVariables,
-  APITypes.SyncTenantsQuery
->;
-export const tenantsByPropertyID = /* GraphQL */ `query TenantsByPropertyID(
-  $propertyID: ID!
-  $sortDirection: ModelSortDirection
-  $filter: ModelTenantFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  tenantsByPropertyID(
-    propertyID: $propertyID
-    sortDirection: $sortDirection
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      firstName
-      lastName
-      email
-      phNo
-      useElectricity
-      useInternet
-      useWater
-      useGas
-      propertyID
-      photo
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
-    }
-    nextToken
-    startedAt
-    __typename
-  }
-}
-` as GeneratedQuery<
-  APITypes.TenantsByPropertyIDQueryVariables,
-  APITypes.TenantsByPropertyIDQuery
 >;
 export const getOwner = /* GraphQL */ `query GetOwner($id: ID!) {
   getOwner(id: $id) {

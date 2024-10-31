@@ -23,7 +23,7 @@ export default function EditProfile() {
         setLastName(userDetails.lastName)
 
       } catch (error) {
-        console.error('Error fetching user details:', error)
+        // console.error('Error fetching user details:', error)
       }
     }
 

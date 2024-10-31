@@ -1,8 +1,8 @@
-import { View, Text, Image, KeyboardAvoidingView } from 'react-native'
+import { View, Text, Image, KeyboardAvoidingView, Pressable } from 'react-native'
 import React from 'react'
 import Button from '../../components/customButton'
 import { handleSignOut } from '../../lib/aws-amplify'
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import AppBar from '../../components/appBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -21,7 +21,7 @@ const Account = () => {
       router.replace('/(auth)/signIn');
       dispatch({ type: 'SIGN_OUT' });
     } catch (error) {
-      console.error('Error during sign out:', error);
+      // console.error('Error during sign out:', error);
       // Add user feedback for sign out failure
       Alert.alert(
         "Sign Out Failed",
@@ -50,46 +50,38 @@ const Account = () => {
                 <Text className='text-secondary text-md'>{userDetails.email}</Text>
               </View>
             </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="edit" size={22} color="#cdcdcd" />
-              </View>
-              <Link href="../(settings)/editProfile">
+            <Pressable onPress={() => router.push("../(settings)/editProfile")}>
+              <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                <View className='mr-5'>
+                  <MaterialIcons name="edit" size={22} color="#cdcdcd" />
+                </View>
                 <Text className='text-zinc-200 text-md'>Edit Profile</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="lock" size={22} color="#cdcdcd" />
               </View>
-              <Link href="../(settings)/changePassword">
+            </Pressable>
+            <Pressable onPress={() => router.push("../(settings)/changePassword")}>
+              <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                <View className='mr-5'>
+                  <MaterialIcons name="lock" size={22} color="#cdcdcd" />
+                </View>
                 <Text className='text-zinc-200 text-md'>Change Password</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="notifications" size={22} color="#cdcdcd" />
               </View>
-              <Link href="/notificationSettings">
+            </Pressable>
+            <Pressable onPress={() => router.push("../(settings)/notificationSettings")}>
+              <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                <View className='mr-5'>
+                  <MaterialIcons name="notifications" size={22} color="#cdcdcd" />
+                </View>
                 <Text className='text-zinc-200 text-md'>Notification Settings</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="help" size={22} color="#cdcdcd" />
               </View>
-              <Link href="/help">
-                <Text className='text-zinc-200 text-md'>Help & Support</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="privacy-tip" size={22} color="#cdcdcd" />
+            </Pressable>
+            <Pressable onPress={() => router.push("../(settings)/reportGenerate")}>
+              <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                <View className='mr-5'>
+                  <MaterialIcons name="note" size={22} color="#cdcdcd" />
+                </View>
+                <Text className='text-zinc-200 text-md'>Usage Summary</Text>
               </View>
-              <Link href="/privacyPolicy">
-                <Text className='text-zinc-200 text-md'>Privacy Policy</Text>
-              </Link>
-            </View>
+            </Pressable>
 
           </View>
           <View className='items-center'>

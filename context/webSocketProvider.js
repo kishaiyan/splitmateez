@@ -7,6 +7,7 @@ export const WebSocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const messageHandlerRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
 
   const connectWebSocket = useCallback(() => {
     if (socket) {
@@ -18,6 +19,10 @@ export const WebSocketProvider = ({ children }) => {
     ws.onopen = () => {
       console.log('WebSocket connected');
       setIsConnected(true);
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+        reconnectTimeoutRef.current = null;
+      }
     };
 
     ws.onmessage = (event) => {
@@ -29,7 +34,10 @@ export const WebSocketProvider = ({ children }) => {
     ws.onclose = () => {
       console.log('WebSocket disconnected');
       setIsConnected(false);
-
+      reconnectTimeoutRef.current = setTimeout(() => {
+        console.log('Attempting to reconnect...');
+        connectWebSocket();
+      }, 5000); // Try to reconnect after 5 seconds
     };
 
     ws.onerror = (error) => {
@@ -47,10 +55,22 @@ export const WebSocketProvider = ({ children }) => {
 
     setSocket(null);
     setIsConnected(false);
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
   }, [socket]);
 
   const setOnMessageHandler = useCallback((handler) => {
     messageHandlerRef.current = handler;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
+    };
   }, []);
 
   return (

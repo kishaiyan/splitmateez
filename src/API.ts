@@ -2,31 +2,29 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateNotificationInput = {
+export type CreatePropertyInput = {
   id?: string | null,
-  message: string,
-  timestamp: string,
-  isRead: boolean,
-  recipientID: string,
-  type: string,
-  ownerID?: string | null,
-  tenantID?: string | null,
-  propertyID?: string | null,
+  address: string,
+  rooms: string,
+  maximum: string,
+  bathroom: string,
+  parking: string,
+  photo: string,
+  ownerID: string,
   _version?: number | null,
 };
 
-export type ModelNotificationConditionInput = {
-  message?: ModelStringInput | null,
-  timestamp?: ModelStringInput | null,
-  isRead?: ModelBooleanInput | null,
-  recipientID?: ModelIDInput | null,
-  type?: ModelStringInput | null,
+export type ModelPropertyConditionInput = {
+  address?: ModelStringInput | null,
+  rooms?: ModelStringInput | null,
+  maximum?: ModelStringInput | null,
+  bathroom?: ModelStringInput | null,
+  parking?: ModelStringInput | null,
+  photo?: ModelStringInput | null,
   ownerID?: ModelIDInput | null,
-  tenantID?: ModelIDInput | null,
-  propertyID?: ModelIDInput | null,
-  and?: Array< ModelNotificationConditionInput | null > | null,
-  or?: Array< ModelNotificationConditionInput | null > | null,
-  not?: ModelNotificationConditionInput | null,
+  and?: Array< ModelPropertyConditionInput | null > | null,
+  or?: Array< ModelPropertyConditionInput | null > | null,
+  not?: ModelPropertyConditionInput | null,
   _deleted?: ModelBooleanInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -72,13 +70,6 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type ModelIDInput = {
   ne?: string | null,
   eq?: string | null,
@@ -95,68 +86,11 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type Notification = {
-  __typename: "Notification",
-  id: string,
-  message: string,
-  timestamp: string,
-  isRead: boolean,
-  recipientID: string,
-  type: string,
-  ownerID?: string | null,
-  tenantID?: string | null,
-  propertyID?: string | null,
-  createdAt: string,
-  updatedAt: string,
-  _version: number,
-  _deleted?: boolean | null,
-  _lastChangedAt: number,
-};
-
-export type UpdateNotificationInput = {
-  id: string,
-  message?: string | null,
-  timestamp?: string | null,
-  isRead?: boolean | null,
-  recipientID?: string | null,
-  type?: string | null,
-  ownerID?: string | null,
-  tenantID?: string | null,
-  propertyID?: string | null,
-  _version?: number | null,
-};
-
-export type DeleteNotificationInput = {
-  id: string,
-  _version?: number | null,
-};
-
-export type CreatePropertyInput = {
-  id?: string | null,
-  address: string,
-  rooms: string,
-  maximum: string,
-  bathroom: string,
-  parking: string,
-  photo: string,
-  ownerID: string,
-  _version?: number | null,
-};
-
-export type ModelPropertyConditionInput = {
-  address?: ModelStringInput | null,
-  rooms?: ModelStringInput | null,
-  maximum?: ModelStringInput | null,
-  bathroom?: ModelStringInput | null,
-  parking?: ModelStringInput | null,
-  photo?: ModelStringInput | null,
-  ownerID?: ModelIDInput | null,
-  and?: Array< ModelPropertyConditionInput | null > | null,
-  or?: Array< ModelPropertyConditionInput | null > | null,
-  not?: ModelPropertyConditionInput | null,
-  _deleted?: ModelBooleanInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type Property = {
@@ -211,6 +145,24 @@ export type ModelNotificationConnection = {
   items:  Array<Notification | null >,
   nextToken?: string | null,
   startedAt?: number | null,
+};
+
+export type Notification = {
+  __typename: "Notification",
+  id: string,
+  message: string,
+  timestamp: string,
+  isRead: boolean,
+  recipientID: string,
+  type: string,
+  ownerID?: string | null,
+  tenantID?: string | null,
+  propertyID?: string | null,
+  createdAt: string,
+  updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
 };
 
 export type UpdatePropertyInput = {
@@ -284,6 +236,54 @@ export type DeleteTenantInput = {
   _version?: number | null,
 };
 
+export type CreateNotificationInput = {
+  id?: string | null,
+  message: string,
+  timestamp: string,
+  isRead: boolean,
+  recipientID: string,
+  type: string,
+  ownerID?: string | null,
+  tenantID?: string | null,
+  propertyID?: string | null,
+  _version?: number | null,
+};
+
+export type ModelNotificationConditionInput = {
+  message?: ModelStringInput | null,
+  timestamp?: ModelStringInput | null,
+  isRead?: ModelBooleanInput | null,
+  recipientID?: ModelIDInput | null,
+  type?: ModelStringInput | null,
+  ownerID?: ModelIDInput | null,
+  tenantID?: ModelIDInput | null,
+  propertyID?: ModelIDInput | null,
+  and?: Array< ModelNotificationConditionInput | null > | null,
+  or?: Array< ModelNotificationConditionInput | null > | null,
+  not?: ModelNotificationConditionInput | null,
+  _deleted?: ModelBooleanInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type UpdateNotificationInput = {
+  id: string,
+  message?: string | null,
+  timestamp?: string | null,
+  isRead?: boolean | null,
+  recipientID?: string | null,
+  type?: string | null,
+  ownerID?: string | null,
+  tenantID?: string | null,
+  propertyID?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteNotificationInput = {
+  id: string,
+  _version?: number | null,
+};
+
 export type CreateOwnerInput = {
   id?: string | null,
   firstName: string,
@@ -347,30 +347,6 @@ export type DeleteOwnerInput = {
   _version?: number | null,
 };
 
-export type ModelNotificationFilterInput = {
-  id?: ModelIDInput | null,
-  message?: ModelStringInput | null,
-  timestamp?: ModelStringInput | null,
-  isRead?: ModelBooleanInput | null,
-  recipientID?: ModelIDInput | null,
-  type?: ModelStringInput | null,
-  ownerID?: ModelIDInput | null,
-  tenantID?: ModelIDInput | null,
-  propertyID?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  and?: Array< ModelNotificationFilterInput | null > | null,
-  or?: Array< ModelNotificationFilterInput | null > | null,
-  not?: ModelNotificationFilterInput | null,
-  _deleted?: ModelBooleanInput | null,
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
 export type ModelPropertyFilterInput = {
   id?: ModelIDInput | null,
   address?: ModelStringInput | null,
@@ -408,6 +384,30 @@ export type ModelTenantFilterInput = {
   _deleted?: ModelBooleanInput | null,
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
+export type ModelNotificationFilterInput = {
+  id?: ModelIDInput | null,
+  message?: ModelStringInput | null,
+  timestamp?: ModelStringInput | null,
+  isRead?: ModelBooleanInput | null,
+  recipientID?: ModelIDInput | null,
+  type?: ModelStringInput | null,
+  ownerID?: ModelIDInput | null,
+  tenantID?: ModelIDInput | null,
+  propertyID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelNotificationFilterInput | null > | null,
+  or?: Array< ModelNotificationFilterInput | null > | null,
+  not?: ModelNotificationFilterInput | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
 export type ModelOwnerFilterInput = {
   id?: ModelIDInput | null,
   firstName?: ModelStringInput | null,
@@ -430,20 +430,19 @@ export type ModelOwnerConnection = {
   startedAt?: number | null,
 };
 
-export type ModelSubscriptionNotificationFilterInput = {
+export type ModelSubscriptionPropertyFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  message?: ModelSubscriptionStringInput | null,
-  timestamp?: ModelSubscriptionStringInput | null,
-  isRead?: ModelSubscriptionBooleanInput | null,
-  recipientID?: ModelSubscriptionIDInput | null,
-  type?: ModelSubscriptionStringInput | null,
+  address?: ModelSubscriptionStringInput | null,
+  rooms?: ModelSubscriptionStringInput | null,
+  maximum?: ModelSubscriptionStringInput | null,
+  bathroom?: ModelSubscriptionStringInput | null,
+  parking?: ModelSubscriptionStringInput | null,
+  photo?: ModelSubscriptionStringInput | null,
   ownerID?: ModelSubscriptionIDInput | null,
-  tenantID?: ModelSubscriptionIDInput | null,
-  propertyID?: ModelSubscriptionIDInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionNotificationFilterInput | null > | null,
-  or?: Array< ModelSubscriptionNotificationFilterInput | null > | null,
+  and?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
   _deleted?: ModelBooleanInput | null,
 };
 
@@ -477,27 +476,6 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
-export type ModelSubscriptionBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-};
-
-export type ModelSubscriptionPropertyFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  address?: ModelSubscriptionStringInput | null,
-  rooms?: ModelSubscriptionStringInput | null,
-  maximum?: ModelSubscriptionStringInput | null,
-  bathroom?: ModelSubscriptionStringInput | null,
-  parking?: ModelSubscriptionStringInput | null,
-  photo?: ModelSubscriptionStringInput | null,
-  ownerID?: ModelSubscriptionIDInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPropertyFilterInput | null > | null,
-  _deleted?: ModelBooleanInput | null,
-};
-
 export type ModelSubscriptionTenantFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   firstName?: ModelSubscriptionStringInput | null,
@@ -517,6 +495,28 @@ export type ModelSubscriptionTenantFilterInput = {
   _deleted?: ModelBooleanInput | null,
 };
 
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
+export type ModelSubscriptionNotificationFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  message?: ModelSubscriptionStringInput | null,
+  timestamp?: ModelSubscriptionStringInput | null,
+  isRead?: ModelSubscriptionBooleanInput | null,
+  recipientID?: ModelSubscriptionIDInput | null,
+  type?: ModelSubscriptionStringInput | null,
+  ownerID?: ModelSubscriptionIDInput | null,
+  tenantID?: ModelSubscriptionIDInput | null,
+  propertyID?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionNotificationFilterInput | null > | null,
+  or?: Array< ModelSubscriptionNotificationFilterInput | null > | null,
+  _deleted?: ModelBooleanInput | null,
+};
+
 export type ModelSubscriptionOwnerFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   firstName?: ModelSubscriptionStringInput | null,
@@ -529,81 +529,6 @@ export type ModelSubscriptionOwnerFilterInput = {
   and?: Array< ModelSubscriptionOwnerFilterInput | null > | null,
   or?: Array< ModelSubscriptionOwnerFilterInput | null > | null,
   _deleted?: ModelBooleanInput | null,
-};
-
-export type CreateNotificationMutationVariables = {
-  input: CreateNotificationInput,
-  condition?: ModelNotificationConditionInput | null,
-};
-
-export type CreateNotificationMutation = {
-  createNotification?:  {
-    __typename: "Notification",
-    id: string,
-    message: string,
-    timestamp: string,
-    isRead: boolean,
-    recipientID: string,
-    type: string,
-    ownerID?: string | null,
-    tenantID?: string | null,
-    propertyID?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type UpdateNotificationMutationVariables = {
-  input: UpdateNotificationInput,
-  condition?: ModelNotificationConditionInput | null,
-};
-
-export type UpdateNotificationMutation = {
-  updateNotification?:  {
-    __typename: "Notification",
-    id: string,
-    message: string,
-    timestamp: string,
-    isRead: boolean,
-    recipientID: string,
-    type: string,
-    ownerID?: string | null,
-    tenantID?: string | null,
-    propertyID?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type DeleteNotificationMutationVariables = {
-  input: DeleteNotificationInput,
-  condition?: ModelNotificationConditionInput | null,
-};
-
-export type DeleteNotificationMutation = {
-  deleteNotification?:  {
-    __typename: "Notification",
-    id: string,
-    message: string,
-    timestamp: string,
-    isRead: boolean,
-    recipientID: string,
-    type: string,
-    ownerID?: string | null,
-    tenantID?: string | null,
-    propertyID?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
 };
 
 export type CreatePropertyMutationVariables = {
@@ -804,6 +729,81 @@ export type DeleteTenantMutation = {
   } | null,
 };
 
+export type CreateNotificationMutationVariables = {
+  input: CreateNotificationInput,
+  condition?: ModelNotificationConditionInput | null,
+};
+
+export type CreateNotificationMutation = {
+  createNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type UpdateNotificationMutationVariables = {
+  input: UpdateNotificationInput,
+  condition?: ModelNotificationConditionInput | null,
+};
+
+export type UpdateNotificationMutation = {
+  updateNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type DeleteNotificationMutationVariables = {
+  input: DeleteNotificationInput,
+  condition?: ModelNotificationConditionInput | null,
+};
+
+export type DeleteNotificationMutation = {
+  deleteNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
 export type CreateOwnerMutationVariables = {
   input: CreateOwnerInput,
   condition?: ModelOwnerConditionInput | null,
@@ -897,6 +897,265 @@ export type DeleteOwnerMutation = {
     _version: number,
     _deleted?: boolean | null,
     _lastChangedAt: number,
+  } | null,
+};
+
+export type GetPropertyQueryVariables = {
+  id: string,
+};
+
+export type GetPropertyQuery = {
+  getProperty?:  {
+    __typename: "Property",
+    id: string,
+    address: string,
+    rooms: string,
+    maximum: string,
+    bathroom: string,
+    parking: string,
+    photo: string,
+    Tenants?:  {
+      __typename: "ModelTenantConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    ownerID: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type ListPropertiesQueryVariables = {
+  filter?: ModelPropertyFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPropertiesQuery = {
+  listProperties?:  {
+    __typename: "ModelPropertyConnection",
+    items:  Array< {
+      __typename: "Property",
+      id: string,
+      address: string,
+      rooms: string,
+      maximum: string,
+      bathroom: string,
+      parking: string,
+      photo: string,
+      ownerID: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncPropertiesQueryVariables = {
+  filter?: ModelPropertyFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncPropertiesQuery = {
+  syncProperties?:  {
+    __typename: "ModelPropertyConnection",
+    items:  Array< {
+      __typename: "Property",
+      id: string,
+      address: string,
+      rooms: string,
+      maximum: string,
+      bathroom: string,
+      parking: string,
+      photo: string,
+      ownerID: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetTenantQueryVariables = {
+  id: string,
+};
+
+export type GetTenantQuery = {
+  getTenant?:  {
+    __typename: "Tenant",
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phNo: string,
+    useElectricity?: boolean | null,
+    useInternet?: boolean | null,
+    useWater?: boolean | null,
+    useGas?: boolean | null,
+    propertyID: string,
+    photo: string,
+    Notifications?:  {
+      __typename: "ModelNotificationConnection",
+      nextToken?: string | null,
+      startedAt?: number | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type ListTenantsQueryVariables = {
+  filter?: ModelTenantFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListTenantsQuery = {
+  listTenants?:  {
+    __typename: "ModelTenantConnection",
+    items:  Array< {
+      __typename: "Tenant",
+      id: string,
+      firstName: string,
+      lastName: string,
+      email: string,
+      phNo: string,
+      useElectricity?: boolean | null,
+      useInternet?: boolean | null,
+      useWater?: boolean | null,
+      useGas?: boolean | null,
+      propertyID: string,
+      photo: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncTenantsQueryVariables = {
+  filter?: ModelTenantFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncTenantsQuery = {
+  syncTenants?:  {
+    __typename: "ModelTenantConnection",
+    items:  Array< {
+      __typename: "Tenant",
+      id: string,
+      firstName: string,
+      lastName: string,
+      email: string,
+      phNo: string,
+      useElectricity?: boolean | null,
+      useInternet?: boolean | null,
+      useWater?: boolean | null,
+      useGas?: boolean | null,
+      propertyID: string,
+      photo: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type PropertiesByOwnerIDQueryVariables = {
+  ownerID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPropertyFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type PropertiesByOwnerIDQuery = {
+  propertiesByOwnerID?:  {
+    __typename: "ModelPropertyConnection",
+    items:  Array< {
+      __typename: "Property",
+      id: string,
+      address: string,
+      rooms: string,
+      maximum: string,
+      bathroom: string,
+      parking: string,
+      photo: string,
+      ownerID: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type TenantsByPropertyIDQueryVariables = {
+  propertyID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelTenantFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type TenantsByPropertyIDQuery = {
+  tenantsByPropertyID?:  {
+    __typename: "ModelTenantConnection",
+    items:  Array< {
+      __typename: "Tenant",
+      id: string,
+      firstName: string,
+      lastName: string,
+      email: string,
+      phNo: string,
+      useElectricity?: boolean | null,
+      useInternet?: boolean | null,
+      useWater?: boolean | null,
+      useGas?: boolean | null,
+      propertyID: string,
+      photo: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -1119,265 +1378,6 @@ export type NotificationsByPropertyIDQuery = {
   } | null,
 };
 
-export type GetPropertyQueryVariables = {
-  id: string,
-};
-
-export type GetPropertyQuery = {
-  getProperty?:  {
-    __typename: "Property",
-    id: string,
-    address: string,
-    rooms: string,
-    maximum: string,
-    bathroom: string,
-    parking: string,
-    photo: string,
-    Tenants?:  {
-      __typename: "ModelTenantConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    ownerID: string,
-    Notifications?:  {
-      __typename: "ModelNotificationConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type ListPropertiesQueryVariables = {
-  filter?: ModelPropertyFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListPropertiesQuery = {
-  listProperties?:  {
-    __typename: "ModelPropertyConnection",
-    items:  Array< {
-      __typename: "Property",
-      id: string,
-      address: string,
-      rooms: string,
-      maximum: string,
-      bathroom: string,
-      parking: string,
-      photo: string,
-      ownerID: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type SyncPropertiesQueryVariables = {
-  filter?: ModelPropertyFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncPropertiesQuery = {
-  syncProperties?:  {
-    __typename: "ModelPropertyConnection",
-    items:  Array< {
-      __typename: "Property",
-      id: string,
-      address: string,
-      rooms: string,
-      maximum: string,
-      bathroom: string,
-      parking: string,
-      photo: string,
-      ownerID: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type PropertiesByOwnerIDQueryVariables = {
-  ownerID: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelPropertyFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type PropertiesByOwnerIDQuery = {
-  propertiesByOwnerID?:  {
-    __typename: "ModelPropertyConnection",
-    items:  Array< {
-      __typename: "Property",
-      id: string,
-      address: string,
-      rooms: string,
-      maximum: string,
-      bathroom: string,
-      parking: string,
-      photo: string,
-      ownerID: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type GetTenantQueryVariables = {
-  id: string,
-};
-
-export type GetTenantQuery = {
-  getTenant?:  {
-    __typename: "Tenant",
-    id: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    phNo: string,
-    useElectricity?: boolean | null,
-    useInternet?: boolean | null,
-    useWater?: boolean | null,
-    useGas?: boolean | null,
-    propertyID: string,
-    photo: string,
-    Notifications?:  {
-      __typename: "ModelNotificationConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type ListTenantsQueryVariables = {
-  filter?: ModelTenantFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListTenantsQuery = {
-  listTenants?:  {
-    __typename: "ModelTenantConnection",
-    items:  Array< {
-      __typename: "Tenant",
-      id: string,
-      firstName: string,
-      lastName: string,
-      email: string,
-      phNo: string,
-      useElectricity?: boolean | null,
-      useInternet?: boolean | null,
-      useWater?: boolean | null,
-      useGas?: boolean | null,
-      propertyID: string,
-      photo: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type SyncTenantsQueryVariables = {
-  filter?: ModelTenantFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncTenantsQuery = {
-  syncTenants?:  {
-    __typename: "ModelTenantConnection",
-    items:  Array< {
-      __typename: "Tenant",
-      id: string,
-      firstName: string,
-      lastName: string,
-      email: string,
-      phNo: string,
-      useElectricity?: boolean | null,
-      useInternet?: boolean | null,
-      useWater?: boolean | null,
-      useGas?: boolean | null,
-      propertyID: string,
-      photo: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type TenantsByPropertyIDQueryVariables = {
-  propertyID: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelTenantFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type TenantsByPropertyIDQuery = {
-  tenantsByPropertyID?:  {
-    __typename: "ModelTenantConnection",
-    items:  Array< {
-      __typename: "Tenant",
-      id: string,
-      firstName: string,
-      lastName: string,
-      email: string,
-      phNo: string,
-      useElectricity?: boolean | null,
-      useInternet?: boolean | null,
-      useWater?: boolean | null,
-      useGas?: boolean | null,
-      propertyID: string,
-      photo: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
 export type GetOwnerQueryVariables = {
   id: string,
 };
@@ -1463,78 +1463,6 @@ export type SyncOwnersQuery = {
     } | null >,
     nextToken?: string | null,
     startedAt?: number | null,
-  } | null,
-};
-
-export type OnCreateNotificationSubscriptionVariables = {
-  filter?: ModelSubscriptionNotificationFilterInput | null,
-};
-
-export type OnCreateNotificationSubscription = {
-  onCreateNotification?:  {
-    __typename: "Notification",
-    id: string,
-    message: string,
-    timestamp: string,
-    isRead: boolean,
-    recipientID: string,
-    type: string,
-    ownerID?: string | null,
-    tenantID?: string | null,
-    propertyID?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnUpdateNotificationSubscriptionVariables = {
-  filter?: ModelSubscriptionNotificationFilterInput | null,
-};
-
-export type OnUpdateNotificationSubscription = {
-  onUpdateNotification?:  {
-    __typename: "Notification",
-    id: string,
-    message: string,
-    timestamp: string,
-    isRead: boolean,
-    recipientID: string,
-    type: string,
-    ownerID?: string | null,
-    tenantID?: string | null,
-    propertyID?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnDeleteNotificationSubscriptionVariables = {
-  filter?: ModelSubscriptionNotificationFilterInput | null,
-};
-
-export type OnDeleteNotificationSubscription = {
-  onDeleteNotification?:  {
-    __typename: "Notification",
-    id: string,
-    message: string,
-    timestamp: string,
-    isRead: boolean,
-    recipientID: string,
-    type: string,
-    ownerID?: string | null,
-    tenantID?: string | null,
-    propertyID?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -1722,6 +1650,78 @@ export type OnDeleteTenantSubscription = {
       nextToken?: string | null,
       startedAt?: number | null,
     } | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnCreateNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionNotificationFilterInput | null,
+};
+
+export type OnCreateNotificationSubscription = {
+  onCreateNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnUpdateNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionNotificationFilterInput | null,
+};
+
+export type OnUpdateNotificationSubscription = {
+  onUpdateNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnDeleteNotificationSubscriptionVariables = {
+  filter?: ModelSubscriptionNotificationFilterInput | null,
+};
+
+export type OnDeleteNotificationSubscription = {
+  onDeleteNotification?:  {
+    __typename: "Notification",
+    id: string,
+    message: string,
+    timestamp: string,
+    isRead: boolean,
+    recipientID: string,
+    type: string,
+    ownerID?: string | null,
+    tenantID?: string | null,
+    propertyID?: string | null,
     createdAt: string,
     updatedAt: string,
     _version: number,

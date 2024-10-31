@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, Pressable } from 'react-native'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AppBar from '../../components/appBar'
 import TextField from '../../components/textField';
@@ -24,6 +24,7 @@ const AddProperty = () => {
     photo: "",
     maximun: "",
   })
+  const [isFormComplete, setIsFormComplete] = useState(false); // Added to track form completeness
 
   // Include addProperty
   const addPropertytoUser = useCallback(async () => {
@@ -92,6 +93,20 @@ const AddProperty = () => {
 
     }
   }
+
+  useEffect(() => {
+    checkFormCompleteness(); // Check form completeness on mount
+  }, [propertyForm]);
+
+  const checkFormCompleteness = () => {
+    const { address, rooms, bathroom, parking, maximun, photo } = propertyForm;
+    if (address && rooms && bathroom && parking && maximun && photo) {
+      setIsFormComplete(true);
+    } else {
+      setIsFormComplete(false);
+    }
+  }
+
   return (
 
 
@@ -120,22 +135,22 @@ const AddProperty = () => {
               value={propertyForm.address}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, address: e })}
               keyboardtype=""
-              secureTextEntry={false}/>
+              secureTextEntry={false} />
             <TextField
               label="Rooms"
               placeholder="2"
               value={propertyForm.rooms}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, rooms: e })}
               keyboardtype="numeric"
-              secureTextEntry={false}/>
-              
+              secureTextEntry={false} />
+
             <TextField
               label="Bathroom"
               placeholder="4"
               value={propertyForm.bathroom}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, bathroom: e })}
               keyboardtype="numeric"
-              secureTextEntry={false}/>
+              secureTextEntry={false} />
 
             <TextField
               label="Parking_space"
@@ -143,7 +158,7 @@ const AddProperty = () => {
               value={propertyForm.parking}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, parking: e })}
               keyboardtype="numeric"
-              secureTextEntry={false}/>
+              secureTextEntry={false} />
 
             <TextField
               label="Maximum occupants"
@@ -151,7 +166,7 @@ const AddProperty = () => {
               value={propertyForm.maximun}
               onhandleChange={(e) => setPropertyForm({ ...propertyForm, maximun: e })}
               keyboardtype="numeric"
-              secureTextEntry={false}/>
+              secureTextEntry={false} />
 
 
 

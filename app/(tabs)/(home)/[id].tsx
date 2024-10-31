@@ -45,7 +45,7 @@ const PropertyDetails = () => {
                 Alert.alert("Error", "Property removal failed");
               }
             } catch (error) {
-              console.error("Error removing property:", JSON.stringify(error, null, 2));
+              // console.error("Error removing property:", JSON.stringify(error, null, 2));
               Alert.alert("Error", "An error occurred while deleting the property");
             }
           },

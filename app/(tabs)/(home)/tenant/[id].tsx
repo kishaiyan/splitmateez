@@ -20,14 +20,14 @@ const TenantAbout = () => {
     if (tenant) {
       setTenantDetails(tenant);
     } else {
-      console.error("Tenant not found in local state");
+      // console.error("Tenant not found in local state");
     }
     setIsLoading(false);
-  }, [id, state.properties]);
+  }, [id]);
 
   useEffect(() => {
     fetchTenantDetails();
-  }, [fetchTenantDetails]);
+  }, [fetchTenantDetails, state.properties]);
 
   const removeTenant = useCallback(async () => {
     Alert.alert(
@@ -53,7 +53,7 @@ const TenantAbout = () => {
               console.log(state.properties)
               router.back();
             } catch (error) {
-              console.error("Error deleting tenant:", error);
+              // console.error("Error deleting tenant:", error);
             }
           }
         }
@@ -90,7 +90,7 @@ const TenantAbout = () => {
               });
 
               if (response.data.updateTenant[service] !== newValue) {
-                console.error(`Failed to update ${service}. Expected ${newValue}, but got ${response.data.updateTenant[service]}`);
+                // console.error(`Failed to update ${service}. Expected ${newValue}, but got ${response.data.updateTenant[service]}`);
                 setTenantDetails(prevDetails => ({
                   ...prevDetails,
                   [service]: !newValue
@@ -105,7 +105,7 @@ const TenantAbout = () => {
                 setTenantDetails(updatedTenant);
               }
             } catch (error) {
-              console.error(`Error updating ${service}:`, error);
+              // console.error(`Error updating ${service}:`, error);
               setTenantDetails(prevDetails => ({
                 ...prevDetails,
                 [service]: !prevDetails[service]
@@ -162,48 +162,51 @@ const TenantAbout = () => {
           <Text className='text-secondary text-xl'>{tenantDetails.firstName} {tenantDetails.lastName}</Text>
         </View>
       </View>
-      <ScrollView>
-        <View className='flex flex-row justify-evenly'>
-          <Image
-            source={{ uri: tenantDetails.photo }}
-            style={{ width: 120, height: 120, marginBottom: 16, borderRadius: 15 }}
-            resizeMode='contain'
+
+      <View className='flex flex-row justify-evenly'>
+        <Image
+          source={{ uri: tenantDetails.photo }}
+          style={{ width: 120, height: 120, marginBottom: 16, borderRadius: 15 }}
+          resizeMode='contain'
+        />
+        <View className='flex flex-col justify-center bg-tile rounded-lg h-[120] p-2'>
+          <Text className='text-white text-xs'>{tenantDetails.phNo}</Text>
+          <Text className='text-white text-md'>{tenantDetails.email.length > 21 ? tenantDetails.email.slice(0, 21) + ".." : tenantDetails.email}</Text>
+        </View>
+      </View>
+      <View className='flex-col'>
+        <View>
+          <Text className='text-secondary text-xl'>Services</Text>
+        </View>
+        <View className='flex-row my-5 justify-between'>
+          <ServiceButton service='useElectricity' icon={<Ionicons name='flash' size={30} color={tenantDetails.useElectricity ? "#E3EA2F" : "#424242"} />} />
+          <ServiceButton service='useWater' icon={<Ionicons name='water' size={30} color={tenantDetails.useWater ? "#2FD5EA" : "#424242"} />} />
+          <ServiceButton service='useInternet' icon={<Ionicons name='wifi' size={30} color={tenantDetails.useInternet ? "#5371FF" : "#424242"} />} />
+          <ServiceButton service='useGas' icon={<FontAwesome5 name='fire' size={28} color={tenantDetails.useGas ? "#ECA314" : "#424242"} />} />
+        </View>
+      </View>
+      <View className='flex-1 flex-col'>
+
+        <View className='w-full bg-tile items-center justify-evenly rounded flex-row p-4 mb-4'>
+          <FontAwesome6 name="money-bills" size={30} color={"#4f8a41"} />
+          <View className='justify-center ml-4'>
+            <Text className='text-xl text-orange-400 pb-2'>The Total utility cost</Text>
+            <Text className='text-3xl text-gray-300'>{"$ "}{tenantDetails.utilityCost ? tenantDetails.utilityCost.toFixed(2) : 0}</Text>
+          </View>
+        </View>
+
+        <View className='mt-auto mb-5'>
+          <Button
+            title="Remove"
+            className='px-5 py-1 bg-signOut border border-red-500'
+            onPress={removeTenant}
           />
-          <View className='flex flex-col justify-center bg-tile rounded-lg h-[120] p-2'>
-            <Text className='text-white text-xs'>{tenantDetails.phNo}</Text>
-            <Text className='text-white text-md'>{tenantDetails.email}</Text>
-          </View>
         </View>
-        <View className='flex-col'>
-          <View>
-            <Text className='text-secondary text-xl'>Services</Text>
-          </View>
-          <View className='flex-row my-5 justify-between'>
-            <ServiceButton service='useElectricity' icon={<Ionicons name='flash' size={30} color={tenantDetails.useElectricity ? "#E3EA2F" : "#424242"} />} />
-            <ServiceButton service='useWater' icon={<Ionicons name='water' size={30} color={tenantDetails.useWater ? "#2FD5EA" : "#424242"} />} />
-            <ServiceButton service='useInternet' icon={<Ionicons name='wifi' size={30} color={tenantDetails.useInternet ? "#5371FF" : "#424242"} />} />
-            <ServiceButton service='useGas' icon={<FontAwesome5 name='fire' size={28} color={tenantDetails.useGas ? "#ECA314" : "#424242"} />} />
-          </View>
+        <View className="h-[20%]">
+
         </View>
-        <View className='flex-1 flex-col'>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View className='w-full bg-tile items-center justify-evenly rounded flex-row p-4 mb-4'>
-              <FontAwesome6 name="money-bills" size={30} color={"#4f8a41"} />
-              <View className='justify-center ml-4'>
-                <Text className='text-xl text-orange-400 pb-2'>The Total utility cost</Text>
-                <Text className='text-3xl text-gray-300'>{"$ "}{tenantDetails.utilityCost ? tenantDetails.utilityCost.toFixed(2) : 0}</Text>
-              </View>
-            </View>
-          </ScrollView>
-          <View className='mt-auto mb-5'>
-            <Button
-              title="Remove"
-              className='px-5 py-1 bg-signOut border border-red-500'
-              onPress={removeTenant}
-            />
-          </View>
-        </View>
-      </ScrollView>
+      </View>
+
     </SafeAreaView>
   );
 };

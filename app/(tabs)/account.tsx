@@ -1,4 +1,4 @@
-import { View, Text, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
+import { View, Text, Image, KeyboardAvoidingView, TouchableOpacity, Pressable, ScrollView } from 'react-native'
 import React from 'react'
 import Button from '../../components/customButton'
 import { handleSignOut } from '../../lib/aws-amplify'
@@ -38,69 +38,75 @@ const Account = () => {
     <SafeAreaView className='flex-1 bg-primary px-4'>
       <KeyboardAvoidingView
         behavior='padding'>
-        <AppBar leading={false} />
-        <View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}>
+          <AppBar leading={false} />
+          <View>
 
-          <View className='mb-6'>
-            <View className='items-center flex-row justify-evenly bg-tile p-4 rounded-lg mb-4'>
-              {userDetails.photo && (
-                <Image
-                  source={{ uri: userDetails.photo }}
-                  style={{ width: 100, height: 100, marginBottom: 16, borderRadius: 50 }}
-                  resizeMode='cover'
-                  onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)} />
-              )}
-              <View className='flex-col items-center justify-center'>
-                <Text className='text-zinc-200 text-xl'>{userDetails.firstName} {userDetails.lastName}</Text>
-                <Text className='text-secondary text-md'>{userDetails.email}</Text>
+            <View className='mb-6'>
+              <View className='items-center flex-row justify-evenly bg-tile p-4 rounded-lg mb-4'>
+                {userDetails.photo && (
+                  <Image
+                    source={{ uri: userDetails.photo }}
+                    style={{ width: 100, height: 100, marginBottom: 16, borderRadius: 50 }}
+                    resizeMode='cover'
+                    onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)} />
+                )}
+                <View className='flex-col items-center justify-center'>
+                  <Text className='text-zinc-200 text-xl'>{userDetails.firstName} {userDetails.lastName}</Text>
+                  <Text className='text-secondary text-md'>{userDetails.email}</Text>
+                </View>
               </View>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="edit" size={22} color="#cdcdcd" />
-              </View>
-              <Link href="../(settings)/editProfile">
-                <Text className='text-zinc-200 text-md'>Edit Profile</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="lock" size={22} color="#cdcdcd" />
-              </View>
-              <Link href="../(settings)/changePassword">
-                <Text className='text-zinc-200 text-md'>Change Password</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="notifications" size={22} color="#cdcdcd" />
-              </View>
-              <Link href="../(settings)/notificationSettings">
-                <Text className='text-zinc-200 text-md'>Notification Settings</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="help" size={22} color="#cdcdcd" />
-              </View>
-              <Link href="../(settings)/help">
-                <Text className='text-zinc-200 text-md'>Help & Support</Text>
-              </Link>
-            </View>
-            <View className='bg-tile px-4 py-2 rounded-lg flex-row items-center mb-2'>
-              <View className='mr-5'>
-                <MaterialIcons name="privacy-tip" size={22} color="#cdcdcd" />
-              </View>
-              <Link href="../(settings)/privacyPolicy">
-                <Text className='text-zinc-200 text-md'>Privacy Policy</Text>
-              </Link>
-            </View>
+              <Pressable onPress={() => router.push("../(settings)/editProfile")}>
+                <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                  <View className='mr-5'>
+                    <MaterialIcons name="edit" size={22} color="#cdcdcd" />
+                  </View>
+                  <Text className='text-zinc-200 text-md'>Edit Profile</Text>
+                </View>
+              </Pressable>
+              <Pressable onPress={() => router.push("../(settings)/changePassword")}>
+                <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                  <View className='mr-5'>
+                    <MaterialIcons name="lock" size={22} color="#cdcdcd" />
+                  </View>
+                  <Text className='text-zinc-200 text-md'>Change Password</Text>
+                </View>
+              </Pressable>
+              <Pressable onPress={() => router.push("../(settings)/notificationSettings")}>
+                <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                  <View className='mr-5'>
+                    <MaterialIcons name="notifications" size={22} color="#cdcdcd" />
+                  </View>
+                  <Text className='text-zinc-200 text-md'>Notification Settings</Text>
+                </View>
+              </Pressable>
+              <Pressable onPress={() => router.push("../(settings)/help")}>
+                <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                  <View className='mr-5'>
+                    <MaterialIcons name="help" size={22} color="#cdcdcd" />
+                  </View>
+                  <Text className='text-zinc-200 text-md'>Help & Support</Text>
+                </View>
+              </Pressable>
+              <Pressable onPress={() => router.push("../(settings)/privacyPolicy")}>
+                <View className='bg-tile px-4 py-5 rounded-lg flex-row items-center mb-2'>
+                  <View className='mr-5'>
+                    <MaterialIcons name="privacy-tip" size={22} color="#cdcdcd" />
+                  </View>
+                  <Text className='text-zinc-200 text-md'>Privacy Policy</Text>
+                </View>
+              </Pressable>
 
+            </View>
+            <View className='items-center'>
+              <Button title='Sign Out' containerStyle='px-10 py-3 bg-signOut border border-red-500' onPress={signOut} isLoading={state.isLoading} />
+            </View>
+            <View className='h-[100]'>
+
+            </View>
           </View>
-          <View className='items-center'>
-            <Button title='Sign Out' containerStyle='px-10 py-3 bg-signOut border border-red-500' onPress={signOut} isLoading={state.isLoading} />
-          </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
 
     </SafeAreaView>
