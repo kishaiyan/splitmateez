@@ -4,11 +4,9 @@ import { Stack } from 'expo-router'
 import { View, Text, Pressable, Linking, Alert } from 'react-native';
 import AppBar from '../../components/appBar';
 import Button from '../../components/customButton';
-import axios from 'axios';
-import { getUrl, downloadData } from 'aws-amplify/storage';
+import axios from 'axios'
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { MaterialIcons } from '@expo/vector-icons';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const reportGenerate = () => {
   const { state } = useGlobalContext()
